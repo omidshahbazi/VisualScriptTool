@@ -1,4 +1,4 @@
-﻿namespace VisualScriptTool
+﻿namespace VisualScriptTool.Editor
 {
 	partial class MainForm
 	{
