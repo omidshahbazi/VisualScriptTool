@@ -52,6 +52,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -73,6 +76,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GDIHelper\GDIHelper.csproj">
+      <Project>{cf198119-9e6b-4f90-a878-088cbf2ce90d}</Project>
+      <Name>GDIHelper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Language\Language.csproj">
       <Project>{c5a2fbe8-a0e9-4ad3-9895-7f39c079ae59}</Project>
       <Name>Language</Name>
