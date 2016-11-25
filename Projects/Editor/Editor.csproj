@@ -44,6 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TypeHelper.cs" />
+    <Compile Include="StatementDrawer.cs" />
+    <Compile Include="DiagramTab.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Language\Drawers\IntegerVariableDrawer.cs" />
+    <Compile Include="Language\Drawers\Drawer.cs" />
+    <Compile Include="Language\StatementInstance.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

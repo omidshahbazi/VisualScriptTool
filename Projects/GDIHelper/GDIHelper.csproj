@@ -34,7 +34,6 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CodeArea.cs" />
-    <Compile Include="DiagramTab.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
