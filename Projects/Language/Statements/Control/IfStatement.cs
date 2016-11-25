@@ -1,5 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
-using VisualScriptTool.Language.Declaration.Variables;
+using VisualScriptTool.Language.Statements.Declaration.Variables;
 
 namespace VisualScriptTool.Language.Statements.Control
 {

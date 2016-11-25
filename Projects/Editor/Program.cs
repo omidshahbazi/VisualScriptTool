@@ -1,8 +1,8 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
 using System.Windows.Forms;
-using VisualScriptTool.Language.Declaration.Variables;
 using VisualScriptTool.Language.Statements.Control;
+using VisualScriptTool.Language.Statements.Declaration.Variables;
 
 namespace VisualScriptTool.Editor
 {
@@ -20,17 +20,18 @@ namespace VisualScriptTool.Editor
 			boolVariable.Name = "flag";
 			boolVariable.Value = true;
 
+
+			IfStatement ifStatement = new IfStatement();
+			ifStatement.ConditionValue = boolVariable;
+
 			ForStatement forStatement = new ForStatement();
+			ifStatement.Statements.Add(forStatement);
 
 			IntegerVariable intVariable = new IntegerVariable();
 			intVariable.Name = "i";
 			intVariable.Value = 0;
 
 			forStatement.InitializeStatement = intVariable;
-
-			IfStatement ifStatement = new IfStatement();
-			ifStatement.ConditionValue = boolVariable;
-
 		}
 	}
 }

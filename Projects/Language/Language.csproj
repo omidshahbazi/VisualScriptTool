@@ -30,21 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Declaration\Variables\BooleanVariable.cs" />
-    <Compile Include="Declaration\Variables\FloatVariable.cs" />
-    <Compile Include="Declaration\Variables\IntegerVariable.cs" />
-    <Compile Include="Declaration\Variables\Variable.cs" />
+    <Compile Include="Statements\Variables\BooleanVariable.cs" />
+    <Compile Include="Statements\Variables\FloatVariable.cs" />
+    <Compile Include="Statements\Variables\StringVariable.cs" />
+    <Compile Include="Statements\Variables\IntegerVariable.cs" />
+    <Compile Include="Statements\Variables\VariableStatement.cs" />
     <Compile Include="Statements\Control\ControlStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Statements\Control\ForStatement.cs" />
     <Compile Include="Statements\Control\IfStatement.cs" />
     <Compile Include="Statements\Statement.cs" />
   </ItemGroup>

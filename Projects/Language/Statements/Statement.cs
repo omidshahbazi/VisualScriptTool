@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VisualScriptTool.Language.Statements
 {
-	public class Statement
+	public abstract class Statement
 	{
 	}
 
