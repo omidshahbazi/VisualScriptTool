@@ -4,7 +4,7 @@ using VisualScriptTool.Language.Statements.Declaration.Variables;
 
 namespace VisualScriptTool.Editor.Language.Drawers
 {
-	public class IntegerVariableDrawer : Drawer
+	public class IntegerVariableDrawer : VariableDrawer
 	{
 		public override Type StatementType
 		{
@@ -13,6 +13,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected override void Draw(StatementInstance StatementInstance)
 		{
+			base.Draw(StatementInstance);
 		}
 	}
 }

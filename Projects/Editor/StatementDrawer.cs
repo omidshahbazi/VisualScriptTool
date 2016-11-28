@@ -8,39 +8,41 @@ namespace VisualScriptTool.Editor
 {
 	public static class StatementDrawer
 	{
-		private static Drawer[] drawers = null;
+		private static Dictionary<Type, Drawer> drawers = null;
 
 		public static void Initialize()
 		{
+			drawers = new Dictionary<Type, Drawer>();
+
 			Type[] types = TypeHelper.GetDrievedTypesOf<Drawer>();
 
 			if (types == null)
 				return;
 
-			drawers = new Drawer[types.Length];
-
 			for (int i = 0; i < types.Length; ++i)
-				drawers[i] = (Drawer)Activator.CreateInstance(types[i]);
+			{
+				Type type = types[i];
+
+				if (type.IsAbstract)
+					continue;
+
+				Drawer drawer = (Drawer)Activator.CreateInstance(types[i]);
+				drawers[drawer.StatementType] = drawer;
+			}
 		}
 
 		public static void Draw(Graphics Graphics, StatementInstance StatementInstance)
 		{
 			Drawer drawer = GetDrawer(StatementInstance.Statement.GetType());
-
 			drawer.Draw(Graphics, StatementInstance);
 		}
 
 		private static Drawer GetDrawer(Type StatementType)
 		{
-			for (int i = 0; i < drawers.Length;++i)
-			{
-				Drawer drawer = drawers[i];
+			if (!drawers.ContainsKey(StatementType))
+				return null;
 
-				if (drawer.StatementType == StatementType)
-					return drawer;
-			}
-
-			return null;
+			return drawers[StatementType];
         }
 	}
 }
