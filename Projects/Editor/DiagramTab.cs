@@ -1,6 +1,7 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System.Drawing;
 using System.Windows.Forms;
+using VisualScriptTool.Editor.Properties;
 using VisualScriptTool.Renderer;
 
 namespace VisualScriptTool.Editor
@@ -38,7 +39,7 @@ namespace VisualScriptTool.Editor
 			canvas.DrawGrid = true;
 			canvas.DrawShadow = true;
 			canvas.Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-			//canvas.GridImage = Resources.GridPattern;
+			canvas.GridImage = Resources.GridPattern;
 			canvas.Location = new Point(3, 20);
 			canvas.PanX = 0F;
 			canvas.PanY = 0F;
