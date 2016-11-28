@@ -85,13 +85,13 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GDIHelper\GDIHelper.csproj">
-      <Project>{cf198119-9e6b-4f90-a878-088cbf2ce90d}</Project>
-      <Name>GDIHelper</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Language\Language.csproj">
       <Project>{c5a2fbe8-a0e9-4ad3-9895-7f39c079ae59}</Project>
       <Name>Language</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Renderer\Renderer.csproj">
+      <Project>{cf198119-9e6b-4f90-a878-088cbf2ce90d}</Project>
+      <Name>Renderer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

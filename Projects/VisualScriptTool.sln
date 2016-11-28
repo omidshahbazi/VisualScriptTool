@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csproj", "{0181D7D0-BA5C-45DF-8B79-D74621479AC9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Language", "Language\Language.csproj", "{C5A2FBE8-A0E9-4AD3-9895-7F39C079AE59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GDIHelper", "GDIHelper\GDIHelper.csproj", "{CF198119-9E6B-4F90-A878-088CBF2CE90D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renderer", "Renderer\Renderer.csproj", "{CF198119-9E6B-4F90-A878-088CBF2CE90D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

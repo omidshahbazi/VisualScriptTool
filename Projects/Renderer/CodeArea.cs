@@ -3,7 +3,7 @@
 //using System.Drawing;
 //using System.Windows.Forms;
 
-//namespace VisualScriptTool.GDIHelper
+//namespace VisualScriptTool.Renderer
 //{
 //	public class CodeArea : TextBox
 //	{
