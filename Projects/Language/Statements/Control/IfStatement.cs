@@ -5,6 +5,12 @@ namespace VisualScriptTool.Language.Statements.Control
 {
 	public class IfStatement : ControlStatement
 	{
+		public override string Name
+		{
+			get { return "if"; }
+			set { }
+		}
+
 		public BooleanVariable ConditionValue
 		{
 			get;

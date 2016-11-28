@@ -5,6 +5,12 @@ namespace VisualScriptTool.Language.Statements.Control
 {
 	public class ForStatement : ControlStatement
 	{
+		public override string Name
+		{
+			get { return "for"; }
+			set { }
+		}
+
 		public Statement InitializeStatement
 		{
 			get;

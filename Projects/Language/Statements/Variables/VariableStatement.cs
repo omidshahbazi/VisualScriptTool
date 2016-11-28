@@ -3,7 +3,7 @@ namespace VisualScriptTool.Language.Statements.Declaration.Variables
 {
 	public abstract class VariableStatement : Statement
 	{
-		public string Name
+		public override string Name
 		{
 			get;
 			set;
