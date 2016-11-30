@@ -48,6 +48,7 @@
 			this.Controls.Add(this.tabControl1);
 			this.Name = "MainForm";
 			this.Text = "MainForm";
+			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
 			this.ResumeLayout(false);
 
 		}

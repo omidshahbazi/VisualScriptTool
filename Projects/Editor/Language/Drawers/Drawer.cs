@@ -7,10 +7,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 {
 	public abstract class Drawer
 	{
-		private const float HEADER_TEXT_MARGIN = 2.5F;
+		private const float HEADER_TEXT_MARGIN = 5.0F;
 		private const float TWO_HEADER_TEXT_MARGIN = HEADER_TEXT_MARGIN * 2;
-		private const float MINIMUM_MEASURE_STRING_WITHD = 100.0F;
-		private const float MINIMUM_MEASURE_STRING_HEIGHT = 20.0F;
 
 		private Graphics graphics = null;
 		private Brush headeTextBrush = null;
@@ -33,9 +31,20 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get;
 		}
 
+		protected abstract float MinimumWidth
+		{
+			get;
+		}
+
 		protected abstract Color HeaderBackColor
 		{
 			get;
+		}
+
+		protected SizeF HeaderSize
+		{
+			get;
+			private set;
 		}
 
 		public abstract Type StatementType
@@ -57,15 +66,22 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			graphics.TranslateTransform(StatementInstance.Position.X, StatementInstance.Position.Y);
 
-			Statement statement = StatementInstance.Statement;
+			SizeF headerSize = MeasureString(StatementInstance.Statement.Name) + new SizeF(TWO_HEADER_TEXT_MARGIN, TWO_HEADER_TEXT_MARGIN);
+			headerSize.Width = Math.Max(headerSize.Width, MinimumWidth);
+			HeaderSize = headerSize;
 
-			SizeF size = MeasureString(statement.Name);
-
-			DrawRectangle(0, 0, size.Width + TWO_HEADER_TEXT_MARGIN, size.Height + TWO_HEADER_TEXT_MARGIN, headeBackBrush);
-
-			DrawString(statement.Name, HEADER_TEXT_MARGIN, HEADER_TEXT_MARGIN, headeTextBrush);
+			DrawHeader(StatementInstance);
 
 			Draw(StatementInstance);
+		}
+
+		protected virtual void DrawHeader(StatementInstance StatementInstance)
+		{
+			Statement statement = StatementInstance.Statement;
+
+			DrawRectangle(0, 0, HeaderSize.Width, HeaderSize.Height, headeBackBrush);
+
+			DrawString(statement.Name, HEADER_TEXT_MARGIN, HEADER_TEXT_MARGIN, headeTextBrush);
 		}
 
 		protected abstract void Draw(StatementInstance StatementInstance);
@@ -92,12 +108,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected SizeF MeasureString(string Value, Font Font)
 		{
-			SizeF size = graphics.MeasureString(Value, Font);
-
-			size.Width = Math.Max(size.Width, MINIMUM_MEASURE_STRING_WITHD);
-			size.Height = Math.Max(size.Height, MINIMUM_MEASURE_STRING_HEIGHT);
-
-			return size;
+			return graphics.MeasureString(Value, Font);
 		}
 	}
 }

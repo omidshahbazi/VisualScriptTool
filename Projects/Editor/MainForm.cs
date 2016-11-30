@@ -29,7 +29,7 @@ namespace VisualScriptTool.Editor
 			ifStatement.Statements.Add(forStatement);
 
 			IntegerVariable intVariable = new IntegerVariable();
-			intVariable.Name = "i";
+			intVariable.Name = "i12dfsscsdvsdvsdvsdvsdav";
 			intVariable.Value = 0;
 
 			forStatement.InitializeStatement = intVariable;
@@ -37,7 +37,8 @@ namespace VisualScriptTool.Editor
 			//diagramTab.Statements.Add(new StatementInstance(boolVariable, new PointF()));
 			//diagramTab.Statements.Add(new StatementInstance(ifStatement, new PointF()));
 			//diagramTab.Statements.Add(new StatementInstance(forStatement, new PointF()));
-			diagramTab.Statements.Add(new StatementInstance(intVariable, new PointF()));
+			diagramTab.Statements.Add(new StatementInstance(intVariable, new PointF(50, 20)));
+			diagramTab.Statements.Add(new StatementInstance(intVariable, new PointF(150, 220)));
 
 			tabControl1.TabPages.Add(diagramTab);
 		}
