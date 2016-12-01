@@ -29,7 +29,7 @@ namespace VisualScriptTool.Editor
 			ifStatement.Statements.Add(forStatement);
 
 			IntegerVariable intVariable = new IntegerVariable();
-			intVariable.Name = "i12dfsscsdvsdvsdvsdvsdav";
+			intVariable.Name = "myVariable";
 			intVariable.Value = 0;
 
 			forStatement.InitializeStatement = intVariable;

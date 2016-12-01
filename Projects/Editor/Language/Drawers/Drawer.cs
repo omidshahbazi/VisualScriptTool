@@ -7,7 +7,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 {
 	public abstract class Drawer
 	{
-		private const float HEADER_TEXT_MARGIN = 5.0F;
+		private const float HEADER_TEXT_MARGIN = 1.0F;
 		private const float TWO_HEADER_TEXT_MARGIN = HEADER_TEXT_MARGIN * 2;
 
 		private Graphics graphics = null;

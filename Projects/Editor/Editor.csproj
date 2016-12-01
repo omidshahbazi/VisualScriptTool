@@ -44,7 +44,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GridCanvas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Language\Drawers\VariableDrawer.cs" />
+    <Compile Include="StatementCanvas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="TypeHelper.cs" />
     <Compile Include="StatementDrawer.cs" />
     <Compile Include="DiagramTab.cs">
