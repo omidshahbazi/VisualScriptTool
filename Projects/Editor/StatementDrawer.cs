@@ -27,7 +27,11 @@ namespace VisualScriptTool.Editor
 					continue;
 
 				Drawer drawer = (Drawer)Activator.CreateInstance(types[i]);
-				drawers[drawer.StatementType] = drawer;
+
+				Type[] handleTypes = drawer.StatementTypes;
+				if (handleTypes != null)
+					for (int j = 0; j < handleTypes.Length; ++j)
+						drawers[handleTypes[j]] = drawer;
 			}
 		}
 
@@ -44,6 +48,6 @@ namespace VisualScriptTool.Editor
 				return null;
 
 			return drawers[StatementType];
-        }
+		}
 	}
 }

@@ -47,6 +47,9 @@
     <Compile Include="GridCanvas.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Language\Drawers\ForStatementDrawer.cs" />
+    <Compile Include="Language\Drawers\IfStatementDrawer.cs" />
+    <Compile Include="Language\Drawers\ControlStatementDrawer.cs" />
     <Compile Include="Language\Drawers\VariableDrawer.cs" />
     <Compile Include="StatementCanvas.cs">
       <SubType>UserControl</SubType>
@@ -57,7 +60,6 @@
     <Compile Include="DiagramTab.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Language\Drawers\IntegerVariableDrawer.cs" />
     <Compile Include="Language\Drawers\Drawer.cs" />
     <Compile Include="Language\StatementInstance.cs" />
     <Compile Include="MainForm.cs">

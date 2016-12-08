@@ -40,8 +40,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		{
 			get;
 		}
-		
-		public abstract Type StatementType
+
+		public abstract Type[] StatementTypes
 		{
 			get;
 		}
@@ -69,7 +69,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			Draw(StatementInstance);
 
 			graphics.TranslateTransform(-StatementInstance.Bounds.Location.X, -StatementInstance.Bounds.Location.Y);
-        }
+		}
 
 		protected virtual void DrawHeader(StatementInstance StatementInstance)
 		{
