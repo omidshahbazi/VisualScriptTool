@@ -34,7 +34,7 @@ namespace VisualScriptTool.Editor
 			canvas.Dock = DockStyle.Fill;
 			canvas.MinimumZoom = 0.5F;
 			canvas.MaximumZoom = 1.0F;
-			canvas.GraphicsUnit = GraphicsUnit.Millimeter;
+			//canvas. = 1.0F;
 
 			Controls.Add(canvas);
 

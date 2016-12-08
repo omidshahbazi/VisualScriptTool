@@ -1,11 +1,15 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System.Drawing;
+using System.Windows.Forms;
 using VisualScriptTool.Renderer;
 
 namespace VisualScriptTool.Editor
 {
 	public class GridCanvas : Canvas
 	{
+		private Point lastMousePosition;
+		private bool panning = false;
+
 		protected override void OnDrawCanvas(Graphics Graphics)
 		{
 			base.OnDrawCanvas(Graphics);
@@ -24,6 +28,44 @@ namespace VisualScriptTool.Editor
 
 			Graphics.DrawLine(originPen, min.X, 0.0F, max.X, 0.0F);
 			Graphics.DrawLine(originPen, 0.0F, min.Y, 0.0F, max.Y);
+		}
+
+		protected override void OnMouseDown(MouseEventArgs e)
+		{
+			base.OnMouseDown(e);
+
+			if (e.Button == MouseButtons.Right)
+				panning = true;
+		}
+
+		protected override void OnMouseUp(MouseEventArgs e)
+		{
+			base.OnMouseUp(e);
+
+			if (e.Button == MouseButtons.Right)
+				panning = false;
+		}
+
+		protected override void OnMouseMove(MouseEventArgs e)
+		{
+			base.OnMouseMove(e);
+
+			if (panning)
+			{
+				Pan = new PointF(Pan.X + (e.X - lastMousePosition.X), Pan.Y + (e.Y - lastMousePosition.Y));
+				Refresh();
+			}
+
+			lastMousePosition = e.Location;
+		}
+
+		protected override void OnMouseWheel(MouseEventArgs e)
+		{
+			base.OnMouseWheel(e);
+
+			Zoom += (e.Delta / 1000.0F);
+
+			Refresh();
 		}
 	}
 }

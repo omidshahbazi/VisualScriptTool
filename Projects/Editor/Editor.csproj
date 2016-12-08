@@ -51,6 +51,7 @@
     <Compile Include="StatementCanvas.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="BoundsF.cs" />
     <Compile Include="TypeHelper.cs" />
     <Compile Include="StatementDrawer.cs" />
     <Compile Include="DiagramTab.cs">

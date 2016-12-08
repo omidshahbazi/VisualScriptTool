@@ -7,6 +7,8 @@ namespace VisualScriptTool.Editor
 {
 	public class StatementInstance
 	{
+		private RectangleF bounds;
+
 		public Statement Statement
 		{
 			get;
@@ -15,14 +17,37 @@ namespace VisualScriptTool.Editor
 
 		public PointF Position
 		{
+			get { return bounds.Location; }
+			set { bounds.Location = value; }
+		}
+
+		public SizeF HeaderSize
+		{
 			get;
 			set;
 		}
 
+		public SizeF BodySize
+		{
+			get;
+			set;
+		}
+
+		public RectangleF Bounds
+		{
+			get { return bounds; }
+		}
+
 		public StatementInstance(Statement Statement, PointF Position)
 		{
+			bounds = new RectangleF();
 			this.Statement = Statement;
-			this.Position = Position;
+			bounds.Location = Position;
+		}
+
+		public void UpdateBounds()
+		{
+			bounds.Size = new SizeF(HeaderSize.Width, HeaderSize.Height + BodySize.Height);
 		}
 	}
 

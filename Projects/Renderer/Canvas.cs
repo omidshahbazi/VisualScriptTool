@@ -14,8 +14,6 @@ namespace VisualScriptTool.Renderer
 		protected Matrix matrix = new Matrix();
 
 		private float zoom = 1.0F;
-		private Point lastMousePosition;
-		private bool panning = false;
 
 		private PointF[] pointArray = new PointF[1] { PointF.Empty };
 
@@ -114,44 +112,6 @@ namespace VisualScriptTool.Renderer
 
 			Focus();
 		}
-
-		protected override void OnMouseDown(MouseEventArgs e)
-		{
-			base.OnMouseDown(e);
-
-			if (e.Button == MouseButtons.Right)
-				panning = true;
-		}
-
-		protected override void OnMouseUp(MouseEventArgs e)
-		{
-			base.OnMouseUp(e);
-
-			if (e.Button == MouseButtons.Right)
-				panning = false;
-		}
-
-		protected override void OnMouseMove(MouseEventArgs e)
-		{
-			base.OnMouseMove(e);
-
-			if (panning)
-			{
-				Pan = new PointF(Pan.X + (e.X - lastMousePosition.X), Pan.Y + (e.Y - lastMousePosition.Y));
-				Refresh();
-			}
-
-			lastMousePosition = e.Location;
-		}
-
-		protected override void OnMouseWheel(MouseEventArgs e)
-		{
-			base.OnMouseWheel(e);
-
-			Zoom += (e.Delta / 1000.0F);
-
-			Refresh();
-        }
 
 		protected override void OnPaint(PaintEventArgs e)
 		{

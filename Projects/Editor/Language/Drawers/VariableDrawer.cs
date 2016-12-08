@@ -9,7 +9,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected override float MinimumWidth
 		{
-			get { return 40.0F; }
+			get { return 100.0F; }
 		}
 
 		protected override Color HeaderBackColor
@@ -24,7 +24,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected override void Draw(StatementInstance StatementInstance)
 		{
-			DrawRectangle(0.0F, HeaderSize.Height, HeaderSize.Width, 10.0F, backBrush);
+			DrawFillRectangle(0.0F, StatementInstance.HeaderSize.Height, StatementInstance.HeaderSize.Width, 20.0F, backBrush);
         }
 	}
 }

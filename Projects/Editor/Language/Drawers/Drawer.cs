@@ -40,13 +40,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		{
 			get;
 		}
-
-		protected SizeF HeaderSize
-		{
-			get;
-			private set;
-		}
-
+		
 		public abstract Type StatementType
 		{
 			get;
@@ -64,22 +58,24 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		{
 			graphics = Graphics;
 
-			graphics.TranslateTransform(StatementInstance.Position.X, StatementInstance.Position.Y);
+			graphics.TranslateTransform(StatementInstance.Bounds.Location.X, StatementInstance.Bounds.Location.Y);
 
 			SizeF headerSize = MeasureString(StatementInstance.Statement.Name) + new SizeF(TWO_HEADER_TEXT_MARGIN, TWO_HEADER_TEXT_MARGIN);
 			headerSize.Width = Math.Max(headerSize.Width, MinimumWidth);
-			HeaderSize = headerSize;
+			StatementInstance.HeaderSize = headerSize;
 
 			DrawHeader(StatementInstance);
 
 			Draw(StatementInstance);
-		}
+
+			graphics.TranslateTransform(-StatementInstance.Bounds.Location.X, -StatementInstance.Bounds.Location.Y);
+        }
 
 		protected virtual void DrawHeader(StatementInstance StatementInstance)
 		{
 			Statement statement = StatementInstance.Statement;
 
-			DrawRectangle(0, 0, HeaderSize.Width, HeaderSize.Height, headeBackBrush);
+			DrawFillRectangle(0, 0, StatementInstance.HeaderSize.Width, StatementInstance.HeaderSize.Height, headeBackBrush);
 
 			DrawString(statement.Name, HEADER_TEXT_MARGIN, HEADER_TEXT_MARGIN, headeTextBrush);
 		}
@@ -96,7 +92,12 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			graphics.DrawString(Value, Font, Brush, X, Y);
 		}
 
-		protected void DrawRectangle(float X, float Y, float Width, float Height, Brush Brush)
+		protected void DrawRectangle(float X, float Y, float Width, float Height, Pen Pen)
+		{
+			graphics.DrawRectangle(Pen, X, Y, Width, Height);
+		}
+
+		protected void DrawFillRectangle(float X, float Y, float Width, float Height, Brush Brush)
 		{
 			graphics.FillRectangle(Brush, X, Y, Width, Height);
 		}

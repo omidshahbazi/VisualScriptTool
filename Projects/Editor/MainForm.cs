@@ -32,13 +32,18 @@ namespace VisualScriptTool.Editor
 			intVariable.Name = "myVariable";
 			intVariable.Value = 0;
 
+			IntegerVariable intVariable1 = new IntegerVariable();
+			intVariable1.Name = "secondVar";
+			intVariable1.Value = 0;
+
 			forStatement.InitializeStatement = intVariable;
 
 			//diagramTab.Statements.Add(new StatementInstance(boolVariable, new PointF()));
 			//diagramTab.Statements.Add(new StatementInstance(ifStatement, new PointF()));
 			//diagramTab.Statements.Add(new StatementInstance(forStatement, new PointF()));
+
+			diagramTab.Statements.Add(new StatementInstance(intVariable1, new PointF(150, 220)));
 			diagramTab.Statements.Add(new StatementInstance(intVariable, new PointF(50, 20)));
-			diagramTab.Statements.Add(new StatementInstance(intVariable, new PointF(150, 220)));
 
 			tabControl1.TabPages.Add(diagramTab);
 		}
