@@ -32,7 +32,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected override void Draw(StatementInstance StatementInstance)
 		{
-			StatementInstance.BodySize = new SizeF(StatementInstance.HeaderSize.Width, 30.0F);
+			StatementInstance.BodySize = new SizeF(StatementInstance.HeaderSize.Width, SLOT_HEIGHT);
 
 			DrawFillRectangle(0.0F, StatementInstance.HeaderSize.Height, StatementInstance.BodySize.Width, StatementInstance.BodySize.Height, backBrush);
 		}

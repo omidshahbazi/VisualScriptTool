@@ -21,10 +21,11 @@ namespace VisualScriptTool.Editor
 
 
 			IfStatement ifStatement = new IfStatement();
-			ifStatement.ConditionValue = boolVariable;
+			ifStatement.Condition = boolVariable;
 
 			ForStatement forStatement = new ForStatement();
 			ifStatement.Statement = forStatement;
+			ifStatement.CompleteStatement = forStatement;
 
 			IntegerVariable intVariable = new IntegerVariable();
 			intVariable.Name = "myVariable";

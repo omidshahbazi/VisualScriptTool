@@ -27,7 +27,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected override void Draw(StatementInstance StatementInstance)
 		{
-			StatementInstance.BodySize = new SizeF(StatementInstance.HeaderSize.Width, 90.0F);
+			StatementInstance.BodySize = new SizeF(StatementInstance.HeaderSize.Width, SLOT_HEIGHT * 3);
 
 			DrawFillRectangle(0.0F, StatementInstance.HeaderSize.Height, StatementInstance.BodySize.Width, StatementInstance.BodySize.Height, backBrush);
 		}
@@ -38,9 +38,14 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			ForStatement statement = (ForStatement)StatementInstance.Statement;
 
-			//CubicSPLine spline = new CubicSPLine();
-			//spline.Update(StatementInstance.Position, new PointF(100, 50), new PointF(300, 500), new PointF(280, 500));
-			//spline.Draw(Graphics, Pens.Red);
+			if (statement.Statement != null)
+				DrawLine(GetRightSlotPosition(StatementInstance, 1), Directions.Out, GetLeftSlotPosition(GetInstanceByStatement(statement.Statement), 0), Directions.In, ExecuteConnectionPen);
+
+			if (statement.ElseStatment != null)
+				DrawLine(GetRightSlotPosition(StatementInstance, 1), Directions.Out, GetLeftSlotPosition(GetInstanceByStatement(statement.ElseStatment), 0), Directions.In, ExecuteConnectionPen);
+
+			if (statement.Condition != null)
+				DrawLine(GetLeftSlotPosition(StatementInstance, 1), Directions.In, GetRightSlotPosition(GetInstanceByStatement(statement.Condition), 0), Directions.Out, VariableConnectionPen);
 		}
 	}
 }

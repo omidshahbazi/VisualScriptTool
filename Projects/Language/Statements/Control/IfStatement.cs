@@ -11,7 +11,7 @@ namespace VisualScriptTool.Language.Statements.Control
 			set { }
 		}
 
-		public BooleanVariable ConditionValue
+		public BooleanVariable Condition
 		{
 			get;
 			set;

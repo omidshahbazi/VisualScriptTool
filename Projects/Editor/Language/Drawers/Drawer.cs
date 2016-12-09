@@ -7,8 +7,10 @@ namespace VisualScriptTool.Editor.Language.Drawers
 {
 	public abstract class Drawer
 	{
-		private const float HEADER_TEXT_MARGIN = 1.0F;
-		private const float TWO_HEADER_TEXT_MARGIN = HEADER_TEXT_MARGIN * 2;
+		protected const float HEADER_TEXT_MARGIN = 1.0F;
+		protected const float TWO_HEADER_TEXT_MARGIN = HEADER_TEXT_MARGIN * 2;
+		protected const float SLOT_HEIGHT = 30.0F;
+		protected const float HALF_SLOT_HEIGHT = SLOT_HEIGHT / 2;
 
 		private Brush headeTextBrush = null;
 		private Brush headeBackBrush = null;
@@ -121,6 +123,26 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		protected SizeF MeasureString(string Value, Font Font)
 		{
 			return Graphics.MeasureString(Value, Font);
+		}
+
+		protected StatementInstance GetInstanceByStatement(Statement Statement)
+		{
+			return StatementInstanceHolder.GetByStatement(Statement);
+		}
+
+		protected virtual float GetSlotYOffset(uint Index)
+		{
+			return (Index * SLOT_HEIGHT) + HALF_SLOT_HEIGHT;
+		}
+
+		protected virtual PointF GetLeftSlotPosition(StatementInstance StatementInstance, uint Index)
+		{
+			return new PointF(StatementInstance.Bounds.Left, StatementInstance.Bounds.Top + StatementInstance.HeaderSize.Height + GetSlotYOffset(Index));
+		}
+
+		protected virtual PointF GetRightSlotPosition(StatementInstance StatementInstance, uint Index)
+		{
+			return new PointF(StatementInstance.Bounds.Right, StatementInstance.Bounds.Top + StatementInstance.HeaderSize.Height + GetSlotYOffset(Index));
 		}
 	}
 }
