@@ -19,7 +19,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return new Type[] { typeof(ForStatement) }; }
 		}
 
-		public ForStatementDrawer()
+		public ForStatementDrawer(IStatementInstanceHolder StatementInstanceHolder) :
+			base(StatementInstanceHolder)
 		{
 			backBrush = new SolidBrush(Color.Black);
 		}
@@ -29,6 +30,17 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			StatementInstance.BodySize = new SizeF(StatementInstance.HeaderSize.Width, 90.0F);
 
 			DrawFillRectangle(0.0F, StatementInstance.HeaderSize.Height, StatementInstance.BodySize.Width, StatementInstance.BodySize.Height, backBrush);
+		}
+
+		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
+		{
+			base.DrawConections(Graphics, StatementInstance);
+
+			ForStatement statement = (ForStatement)StatementInstance.Statement;
+
+			CubicSPLine spline = new CubicSPLine();
+			spline.Update(StatementInstance.Position, new PointF(100, 50), new PointF(300, 500), new PointF(280, 500));
+			spline.Draw(Graphics, Pens.Red);
 		}
 	}
 }

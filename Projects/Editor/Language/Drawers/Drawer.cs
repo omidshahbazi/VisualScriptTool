@@ -10,9 +10,14 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		private const float HEADER_TEXT_MARGIN = 1.0F;
 		private const float TWO_HEADER_TEXT_MARGIN = HEADER_TEXT_MARGIN * 2;
 
-		private Graphics graphics = null;
 		private Brush headeTextBrush = null;
 		private Brush headeBackBrush = null;
+
+		protected IStatementInstanceHolder StatementInstanceHolder
+		{
+			get;
+			private set;
+		}
 
 		protected Graphics Graphics
 		{
@@ -46,8 +51,10 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get;
 		}
 
-		public Drawer()
+		public Drawer(IStatementInstanceHolder StatementInstanceHolder)
 		{
+			this.StatementInstanceHolder = StatementInstanceHolder;
+
 			Font = new Font("Tahoma", 9.0F, FontStyle.Bold);
 			HeaderTextColor = Color.White;
 			headeTextBrush = new SolidBrush(HeaderTextColor);
@@ -56,9 +63,9 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		public void Draw(Graphics Graphics, StatementInstance StatementInstance)
 		{
-			graphics = Graphics;
+			this.Graphics = Graphics;
 
-			graphics.TranslateTransform(StatementInstance.Bounds.Location.X, StatementInstance.Bounds.Location.Y);
+			Graphics.TranslateTransform(StatementInstance.Bounds.Location.X, StatementInstance.Bounds.Location.Y);
 
 			SizeF headerSize = MeasureString(StatementInstance.Statement.Name) + new SizeF(TWO_HEADER_TEXT_MARGIN, TWO_HEADER_TEXT_MARGIN);
 			headerSize.Width = Math.Max(headerSize.Width, MinimumWidth);
@@ -68,7 +75,11 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			Draw(StatementInstance);
 
-			graphics.TranslateTransform(-StatementInstance.Bounds.Location.X, -StatementInstance.Bounds.Location.Y);
+			Graphics.TranslateTransform(-StatementInstance.Bounds.Location.X, -StatementInstance.Bounds.Location.Y);
+		}
+
+		public virtual void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
+		{
 		}
 
 		protected virtual void DrawHeader(StatementInstance StatementInstance)
@@ -89,17 +100,17 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected void DrawString(string Value, float X, float Y, Brush Brush, Font Font)
 		{
-			graphics.DrawString(Value, Font, Brush, X, Y);
+			Graphics.DrawString(Value, Font, Brush, X, Y);
 		}
 
 		protected void DrawRectangle(float X, float Y, float Width, float Height, Pen Pen)
 		{
-			graphics.DrawRectangle(Pen, X, Y, Width, Height);
+			Graphics.DrawRectangle(Pen, X, Y, Width, Height);
 		}
 
 		protected void DrawFillRectangle(float X, float Y, float Width, float Height, Brush Brush)
 		{
-			graphics.FillRectangle(Brush, X, Y, Width, Height);
+			Graphics.FillRectangle(Brush, X, Y, Width, Height);
 		}
 
 		protected SizeF MeasureString(string Value)
@@ -109,7 +120,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected SizeF MeasureString(string Value, Font Font)
 		{
-			return graphics.MeasureString(Value, Font);
+			return Graphics.MeasureString(Value, Font);
 		}
 	}
 }

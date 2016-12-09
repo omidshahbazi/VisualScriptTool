@@ -12,8 +12,6 @@ namespace VisualScriptTool.Editor
 		{
 			InitializeComponent();
 
-			StatementDrawer.Initialize();
-
 			DiagramTab diagramTab = new DiagramTab("test");
 
 
@@ -26,7 +24,7 @@ namespace VisualScriptTool.Editor
 			ifStatement.ConditionValue = boolVariable;
 
 			ForStatement forStatement = new ForStatement();
-			ifStatement.Statements.Add(forStatement);
+			ifStatement.Statement = forStatement;
 
 			IntegerVariable intVariable = new IntegerVariable();
 			intVariable.Name = "myVariable";
@@ -39,7 +37,7 @@ namespace VisualScriptTool.Editor
 			forStatement.InitializeStatement = intVariable;
 
 			diagramTab.Statements.Add(new StatementInstance(ifStatement, new PointF(350, 220)));
-			diagramTab.Statements.Add(new StatementInstance(forStatement, new PointF(450, 220)));
+			diagramTab.Statements.Add(new StatementInstance(forStatement, new PointF(650, 220)));
 
 			diagramTab.Statements.Add(new StatementInstance(intVariable1, new PointF(150, 220)));
 			diagramTab.Statements.Add(new StatementInstance(intVariable, new PointF(50, 20)));

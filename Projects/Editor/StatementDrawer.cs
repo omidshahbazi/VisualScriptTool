@@ -3,16 +3,23 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using VisualScriptTool.Editor.Language.Drawers;
+using VisualScriptTool.Language.Statements;
 
 namespace VisualScriptTool.Editor
 {
-	public static class StatementDrawer
+	public class StatementDrawer : IStatementInstanceHolder
 	{
-		private static Dictionary<Type, Drawer> drawers = null;
+		private Dictionary<Type, Drawer> drawers = new Dictionary<Type, Drawer>();
 
-		public static void Initialize()
+		public StatementCanvas Canvas
 		{
-			drawers = new Dictionary<Type, Drawer>();
+			get;
+			private set;
+		}
+
+		public StatementDrawer(StatementCanvas Canvas)
+		{
+			this.Canvas = Canvas;
 
 			Type[] types = TypeHelper.GetDrievedTypesOf<Drawer>();
 
@@ -26,7 +33,7 @@ namespace VisualScriptTool.Editor
 				if (type.IsAbstract)
 					continue;
 
-				Drawer drawer = (Drawer)Activator.CreateInstance(types[i]);
+				Drawer drawer = (Drawer)Activator.CreateInstance(types[i], this);
 
 				Type[] handleTypes = drawer.StatementTypes;
 				if (handleTypes != null)
@@ -35,19 +42,30 @@ namespace VisualScriptTool.Editor
 			}
 		}
 
-		public static void Draw(Graphics Graphics, StatementInstance StatementInstance)
+		public void Draw(Graphics Graphics, StatementInstance StatementInstance)
 		{
 			Drawer drawer = GetDrawer(StatementInstance.Statement.GetType());
 			drawer.Draw(Graphics, StatementInstance);
 			StatementInstance.UpdateBounds();
 		}
 
-		private static Drawer GetDrawer(Type StatementType)
+		public void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
+		{
+			Drawer drawer = GetDrawer(StatementInstance.Statement.GetType());
+			drawer.DrawConections(Graphics, StatementInstance);
+		}
+
+		private Drawer GetDrawer(Type StatementType)
 		{
 			if (!drawers.ContainsKey(StatementType))
 				return null;
 
 			return drawers[StatementType];
+		}
+
+		StatementInstance IStatementInstanceHolder.GetByStatement(Statement Statement)
+		{
+			return null;
 		}
 	}
 }

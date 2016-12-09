@@ -17,22 +17,16 @@ namespace VisualScriptTool.Language.Statements.Control
 			set;
 		}
 
-		public StatementList Statements
+		public Statement Statement
 		{
 			get;
 			set;
 		}
 
-		public StatementList ElseStatments
+		public Statement ElseStatment
 		{
 			get;
 			set;
-		}
-
-		public IfStatement()
-		{
-			Statements = new StatementList();
-			ElseStatments = new StatementList();
 		}
 	}
 }

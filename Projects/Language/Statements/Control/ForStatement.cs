@@ -23,22 +23,16 @@ namespace VisualScriptTool.Language.Statements.Control
 			set;
 		}
 
-		public StatementList StepStatements
+		public Statement StepStatement
 		{
 			get;
 			set;
 		}
 
-		public StatementList Statments
+		public StatementList Statment
 		{
 			get;
 			set;
-		}
-
-		public ForStatement()
-		{
-			StepStatements = new StatementList();
-			Statments = new StatementList();
 		}
 	}
 }

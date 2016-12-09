@@ -24,7 +24,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return new Type[] { typeof(BooleanVariable), typeof(FloatVariable), typeof(IntegerVariable), typeof(StringVariable) }; }
 		}
 
-		public VariableDrawer()
+		public VariableDrawer(IStatementInstanceHolder StatementInstanceHolder) :
+			base(StatementInstanceHolder)
 		{
 			backBrush = new SolidBrush(Color.Black);
 		}

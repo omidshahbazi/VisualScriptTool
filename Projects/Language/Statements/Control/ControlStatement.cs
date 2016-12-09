@@ -3,5 +3,10 @@ namespace VisualScriptTool.Language.Statements.Control
 {
 	public abstract class ControlStatement : Statement
 	{
+		public StatementList CompleteStatement
+		{
+			get;
+			set;
+		}
 	}
 }

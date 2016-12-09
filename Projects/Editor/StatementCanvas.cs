@@ -6,6 +6,7 @@ namespace VisualScriptTool.Editor
 {
 	public class StatementCanvas : GridCanvas
 	{
+		private StatementDrawer drawer = null;
 		private StatementInstanceList candidateToSelectStatements = null;
 		private PointF lastMousePosition;
 		private Pen selectedPen = null;
@@ -24,32 +25,30 @@ namespace VisualScriptTool.Editor
 
 		public StatementCanvas()
 		{
+			drawer = new StatementDrawer(this);
 			candidateToSelectStatements = new StatementInstanceList();
 			Statements = new StatementInstanceList();
 			SelectedStatements = new StatementInstanceList();
 
 			selectedPen = new Pen(Color.Orange, 1.5F);
-        }
+		}
 
 		protected override void OnDrawCanvas(Graphics Graphics)
 		{
 			base.OnDrawCanvas(Graphics);
 
 			for (int i = 0; i < Statements.Count; ++i)
-			{
-				StatementInstance statementInstance = Statements[i];
-
-				StatementDrawer.Draw(Graphics, statementInstance);
-			}
+				drawer.Draw(Graphics, Statements[i]);
 
 			for (int i = 0; i < SelectedStatements.Count; ++i)
 			{
-				StatementInstance statementInstance = SelectedStatements[i];
-
-				RectangleF rect = statementInstance.Bounds;
+				RectangleF rect = SelectedStatements[i].Bounds;
 
 				Graphics.DrawRectangle(selectedPen, rect.X, rect.Y, rect.Width, rect.Height);
 			}
+
+			for (int i = 0; i < Statements.Count; ++i)
+				drawer.DrawConections(Graphics, Statements[i]);
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
@@ -93,13 +92,13 @@ namespace VisualScriptTool.Editor
 			if (e.Button == MouseButtons.Left && SelectedStatements.Count != 0)
 			{
 				PointF location = ScreenToCanvas(e.Location);
-				PointF delta = new PointF(location.X - lastMousePosition.X, location.Y - lastMousePosition.Y);
+				PointF delta = location.Subtract(lastMousePosition);
 
 				for (int i = 0; i < SelectedStatements.Count; ++i)
 				{
 					StatementInstance statement = SelectedStatements[i];
 
-					statement.Position = new PointF(statement.Position.X + delta.X, statement.Position.Y + delta.Y);
+					statement.Position = statement.Position.Add(delta);
 				}
 
 				lastMousePosition = location;
