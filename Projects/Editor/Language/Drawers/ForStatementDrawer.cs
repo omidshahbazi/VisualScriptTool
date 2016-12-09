@@ -38,9 +38,9 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			ForStatement statement = (ForStatement)StatementInstance.Statement;
 
-			CubicSPLine spline = new CubicSPLine();
-			spline.Update(StatementInstance.Position, new PointF(100, 50), new PointF(300, 500), new PointF(280, 500));
-			spline.Draw(Graphics, Pens.Red);
+			//CubicSPLine spline = new CubicSPLine();
+			//spline.Update(StatementInstance.Position, new PointF(100, 50), new PointF(300, 500), new PointF(280, 500));
+			//spline.Draw(Graphics, Pens.Red);
 		}
 	}
 }

@@ -3,11 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using VisualScriptTool.Editor.Language.Drawers;
-using VisualScriptTool.Language.Statements;
 
 namespace VisualScriptTool.Editor
 {
-	public class StatementDrawer : IStatementInstanceHolder
+	public class StatementDrawer
 	{
 		private Dictionary<Type, Drawer> drawers = new Dictionary<Type, Drawer>();
 
@@ -33,7 +32,7 @@ namespace VisualScriptTool.Editor
 				if (type.IsAbstract)
 					continue;
 
-				Drawer drawer = (Drawer)Activator.CreateInstance(types[i], this);
+				Drawer drawer = (Drawer)Activator.CreateInstance(types[i], Canvas);
 
 				Type[] handleTypes = drawer.StatementTypes;
 				if (handleTypes != null)
@@ -61,11 +60,6 @@ namespace VisualScriptTool.Editor
 				return null;
 
 			return drawers[StatementType];
-		}
-
-		StatementInstance IStatementInstanceHolder.GetByStatement(Statement Statement)
-		{
-			return null;
 		}
 	}
 }

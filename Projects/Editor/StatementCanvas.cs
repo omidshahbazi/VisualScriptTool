@@ -1,13 +1,14 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System.Drawing;
 using System.Windows.Forms;
+using VisualScriptTool.Language.Statements;
 
 namespace VisualScriptTool.Editor
 {
-	public class StatementCanvas : GridCanvas
+	public class StatementCanvas : GridCanvas, IStatementInstanceHolder
 	{
 		private StatementDrawer drawer = null;
-		private StatementInstanceList candidateToSelectStatements = null;
+		private StatementInstanceList candidateToSelectStatements = new StatementInstanceList();
 		private PointF lastMousePosition;
 		private Pen selectedPen = null;
 
@@ -26,7 +27,6 @@ namespace VisualScriptTool.Editor
 		public StatementCanvas()
 		{
 			drawer = new StatementDrawer(this);
-			candidateToSelectStatements = new StatementInstanceList();
 			Statements = new StatementInstanceList();
 			SelectedStatements = new StatementInstanceList();
 
@@ -119,6 +119,15 @@ namespace VisualScriptTool.Editor
 			candidateToSelectStatements.Clear();
 
 			Refresh();
+		}
+
+		StatementInstance IStatementInstanceHolder.GetByStatement(Statement Statement)
+		{
+			for (int i = 0; i < Statements.Count; ++i)
+				if (Statements[i].Statement == Statement)
+					return Statements[i];
+
+			return null;
 		}
 	}
 }
