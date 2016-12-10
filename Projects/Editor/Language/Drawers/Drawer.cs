@@ -11,6 +11,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		protected const float TWO_HEADER_TEXT_MARGIN = HEADER_TEXT_MARGIN * 2;
 		protected const float SLOT_HEIGHT = 30.0F;
 		protected const float HALF_SLOT_HEIGHT = SLOT_HEIGHT / 2;
+		protected const float SLOT_SIZE = 10.0F;
+		protected const float HALF_SLOT_SIZE = SLOT_SIZE / 2;
 		protected const float SLOT_MARGIN = 10.0F;
 
 		private Brush headeTextBrush = null;
@@ -119,6 +121,16 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		protected void DrawString(string Value, float X, float Y, Brush Brush, Font Font)
 		{
 			Graphics.DrawString(Value, Font, Brush, X, Y);
+		}
+
+		protected void DrawTriangle(float X1, float Y1, float X2, float Y2, float X3, float Y3, Pen Pen)
+		{
+			Graphics.DrawPolygon(Pen, new PointF[] { new PointF(X1, Y1), new PointF(X2, Y2), new PointF(X3, Y3) });
+		}
+
+		protected void DrawFillTriangle(float X1, float Y1, float X2, float Y2, float X3, float Y3, Brush Brush)
+		{
+			Graphics.FillPolygon(Brush, new PointF[] { new PointF(X1, Y1), new PointF(X2, Y2), new PointF(X3, Y3) });
 		}
 
 		protected void DrawRectangle(float X, float Y, float Width, float Height, Pen Pen)

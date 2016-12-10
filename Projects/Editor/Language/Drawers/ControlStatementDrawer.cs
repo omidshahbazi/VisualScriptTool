@@ -71,12 +71,12 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected void DrawExecuteSlot(PointF Position)
 		{
-			DrawFillCircle(Position.X - 5, Position.Y - 5, 10, ExecuteSlotBrush);
+			DrawFillCircle(Position.X - HALF_SLOT_SIZE, Position.Y - HALF_SLOT_SIZE, SLOT_SIZE, ExecuteSlotBrush);
 		}
 
 		protected void DrawVariableSlot(PointF Position)
 		{
-			DrawFillCircle(Position.X - 5, Position.Y - 5, 10, VariableSlotBrush);
+			Graphics.FillPolygon(VariableSlotBrush, new PointF[] { new PointF(Position.X - HALF_SLOT_SIZE, Position.Y), new PointF(Position.X, Position.Y + HALF_SLOT_SIZE), new PointF(Position.X + HALF_SLOT_SIZE, Position.Y), new PointF(Position.X, Position.Y - HALF_SLOT_SIZE) });
 		}
 
 		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)

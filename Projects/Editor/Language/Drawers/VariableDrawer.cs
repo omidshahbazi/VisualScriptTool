@@ -27,6 +27,12 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return Color.Black; }
 		}
 
+		protected Brush VariableSlotBrush
+		{
+			get;
+			private set;
+		}
+
 		public override Type[] StatementTypes
 		{
 			get { return new Type[] { typeof(BooleanVariable), typeof(FloatVariable), typeof(IntegerVariable), typeof(StringVariable) }; }
@@ -35,6 +41,19 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		public VariableDrawer(IStatementInstanceHolder StatementInstanceHolder) :
 			base(StatementInstanceHolder)
 		{
+			VariableSlotBrush = new SolidBrush(HeaderBackColor);
+		}
+
+		protected override void DrawBody(StatementInstance StatementInstance)
+		{
+			base.DrawBody(StatementInstance);
+
+			DrawSlot(GetRightSlotPosition(StatementInstance, 0));
+		}
+
+		protected void DrawSlot(PointF Position)
+		{
+			DrawFillTriangle(Position.X - HALF_SLOT_SIZE, Position.Y - HALF_SLOT_SIZE, Position.X - HALF_SLOT_SIZE, Position.Y + HALF_SLOT_SIZE, Position.X + HALF_SLOT_SIZE, Position.Y, VariableSlotBrush);
 		}
 	}
 }
