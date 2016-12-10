@@ -1,6 +1,7 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System.Drawing;
 using System.Windows.Forms;
+using VisualScriptTool.Editor.Language.Drawers;
 using VisualScriptTool.Language.Statements;
 
 namespace VisualScriptTool.Editor
@@ -58,6 +59,22 @@ namespace VisualScriptTool.Editor
 			if (e.Button == MouseButtons.Middle)
 				return;
 
+			if (SelectedStatements.Count != 0)
+			{
+				for (int i = 0; i < SelectedStatements.Count; ++i)
+				{
+					Drawer draw = drawer.GetDrawer(SelectedStatements[i]);
+
+					for (uint j = 0; j < draw.SlotsCount; ++j)
+					{
+						if (draw.IsLeftSlotActive(j))
+						{
+
+						}
+					}
+				}
+			}
+
 			SelectedStatements.Clear();
 			candidateToSelectStatements.Clear();
 
@@ -75,6 +92,20 @@ namespace VisualScriptTool.Editor
 			}
 
 			lastMousePosition = ScreenToCanvas(e.Location);
+
+			Refresh();
+		}
+
+		protected override void OnMouseUp(MouseEventArgs e)
+		{
+			base.OnMouseUp(e);
+
+			if (candidateToSelectStatements.Count == 0)
+				return;
+
+			SelectedStatements.Clear();
+			SelectedStatements.AddRange(candidateToSelectStatements);
+			candidateToSelectStatements.Clear();
 
 			Refresh();
 		}
@@ -105,20 +136,6 @@ namespace VisualScriptTool.Editor
 
 				Refresh();
 			}
-		}
-
-		protected override void OnMouseUp(MouseEventArgs e)
-		{
-			base.OnMouseUp(e);
-
-			if (candidateToSelectStatements.Count == 0)
-				return;
-
-			SelectedStatements.Clear();
-			SelectedStatements.AddRange(candidateToSelectStatements);
-			candidateToSelectStatements.Clear();
-
-			Refresh();
 		}
 
 		StatementInstance IStatementInstanceHolder.GetByStatement(Statement Statement)

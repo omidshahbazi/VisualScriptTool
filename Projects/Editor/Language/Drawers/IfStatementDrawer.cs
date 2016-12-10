@@ -14,9 +14,9 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return 140.0F; }
 		}
 
-		protected override float BodyHeight
+		public override uint SlotsCount
 		{
-			get { return SLOT_HEIGHT * 3; }
+			get { return 3; }
 		}
 
 		public override Type[] StatementTypes
@@ -46,13 +46,29 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			IfStatement statement = (IfStatement)StatementInstance.Statement;
 
 			if (statement.Statement != null)
-                DrawLine(GetRightSlotConnectionPosition(StatementInstance, 1), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.Statement), 0), Directions.In, ExecuteConnectionPen);
+				DrawLine(GetRightSlotConnectionPosition(StatementInstance, 1), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.Statement), 0), Directions.In, ExecuteConnectionPen);
 
 			if (statement.ElseStatment != null)
 				DrawLine(GetRightSlotConnectionPosition(StatementInstance, 2), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.ElseStatment), 0), Directions.In, ExecuteConnectionPen);
 
 			if (statement.Condition != null)
 				DrawLine(GetLeftSlotConnectionPosition(StatementInstance, 1), Directions.In, GetRightSlotConnectionPosition(GetInstanceByStatement(statement.Condition), 0), Directions.Out, VariableConnectionPen);
+		}
+
+		public override bool IsLeftSlotActive(uint Index)
+		{
+			if (base.IsLeftSlotActive(Index))
+				return true;
+
+			return (Index == 1);
+		}
+
+		public override bool IsRightSlotActive(uint Index)
+		{
+			if (base.IsRightSlotActive(Index))
+				return true;
+
+			return (Index == 1 || Index == 2);
 		}
 	}
 }

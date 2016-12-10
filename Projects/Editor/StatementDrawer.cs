@@ -43,14 +43,19 @@ namespace VisualScriptTool.Editor
 
 		public void Draw(Graphics Graphics, StatementInstance StatementInstance)
 		{
-			Drawer drawer = GetDrawer(StatementInstance.Statement.GetType());
+			Drawer drawer = GetDrawer(StatementInstance);
 			drawer.Draw(Graphics, StatementInstance);
 		}
 
 		public void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
 		{
-			Drawer drawer = GetDrawer(StatementInstance.Statement.GetType());
+			Drawer drawer = GetDrawer(StatementInstance);
 			drawer.DrawConections(Graphics, StatementInstance);
+		}
+
+		public Drawer GetDrawer(StatementInstance StatementInstance)
+		{
+			return GetDrawer(StatementInstance.Statement.GetType());
 		}
 
 		private Drawer GetDrawer(Type StatementType)

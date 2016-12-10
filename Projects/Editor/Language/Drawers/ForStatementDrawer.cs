@@ -19,9 +19,9 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return new Type[] { typeof(ForStatement) }; }
 		}
 
-		protected override float BodyHeight
+		public override uint SlotsCount
 		{
-			get { return SLOT_HEIGHT * 4; }
+			get { return 4; }
 		}
 
 		public ForStatementDrawer(IStatementInstanceHolder StatementInstanceHolder) :
@@ -58,6 +58,22 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			if (statement.Statement != null)
 				DrawLine(GetRightSlotConnectionPosition(StatementInstance, 1), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.Statement), 0), Directions.In, ExecuteConnectionPen);
+		}
+
+		public override bool IsLeftSlotActive(uint Index)
+		{
+			if (base.IsLeftSlotActive(Index))
+				return true;
+
+			return (Index == 1 || Index == 2 || Index == 3);
+		}
+
+		public override bool IsRightSlotActive(uint Index)
+		{
+			if (base.IsRightSlotActive(Index))
+				return true;
+
+			return (Index == 1);
 		}
 	}
 }

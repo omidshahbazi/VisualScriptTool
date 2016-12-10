@@ -12,9 +12,9 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return 100.0F; }
 		}
 
-		protected override float BodyHeight
+		public override uint SlotsCount
 		{
-			get { return SLOT_HEIGHT; }
+			get { return 1; }
 		}
 
 		protected override Color HeaderBackColor
@@ -54,6 +54,16 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		protected void DrawSlot(PointF Position)
 		{
 			DrawFillTriangle(Position.X - HALF_SLOT_SIZE, Position.Y - HALF_SLOT_SIZE, Position.X - HALF_SLOT_SIZE, Position.Y + HALF_SLOT_SIZE, Position.X + HALF_SLOT_SIZE, Position.Y, VariableSlotBrush);
+		}
+
+		public override bool IsLeftSlotActive(uint Index)
+		{
+			return false;
+		}
+
+		public override bool IsRightSlotActive(uint Index)
+		{
+			return (Index == 0);
 		}
 	}
 }
