@@ -35,9 +35,15 @@ namespace VisualScriptTool.Editor
 			intVariable1.Name = "secondVar";
 			intVariable1.Value = 0;
 
-			forStatement.InitializeStatement = intVariable;
+			IfStatement ifStatement1 = new IfStatement();
+			ifStatement1.Condition = boolVariable;
+
+			forStatement.MinimumValue = intVariable;
+			forStatement.MaximumValue = intVariable1;
+			forStatement.Statement = ifStatement1;
 
 			diagramTab.Statements.Add(new StatementInstance(ifStatement, new PointF(350, 220)));
+			diagramTab.Statements.Add(new StatementInstance(ifStatement1, new PointF(750, 520)));
 			diagramTab.Statements.Add(new StatementInstance(forStatement, new PointF(650, 220)));
 
 			diagramTab.Statements.Add(new StatementInstance(intVariable1, new PointF(150, 220)));

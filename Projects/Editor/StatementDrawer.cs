@@ -45,7 +45,6 @@ namespace VisualScriptTool.Editor
 		{
 			Drawer drawer = GetDrawer(StatementInstance.Statement.GetType());
 			drawer.Draw(Graphics, StatementInstance);
-			StatementInstance.UpdateBounds();
 		}
 
 		public void DrawConections(Graphics Graphics, StatementInstance StatementInstance)

@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Drawing;
 using VisualScriptTool.Language.Statements.Control;
 
@@ -15,6 +16,16 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		private const float LINE_START_OFFSET_AMOUNT = 100.0F;
 
 		private CubicSPLine line = new CubicSPLine();
+
+		protected override Color HeaderBackColor
+		{
+			get { return Color.DarkGray; }
+		}
+
+		protected override Color BodyBackColor
+		{
+			get { return Color.Black; }
+		}
 
 		protected Pen ExecuteConnectionPen
 		{
@@ -36,9 +47,17 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			VariableConnectionPen = new Pen(Color.Purple, 1.5F);
 		}
 
-		protected override Color HeaderBackColor
+		protected override void DrawBody(StatementInstance StatementInstance)
 		{
-			get { return Color.DarkGray; }
+			base.DrawBody(StatementInstance);
+
+			DrawExecuteSlot(GetLeftSlotPosition(StatementInstance, 0));
+			DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 0));
+		}
+
+		protected void DrawExecuteSlot(PointF Position)
+		{
+			DrawFillCircle(Position.X - 5, Position.Y - 5, 10, Brushes.White);
 		}
 
 		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
@@ -48,7 +67,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			ControlStatement statement = (ControlStatement)StatementInstance.Statement;
 
 			if (statement.CompleteStatement != null)
-				DrawLine(GetRightSlotPosition(StatementInstance, 0), Directions.Out, GetLeftSlotPosition(GetInstanceByStatement(statement.CompleteStatement), 0), Directions.In, ExecuteConnectionPen);
+				DrawLine(GetRightSlotConnectionPosition(StatementInstance, 0), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.CompleteStatement), 0), Directions.In, ExecuteConnectionPen);
 		}
 
 		protected void DrawLine(PointF Start, Directions StartDirection, PointF End, Directions EndDirection, Pen Pen)

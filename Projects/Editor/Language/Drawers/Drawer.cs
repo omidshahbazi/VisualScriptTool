@@ -11,9 +11,11 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		protected const float TWO_HEADER_TEXT_MARGIN = HEADER_TEXT_MARGIN * 2;
 		protected const float SLOT_HEIGHT = 30.0F;
 		protected const float HALF_SLOT_HEIGHT = SLOT_HEIGHT / 2;
+		protected const float SLOT_MARGIN = 10.0F;
 
 		private Brush headeTextBrush = null;
 		private Brush headeBackBrush = null;
+		private Brush bodyBackBrush = null;
 
 		protected IStatementInstanceHolder StatementInstanceHolder
 		{
@@ -43,7 +45,17 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get;
 		}
 
+		protected abstract float BodyHeight
+		{
+			get;
+		}
+
 		protected abstract Color HeaderBackColor
+		{
+			get;
+		}
+
+		protected abstract Color BodyBackColor
 		{
 			get;
 		}
@@ -61,13 +73,12 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			HeaderTextColor = Color.White;
 			headeTextBrush = new SolidBrush(HeaderTextColor);
 			headeBackBrush = new SolidBrush(HeaderBackColor);
+			bodyBackBrush = new SolidBrush(BodyBackColor);
 		}
 
 		public void Draw(Graphics Graphics, StatementInstance StatementInstance)
 		{
 			this.Graphics = Graphics;
-
-			Graphics.TranslateTransform(StatementInstance.Bounds.Location.X, StatementInstance.Bounds.Location.Y);
 
 			SizeF headerSize = MeasureString(StatementInstance.Statement.Name) + new SizeF(TWO_HEADER_TEXT_MARGIN, TWO_HEADER_TEXT_MARGIN);
 			headerSize.Width = Math.Max(headerSize.Width, MinimumWidth);
@@ -75,25 +86,30 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			DrawHeader(StatementInstance);
 
-			Draw(StatementInstance);
+			StatementInstance.BodySize = new SizeF(StatementInstance.HeaderSize.Width, BodyHeight);
 
-			Graphics.TranslateTransform(-StatementInstance.Bounds.Location.X, -StatementInstance.Bounds.Location.Y);
-		}
+			StatementInstance.UpdateBounds();
 
-		public virtual void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
-		{
+			DrawBody(StatementInstance);
 		}
 
 		protected virtual void DrawHeader(StatementInstance StatementInstance)
 		{
 			Statement statement = StatementInstance.Statement;
 
-			DrawFillRectangle(0, 0, StatementInstance.HeaderSize.Width, StatementInstance.HeaderSize.Height, headeBackBrush);
+			DrawFillRectangle(StatementInstance.Position.X, StatementInstance.Position.Y, StatementInstance.HeaderSize.Width, StatementInstance.HeaderSize.Height, headeBackBrush);
 
-			DrawString(statement.Name, HEADER_TEXT_MARGIN, HEADER_TEXT_MARGIN, headeTextBrush);
+			DrawString(statement.Name, StatementInstance.Position.X + HEADER_TEXT_MARGIN, StatementInstance.Position.Y + HEADER_TEXT_MARGIN, headeTextBrush);
 		}
 
-		protected abstract void Draw(StatementInstance StatementInstance);
+		protected virtual void DrawBody(StatementInstance StatementInstance)
+		{
+			DrawFillRectangle(StatementInstance.Position.X, StatementInstance.Position.Y + StatementInstance.HeaderSize.Height, StatementInstance.BodySize.Width, StatementInstance.BodySize.Height, bodyBackBrush);
+		}
+
+		public virtual void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
+		{
+		}
 
 		protected void DrawString(string Value, float X, float Y, Brush Brush)
 		{
@@ -113,6 +129,16 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		protected void DrawFillRectangle(float X, float Y, float Width, float Height, Brush Brush)
 		{
 			Graphics.FillRectangle(Brush, X, Y, Width, Height);
+		}
+
+		protected void DrawCircle(float X, float Y, float Radius, Pen Pen)
+		{
+			Graphics.DrawEllipse(Pen, new RectangleF(X, Y, Radius, Radius));
+		}
+
+		protected void DrawFillCircle(float X, float Y, float Radius, Brush Brush)
+		{
+			Graphics.FillEllipse(Brush, new RectangleF(X, Y, Radius, Radius));
 		}
 
 		protected SizeF MeasureString(string Value)
@@ -137,10 +163,20 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected virtual PointF GetLeftSlotPosition(StatementInstance StatementInstance, uint Index)
 		{
-			return new PointF(StatementInstance.Bounds.Left, StatementInstance.Bounds.Top + StatementInstance.HeaderSize.Height + GetSlotYOffset(Index));
+			return new PointF(StatementInstance.Bounds.Left + SLOT_MARGIN, StatementInstance.Bounds.Top + StatementInstance.HeaderSize.Height + GetSlotYOffset(Index));
 		}
 
 		protected virtual PointF GetRightSlotPosition(StatementInstance StatementInstance, uint Index)
+		{
+			return new PointF(StatementInstance.Bounds.Right - SLOT_MARGIN, StatementInstance.Bounds.Top + StatementInstance.HeaderSize.Height + GetSlotYOffset(Index));
+		}
+
+		protected virtual PointF GetLeftSlotConnectionPosition(StatementInstance StatementInstance, uint Index)
+		{
+			return new PointF(StatementInstance.Bounds.Left, StatementInstance.Bounds.Top + StatementInstance.HeaderSize.Height + GetSlotYOffset(Index));
+		}
+
+		protected virtual PointF GetRightSlotConnectionPosition(StatementInstance StatementInstance, uint Index)
 		{
 			return new PointF(StatementInstance.Bounds.Right, StatementInstance.Bounds.Top + StatementInstance.HeaderSize.Height + GetSlotYOffset(Index));
 		}

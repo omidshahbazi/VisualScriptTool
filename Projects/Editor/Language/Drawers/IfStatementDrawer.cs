@@ -7,12 +7,16 @@ namespace VisualScriptTool.Editor.Language.Drawers
 {
 	public class IfStatementDrawer : ControlStatementDrawer
 	{
-		private Brush backBrush = null;
 		private CubicSPLine spline = new CubicSPLine();
 
 		protected override float MinimumWidth
 		{
 			get { return 140.0F; }
+		}
+
+		protected override float BodyHeight
+		{
+			get { return SLOT_HEIGHT * 3; }
 		}
 
 		public override Type[] StatementTypes
@@ -23,14 +27,14 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		public IfStatementDrawer(IStatementInstanceHolder StatementInstanceHolder) :
 			base(StatementInstanceHolder)
 		{
-			backBrush = new SolidBrush(Color.Black);
 		}
 
-		protected override void Draw(StatementInstance StatementInstance)
+		protected override void DrawBody(StatementInstance StatementInstance)
 		{
-			StatementInstance.BodySize = new SizeF(StatementInstance.HeaderSize.Width, SLOT_HEIGHT * 2);
+			base.DrawBody(StatementInstance);
 
-			DrawFillRectangle(0.0F, StatementInstance.HeaderSize.Height, StatementInstance.BodySize.Width, StatementInstance.BodySize.Height, backBrush);
+			DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 1));
+			DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 2));
 		}
 
 		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
@@ -40,13 +44,13 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			IfStatement statement = (IfStatement)StatementInstance.Statement;
 
 			if (statement.Statement != null)
-                DrawLine(GetRightSlotPosition(StatementInstance, 1), Directions.Out, GetLeftSlotPosition(GetInstanceByStatement(statement.Statement), 0), Directions.In, ExecuteConnectionPen);
+                DrawLine(GetRightSlotConnectionPosition(StatementInstance, 1), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.Statement), 0), Directions.In, ExecuteConnectionPen);
 
 			if (statement.ElseStatment != null)
-				DrawLine(GetRightSlotPosition(StatementInstance, 1), Directions.Out, GetLeftSlotPosition(GetInstanceByStatement(statement.ElseStatment), 0), Directions.In, ExecuteConnectionPen);
+				DrawLine(GetRightSlotConnectionPosition(StatementInstance, 2), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.ElseStatment), 0), Directions.In, ExecuteConnectionPen);
 
 			if (statement.Condition != null)
-				DrawLine(GetLeftSlotPosition(StatementInstance, 1), Directions.In, GetRightSlotPosition(GetInstanceByStatement(statement.Condition), 0), Directions.Out, VariableConnectionPen);
+				DrawLine(GetLeftSlotConnectionPosition(StatementInstance, 1), Directions.In, GetRightSlotConnectionPosition(GetInstanceByStatement(statement.Condition), 0), Directions.Out, VariableConnectionPen);
 		}
 	}
 }

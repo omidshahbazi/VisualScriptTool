@@ -11,25 +11,25 @@ namespace VisualScriptTool.Language.Statements.Control
 			set { }
 		}
 
-		public Statement InitializeStatement
+		public IntegerVariable MinimumValue
 		{
 			get;
 			set;
 		}
 
-		public BooleanVariable BreakConditionValue
+		public IntegerVariable MaximumValue
 		{
 			get;
 			set;
 		}
 
-		public Statement StepStatement
+		public IntegerVariable StepValue
 		{
 			get;
 			set;
 		}
 
-		public StatementList Statment
+		public Statement Statement
 		{
 			get;
 			set;

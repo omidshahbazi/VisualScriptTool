@@ -7,16 +7,24 @@ namespace VisualScriptTool.Editor.Language.Drawers
 {
 	public class VariableDrawer : Drawer
 	{
-		private Brush backBrush = null;
-
 		protected override float MinimumWidth
 		{
 			get { return 100.0F; }
 		}
 
+		protected override float BodyHeight
+		{
+			get { return SLOT_HEIGHT; }
+		}
+
 		protected override Color HeaderBackColor
 		{
 			get { return Color.Purple; }
+		}
+
+		protected override Color BodyBackColor
+		{
+			get { return Color.Black; }
 		}
 
 		public override Type[] StatementTypes
@@ -27,14 +35,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		public VariableDrawer(IStatementInstanceHolder StatementInstanceHolder) :
 			base(StatementInstanceHolder)
 		{
-			backBrush = new SolidBrush(Color.Black);
-		}
-
-		protected override void Draw(StatementInstance StatementInstance)
-		{
-			StatementInstance.BodySize = new SizeF(StatementInstance.HeaderSize.Width, SLOT_HEIGHT);
-
-			DrawFillRectangle(0.0F, StatementInstance.HeaderSize.Height, StatementInstance.BodySize.Width, StatementInstance.BodySize.Height, backBrush);
 		}
 	}
 }
