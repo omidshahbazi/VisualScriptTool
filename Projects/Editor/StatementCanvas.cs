@@ -56,6 +56,8 @@ namespace VisualScriptTool.Editor
 		{
 			base.OnMouseDown(e);
 
+			PointF location = ScreenToCanvas(e.Location);
+
 			if (e.Button == MouseButtons.Middle)
 				return;
 
@@ -63,13 +65,19 @@ namespace VisualScriptTool.Editor
 			{
 				for (int i = 0; i < SelectedStatements.Count; ++i)
 				{
-					Drawer draw = drawer.GetDrawer(SelectedStatements[i]);
+					StatementInstance instance = SelectedStatements[i];
+
+					Drawer draw = drawer.GetDrawer(instance);
 
 					for (uint j = 0; j < draw.SlotsCount; ++j)
 					{
-						if (draw.IsLeftSlotActive(j))
+						if (draw.IsLeftSlotActive(j) && draw.GetLeftSlotBounds(instance, j).Contains(location))
 						{
-
+							??
+						}
+						else if (draw.IsRightSlotActive(j) && draw.GetRightSlotBounds(instance, j).Contains(location))
+						{
+							??
 						}
 					}
 				}
@@ -77,8 +85,6 @@ namespace VisualScriptTool.Editor
 
 			SelectedStatements.Clear();
 			candidateToSelectStatements.Clear();
-
-			PointF location = ScreenToCanvas(e.Location);
 
 			for (int i = Statements.Count - 1; i >= 0; --i)
 			{
