@@ -33,7 +33,19 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			private set;
 		}
 
+		protected Brush ExecuteSlotBrush
+		{
+			get;
+			private set;
+		}
+
 		protected Pen VariableConnectionPen
+		{
+			get;
+			private set;
+		}
+
+		protected Brush VariableSlotBrush
 		{
 			get;
 			private set;
@@ -44,7 +56,9 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		{
 			line = new CubicSPLine();
 			ExecuteConnectionPen = new Pen(Color.White, 2.0F);
+			ExecuteSlotBrush = new SolidBrush(ExecuteConnectionPen.Color);
 			VariableConnectionPen = new Pen(Color.Purple, 1.5F);
+			VariableSlotBrush = new SolidBrush(VariableConnectionPen.Color);
 		}
 
 		protected override void DrawBody(StatementInstance StatementInstance)
@@ -57,7 +71,12 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected void DrawExecuteSlot(PointF Position)
 		{
-			DrawFillCircle(Position.X - 5, Position.Y - 5, 10, Brushes.White);
+			DrawFillCircle(Position.X - 5, Position.Y - 5, 10, ExecuteSlotBrush);
+		}
+
+		protected void DrawVariableSlot(PointF Position)
+		{
+			DrawFillCircle(Position.X - 5, Position.Y - 5, 10, VariableSlotBrush);
 		}
 
 		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)

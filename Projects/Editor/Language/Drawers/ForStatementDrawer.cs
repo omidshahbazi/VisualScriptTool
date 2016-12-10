@@ -21,7 +21,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected override float BodyHeight
 		{
-			get { return SLOT_HEIGHT * 3; }
+			get { return SLOT_HEIGHT * 4; }
 		}
 
 		public ForStatementDrawer(IStatementInstanceHolder StatementInstanceHolder) :
@@ -35,6 +35,10 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			base.DrawBody(StatementInstance);
 
 			DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 1));
+
+			DrawVariableSlot(GetLeftSlotPosition(StatementInstance, 1));
+			DrawVariableSlot(GetLeftSlotPosition(StatementInstance, 2));
+			DrawVariableSlot(GetLeftSlotPosition(StatementInstance, 3));
 		}
 
 		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)

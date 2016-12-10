@@ -34,7 +34,7 @@ namespace VisualScriptTool.Editor
 			canvas.Dock = DockStyle.Fill;
 			canvas.MinimumZoom = 0.5F;
 			canvas.MaximumZoom = 1.0F;
-			//canvas. = 1.0F;
+			canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
 			Controls.Add(canvas);
 
@@ -63,8 +63,8 @@ namespace VisualScriptTool.Editor
 
 		private void InitializeComponent()
 		{
-			this.SuspendLayout();
-			this.ResumeLayout(false);
+			SuspendLayout();
+			ResumeLayout(false);
 		}
 	}
 }

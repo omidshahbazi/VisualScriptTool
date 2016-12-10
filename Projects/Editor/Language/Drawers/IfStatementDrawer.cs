@@ -35,6 +35,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 1));
 			DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 2));
+
+			DrawVariableSlot(GetLeftSlotPosition(StatementInstance, 1));
 		}
 
 		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
