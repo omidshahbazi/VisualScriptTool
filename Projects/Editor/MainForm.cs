@@ -42,13 +42,13 @@ namespace VisualScriptTool.Editor
 			forStatement.MaximumValue = intVariable1;
 			forStatement.Statement = ifStatement1;
 
-			diagramTab.Statements.Add(new StatementInstance(ifStatement, new PointF(350, 220)));
-			diagramTab.Statements.Add(new StatementInstance(ifStatement1, new PointF(750, 520)));
-			diagramTab.Statements.Add(new StatementInstance(forStatement, new PointF(650, 220)));
+			diagramTab.Statements.Add(new IfStatementInstance(ifStatement, new PointF(350, 220)));
+			diagramTab.Statements.Add(new IfStatementInstance(ifStatement1, new PointF(750, 520)));
+			diagramTab.Statements.Add(new ForStatementInstance(forStatement, new PointF(650, 220)));
 
-			diagramTab.Statements.Add(new StatementInstance(intVariable1, new PointF(150, 220)));
-			diagramTab.Statements.Add(new StatementInstance(intVariable, new PointF(50, 20)));
-			diagramTab.Statements.Add(new StatementInstance(boolVariable, new PointF(150, 120)));
+			diagramTab.Statements.Add(new VariableStatementInstance(intVariable1, new PointF(150, 220)));
+			diagramTab.Statements.Add(new VariableStatementInstance(intVariable, new PointF(50, 20)));
+			diagramTab.Statements.Add(new VariableStatementInstance(boolVariable, new PointF(150, 120)));
 
 			tabControl1.TabPages.Add(diagramTab);
 		}

@@ -5,7 +5,7 @@ using VisualScriptTool.Language.Statements;
 
 namespace VisualScriptTool.Editor
 {
-	public class StatementInstance
+	public abstract class StatementInstance
 	{
 		private RectangleF bounds;
 
@@ -38,16 +38,31 @@ namespace VisualScriptTool.Editor
 			get { return bounds; }
 		}
 
+		public SlotList Slots
+		{
+			get;
+			private set;
+		}
+
 		public StatementInstance(Statement Statement, PointF Position)
 		{
 			bounds = new RectangleF();
 			this.Statement = Statement;
 			bounds.Location = Position;
-		}
+
+			Slots = new SlotList();
+        }
 
 		public void UpdateBounds()
 		{
 			bounds.Size = new SizeF(HeaderSize.Width, HeaderSize.Height + BodySize.Height);
+		}
+
+		public Slot AddSlot(Slot.Types Type, uint Index)
+		{
+			Slot slot = new Slot(this, Type, Index);
+            Slots.Add(slot);
+			return slot;
 		}
 	}
 

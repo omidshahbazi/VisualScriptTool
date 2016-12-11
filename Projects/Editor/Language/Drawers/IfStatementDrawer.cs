@@ -33,10 +33,10 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		{
 			base.DrawBody(StatementInstance);
 
-			DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 1));
-			DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 2));
+			//DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 1));
+			//DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 2));
 
-			DrawVariableSlot(GetLeftSlotPosition(StatementInstance, 1));
+			//DrawVariableSlot(GetLeftSlotPosition(StatementInstance, 1));
 		}
 
 		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
@@ -45,14 +45,14 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			IfStatement statement = (IfStatement)StatementInstance.Statement;
 
-			if (statement.Statement != null)
-				DrawLine(GetRightSlotConnectionPosition(StatementInstance, 1), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.Statement), 0), Directions.In, ExecuteConnectionPen);
+			//if (statement.Statement != null)
+			//	DrawLine(GetRightSlotConnectionPosition(StatementInstance, 1), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.Statement), 0), Directions.In, ExecuteConnectionPen);
 
-			if (statement.ElseStatment != null)
-				DrawLine(GetRightSlotConnectionPosition(StatementInstance, 2), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.ElseStatment), 0), Directions.In, ExecuteConnectionPen);
+			//if (statement.ElseStatment != null)
+			//	DrawLine(GetRightSlotConnectionPosition(StatementInstance, 2), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.ElseStatment), 0), Directions.In, ExecuteConnectionPen);
 
-			if (statement.Condition != null)
-				DrawLine(GetLeftSlotConnectionPosition(StatementInstance, 1), Directions.In, GetRightSlotConnectionPosition(GetInstanceByStatement(statement.Condition), 0), Directions.Out, VariableConnectionPen);
+			//if (statement.Condition != null)
+			//	DrawLine(GetLeftSlotConnectionPosition(StatementInstance, 1), Directions.In, GetRightSlotConnectionPosition(GetInstanceByStatement(statement.Condition), 0), Directions.Out, VariableConnectionPen);
 		}
 
 		public override bool IsLeftSlotActive(uint Index)

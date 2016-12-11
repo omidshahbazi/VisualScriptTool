@@ -52,6 +52,10 @@
     <Compile Include="Language\Drawers\IfStatementDrawer.cs" />
     <Compile Include="Language\Drawers\ControlStatementDrawer.cs" />
     <Compile Include="Language\Drawers\VariableDrawer.cs" />
+    <Compile Include="Language\ForStatementInstance.cs" />
+    <Compile Include="Language\Slot.cs" />
+    <Compile Include="Language\IfStatementInstance.cs" />
+    <Compile Include="Language\VariableStatementInstance.cs" />
     <Compile Include="PointFExtensions.cs" />
     <Compile Include="StatementCanvas.cs">
       <SubType>UserControl</SubType>

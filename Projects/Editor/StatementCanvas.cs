@@ -8,6 +8,8 @@ namespace VisualScriptTool.Editor
 {
 	public class StatementCanvas : GridCanvas, IStatementInstanceHolder
 	{
+		private const float SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = 20.0F;
+
 		private StatementDrawer drawer = null;
 		private StatementInstanceList candidateToSelectStatements = new StatementInstanceList();
 		private PointF lastMousePosition;
@@ -71,14 +73,12 @@ namespace VisualScriptTool.Editor
 
 					for (uint j = 0; j < draw.SlotsCount; ++j)
 					{
-						if (draw.IsLeftSlotActive(j) && draw.GetLeftSlotBounds(instance, j).Contains(location))
-						{
-							??
-						}
-						else if (draw.IsRightSlotActive(j) && draw.GetRightSlotBounds(instance, j).Contains(location))
-						{
-							??
-						}
+						//if (draw.IsLeftSlotActive(j) && draw.GetLeftSlotBounds(instance, j, SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT).Contains(location))
+						//{
+						//}
+						//else if (draw.IsRightSlotActive(j) && draw.GetRightSlotBounds(instance, j, SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT).Contains(location))
+						//{
+						//}
 					}
 				}
 			}

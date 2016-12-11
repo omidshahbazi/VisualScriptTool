@@ -18,6 +18,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		private Brush headeTextBrush = null;
 		private Brush headeBackBrush = null;
 		private Brush bodyBackBrush = null;
+		private Brush variableSlotBrush = null;
 
 		protected IStatementInstanceHolder StatementInstanceHolder
 		{
@@ -81,6 +82,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			headeTextBrush = new SolidBrush(HeaderTextColor);
 			headeBackBrush = new SolidBrush(HeaderBackColor);
 			bodyBackBrush = new SolidBrush(BodyBackColor);
+			variableSlotBrush = new SolidBrush(HeaderBackColor);
 		}
 
 		public void Draw(Graphics Graphics, StatementInstance StatementInstance)
@@ -116,6 +118,13 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		public virtual void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
 		{
+		}
+
+		protected virtual void DrawSlot(Slot Slot)
+		{
+			Slot.Bounds = (Slot.Type == Slot.Types.Setter || Slot.Type == Slot.Types.EntryPoint ? GetLeftSlotBounds(Slot) : GetRightSlotBounds(Slot));
+
+			DrawFillTriangle(Slot.Position.X - HALF_SLOT_SIZE, Slot.Position.Y - HALF_SLOT_SIZE, Slot.Position.X - HALF_SLOT_SIZE, Slot.Position.Y + HALF_SLOT_SIZE, Slot.Position.X + HALF_SLOT_SIZE, Slot.Position.Y, variableSlotBrush);
 		}
 
 		protected void DrawString(string Value, float X, float Y, Brush Brush)
@@ -173,43 +182,47 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			return StatementInstanceHolder.GetByStatement(Statement);
 		}
 
-		protected virtual float GetSlotYOffset(uint Index)
+		protected virtual float GetSlotYOffset(Slot Slot)
 		{
-			return (Index * SLOT_HEIGHT) + HALF_SLOT_HEIGHT;
+			return (Slot.Index * SLOT_HEIGHT) + HALF_SLOT_HEIGHT;
 		}
 
-		protected virtual PointF GetLeftSlotPosition(StatementInstance StatementInstance, uint Index)
+		protected virtual PointF GetLeftSlotPosition(Slot Slot)
 		{
-			return new PointF(StatementInstance.Bounds.Left + SLOT_MARGIN, StatementInstance.Bounds.Top + StatementInstance.HeaderSize.Height + GetSlotYOffset(Index));
+			return new PointF(Slot.StatementInstance.Bounds.Left + SLOT_MARGIN, Slot.StatementInstance.Bounds.Top + Slot.StatementInstance.HeaderSize.Height + GetSlotYOffset(Slot));
 		}
 
-		protected virtual PointF GetRightSlotPosition(StatementInstance StatementInstance, uint Index)
+		protected virtual PointF GetRightSlotPosition(Slot Slot)
 		{
-			return new PointF(StatementInstance.Bounds.Right - SLOT_MARGIN, StatementInstance.Bounds.Top + StatementInstance.HeaderSize.Height + GetSlotYOffset(Index));
+			return new PointF(Slot.StatementInstance.Bounds.Right - SLOT_MARGIN, Slot.StatementInstance.Bounds.Top + Slot.StatementInstance.HeaderSize.Height + GetSlotYOffset(Slot));
 		}
 
-		protected virtual PointF GetLeftSlotConnectionPosition(StatementInstance StatementInstance, uint Index)
+		protected virtual PointF GetLeftSlotConnectionPosition(Slot Slot)
 		{
-			return new PointF(StatementInstance.Bounds.Left, StatementInstance.Bounds.Top + StatementInstance.HeaderSize.Height + GetSlotYOffset(Index));
+			return new PointF(Slot.StatementInstance.Bounds.Left, Slot.StatementInstance.Bounds.Top + Slot.StatementInstance.HeaderSize.Height + GetSlotYOffset(Slot));
 		}
 
-		protected virtual PointF GetRightSlotConnectionPosition(StatementInstance StatementInstance, uint Index)
+		protected virtual PointF GetRightSlotConnectionPosition(Slot Slot)
 		{
-			return new PointF(StatementInstance.Bounds.Right, StatementInstance.Bounds.Top + StatementInstance.HeaderSize.Height + GetSlotYOffset(Index));
+			return new PointF(Slot.StatementInstance.Bounds.Right, Slot.StatementInstance.Bounds.Top + Slot.StatementInstance.HeaderSize.Height + GetSlotYOffset(Slot));
 		}
 
-		public virtual RectangleF GetLeftSlotBounds(StatementInstance StatementInstance, uint Index)
+		public virtual RectangleF GetLeftSlotBounds(Slot Slot, float EnlargeAmount = 0.0F)
 		{
-			PointF position = GetLeftSlotPosition(StatementInstance, Index);
+			PointF position = GetLeftSlotPosition(Slot);
 
-			return new RectangleF(position.X - SLOT_SIZE, position.Y - SLOT_SIZE, SLOT_SIZE, SLOT_SIZE);
+			float halfEnlargeAmount = EnlargeAmount / 2.0F;
+
+			return new RectangleF(position.X - HALF_SLOT_SIZE - halfEnlargeAmount, position.Y - HALF_SLOT_SIZE - halfEnlargeAmount, SLOT_SIZE + EnlargeAmount, SLOT_SIZE + EnlargeAmount);
 		}
 
-		public virtual RectangleF GetRightSlotBounds(StatementInstance StatementInstance, uint Index)
+		public virtual RectangleF GetRightSlotBounds(Slot Slot, float EnlargeAmount = 0.0F)
 		{
-			PointF position = GetRightSlotPosition(StatementInstance, Index);
+			PointF position = GetRightSlotPosition(Slot);
 
-			return new RectangleF(position.X - SLOT_SIZE, position.Y - SLOT_SIZE, SLOT_SIZE, SLOT_SIZE);
+			float halfEnlargeAmount = EnlargeAmount / 2.0F;
+
+			return new RectangleF(position.X - HALF_SLOT_SIZE - halfEnlargeAmount, position.Y - HALF_SLOT_SIZE - halfEnlargeAmount, SLOT_SIZE + EnlargeAmount, SLOT_SIZE + EnlargeAmount);
 		}
 
 		public abstract bool IsLeftSlotActive(uint Index);

@@ -7,12 +7,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 {
 	public abstract class ControlStatementDrawer : Drawer
 	{
-		public enum Directions
-		{
-			In = 0,
-			Out
-		}
-
 		private const float LINE_START_OFFSET_AMOUNT = 100.0F;
 
 		private CubicSPLine line = new CubicSPLine();
@@ -65,8 +59,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		{
 			base.DrawBody(StatementInstance);
 
-			DrawExecuteSlot(GetLeftSlotPosition(StatementInstance, 0));
-			DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 0));
+			//DrawExecuteSlot(GetLeftSlotPosition(StatementInstance, 0));
+			//DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 0));
 		}
 
 		protected void DrawExecuteSlot(PointF Position)
@@ -85,21 +79,21 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			ControlStatement statement = (ControlStatement)StatementInstance.Statement;
 
-			if (statement.CompleteStatement != null)
-				DrawLine(GetRightSlotConnectionPosition(StatementInstance, 0), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.CompleteStatement), 0), Directions.In, ExecuteConnectionPen);
+			//if (statement.CompleteStatement != null)
+				//DrawLine(GetRightSlotConnectionPosition(StatementInstance, 0), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.CompleteStatement), 0), Directions.In, ExecuteConnectionPen);
 		}
 
-		protected void DrawLine(PointF Start, Directions StartDirection, PointF End, Directions EndDirection, Pen Pen)
-		{
-			PointF startOffset = PointF.Empty;
-			PointF endOffset = PointF.Empty;
+		//protected void DrawLine(PointF Start, Directions StartDirection, PointF End, Directions EndDirection, Pen Pen)
+		//{
+		//	PointF startOffset = PointF.Empty;
+		//	PointF endOffset = PointF.Empty;
 
-			startOffset.X = DirectionToOffset(StartDirection);
-			endOffset.X = DirectionToOffset(EndDirection);
+		//	startOffset.X = DirectionToOffset(StartDirection);
+		//	endOffset.X = DirectionToOffset(EndDirection);
 
-			line.Update(Start, startOffset, End, endOffset);
-			line.Draw(Graphics, Pen);
-		}
+		//	line.Update(Start, startOffset, End, endOffset);
+		//	line.Draw(Graphics, Pen);
+		//}
 
 		public override bool IsLeftSlotActive(uint Index)
 		{
@@ -111,12 +105,12 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			return (Index == 0);
 		}
 
-		private float DirectionToOffset(Directions Direction)
-		{
-			if (Direction == Directions.In)
-				return -LINE_START_OFFSET_AMOUNT;
+		//private float DirectionToOffset(Directions Direction)
+		//{
+		//	if (Direction == Directions.In)
+		//		return -LINE_START_OFFSET_AMOUNT;
 
-			return LINE_START_OFFSET_AMOUNT;
-		}
+		//	return LINE_START_OFFSET_AMOUNT;
+		//}
 	}
 }
