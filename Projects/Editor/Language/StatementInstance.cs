@@ -8,6 +8,7 @@ namespace VisualScriptTool.Editor
 	public abstract class StatementInstance
 	{
 		private RectangleF bounds;
+		private SlotList slots = null;
 
 		public Statement Statement
 		{
@@ -38,10 +39,9 @@ namespace VisualScriptTool.Editor
 			get { return bounds; }
 		}
 
-		public SlotList Slots
+		public Slot[] Slots
 		{
-			get;
-			private set;
+			get { return slots.ToArray(); }
 		}
 
 		public StatementInstance(Statement Statement, PointF Position)
@@ -50,7 +50,7 @@ namespace VisualScriptTool.Editor
 			this.Statement = Statement;
 			bounds.Location = Position;
 
-			Slots = new SlotList();
+			slots = new SlotList();
         }
 
 		public void UpdateBounds()
@@ -58,10 +58,15 @@ namespace VisualScriptTool.Editor
 			bounds.Size = new SizeF(HeaderSize.Width, HeaderSize.Height + BodySize.Height);
 		}
 
-		public Slot AddSlot(Slot.Types Type, uint Index)
+		protected Slot AddSlot(Slot.Types Type, uint Index)
 		{
-			Slot slot = new Slot(this, Type, Index);
-            Slots.Add(slot);
+			return AddSlot(string.Empty, Type, Index);
+		}
+
+		protected Slot AddSlot(string Name, Slot.Types Type, uint Index)
+		{
+			Slot slot = new Slot(this, Name, Type, Index);
+			slots.Add(slot);
 			return slot;
 		}
 	}

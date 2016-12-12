@@ -27,35 +27,27 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			line = new CubicSPLine();
 		}
 
-		protected override void DrawBody(StatementInstance StatementInstance)
-		{
-			base.DrawBody(StatementInstance);
-
-			//DrawExecuteSlot(GetLeftSlotPosition(StatementInstance, 0));
-			//DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 0));
-		}
-
 		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
 		{
 			base.DrawConections(Graphics, StatementInstance);
 
 			ControlStatement statement = (ControlStatement)StatementInstance.Statement;
 
-			//if (statement.CompleteStatement != null)
-				//DrawLine(GetRightSlotConnectionPosition(StatementInstance, 0), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.CompleteStatement), 0), Directions.In, ExecuteConnectionPen);
+			if (statement.CompleteStatement != null)
+				DrawLine(StatementInstance.Slots[0], GetInstanceByStatement(statement.CompleteStatement).Slots[0], Pens.White);
 		}
 
-		//protected void DrawLine(PointF Start, Directions StartDirection, PointF End, Directions EndDirection, Pen Pen)
-		//{
-		//	PointF startOffset = PointF.Empty;
-		//	PointF endOffset = PointF.Empty;
+		protected void DrawLine(Slot From, Slot To, Pen Pen)
+		{
+			PointF startOffset = PointF.Empty;
+			PointF endOffset = PointF.Empty;
 
-		//	startOffset.X = DirectionToOffset(StartDirection);
-		//	endOffset.X = DirectionToOffset(EndDirection);
+			startOffset.X = DirectionToOffset(From);
+			endOffset.X = DirectionToOffset(To);
 
-		//	line.Update(Start, startOffset, End, endOffset);
-		//	line.Draw(Graphics, Pen);
-		//}
+			line.Update(From.Center, startOffset, To.Center, endOffset);
+			line.Draw(Graphics, Pen);
+		}
 
 		public override bool IsLeftSlotActive(uint Index)
 		{
@@ -67,12 +59,12 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			return (Index == 0);
 		}
 
-		//private float DirectionToOffset(Directions Direction)
-		//{
-		//	if (Direction == Directions.In)
-		//		return -LINE_START_OFFSET_AMOUNT;
+		private float DirectionToOffset(Slot Slot)
+		{
+			if (Slot.IsLeftAligned)
+				return -LINE_START_OFFSET_AMOUNT;
 
-		//	return LINE_START_OFFSET_AMOUNT;
-		//}
+			return LINE_START_OFFSET_AMOUNT;
+		}
 	}
 }

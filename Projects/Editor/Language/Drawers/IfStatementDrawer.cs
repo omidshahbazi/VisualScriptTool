@@ -29,16 +29,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		{
 		}
 
-		protected override void DrawBody(StatementInstance StatementInstance)
-		{
-			base.DrawBody(StatementInstance);
-
-			//DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 1));
-			//DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 2));
-
-			//DrawVariableSlot(GetLeftSlotPosition(StatementInstance, 1));
-		}
-
 		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
 		{
 			base.DrawConections(Graphics, StatementInstance);

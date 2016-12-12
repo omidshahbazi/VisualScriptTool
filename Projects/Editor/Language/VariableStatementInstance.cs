@@ -6,10 +6,16 @@ namespace VisualScriptTool.Editor
 {
 	public class VariableStatementInstance : StatementInstance
 	{
+		public Slot Slot
+		{
+			get;
+			private set;
+		}
+
 		public VariableStatementInstance(VariableStatement Statement, PointF Position) :
 			base(Statement, Position)
 		{
-			AddSlot(Slot.Types.Getter, 0);
+			Slot = AddSlot(Slot.Types.Getter, 0);
 		}
 	}
 }

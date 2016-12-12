@@ -124,9 +124,9 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected virtual void DrawSlots(StatementInstance StatementInstance)
 		{
-			SlotList slots = StatementInstance.Slots;
+			Slot[] slots = StatementInstance.Slots;
 
-			for (int i = 0; i < slots.Count; ++i)
+			for (int i = 0; i < slots.Length; ++i)
 				DrawSlot(slots[i]);
 		}
 
@@ -136,9 +136,17 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected virtual void DrawSlot(Slot Slot)
 		{
-			Slot.Bounds = (Slot.Type == Slot.Types.Setter || Slot.Type == Slot.Types.EntryPoint || Slot.Type == Slot.Types.Argument ? GetLeftSlotBounds(Slot) : GetRightSlotBounds(Slot));
+			Slot.Bounds = (Slot.IsLeftAligned ? GetLeftSlotBounds(Slot) : GetRightSlotBounds(Slot));
 
 			PointF position = Slot.Position;
+
+			if (!string.IsNullOrEmpty(Slot.Name))
+			{
+				SizeF nameSize = MeasureString(Slot.Name);
+
+				PointF namePosition = new PointF(Slot.IsLeftAligned ? Slot.Bounds.Right + SLOT_MARGIN : Slot.Bounds.Left - nameSize.Width - SLOT_MARGIN, position.Y - ((nameSize.Height - Slot.Bounds.Height) / 2.0F));
+				DrawString(Slot.Name, namePosition.X, namePosition.Y, headeTextBrush);
+            }
 
 			switch (Slot.Type)
 			{
@@ -155,9 +163,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 				case Slot.Types.Argument:
 					DrawFillPolygon(argumentSlotBrush, new PointF[] { new PointF(position.X, position.Y + HALF_SLOT_SIZE), new PointF(position.X + HALF_SLOT_SIZE, position.Y), new PointF(position.X + SLOT_SIZE, position.Y + HALF_SLOT_SIZE), new PointF(position.X + HALF_SLOT_SIZE, position.Y + SLOT_SIZE) });
 					break;
-
 			}
-
 		}
 
 		protected void DrawString(string Value, float X, float Y, Brush Brush)

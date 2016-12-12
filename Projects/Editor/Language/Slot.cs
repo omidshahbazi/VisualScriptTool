@@ -23,6 +23,12 @@ namespace VisualScriptTool.Editor
 			private set;
 		}
 
+		public string Name
+		{
+			get;
+			private set;
+		}
+
 		public Types Type
 		{
 			get;
@@ -41,6 +47,11 @@ namespace VisualScriptTool.Editor
 			set { bounds.Location = value; }
 		}
 
+		public PointF Center
+		{
+			get { return new PointF(Position.X + (bounds.Width / 2.0F), Position.Y + (bounds.Height / 2.0F)); }
+		}
+
 		public SizeF Size
 		{
 			get { return bounds.Size; }
@@ -53,9 +64,20 @@ namespace VisualScriptTool.Editor
 			set { bounds = value; }
 		}
 
-		public Slot(StatementInstance StatementInstance, Types Type, uint Index)
+		public bool IsLeftAligned
+		{
+			get { return (Type == Types.Setter || Type == Types.EntryPoint || Type == Types.Argument); }
+		}
+
+		public bool IsRightAligned
+		{
+			get { return !IsLeftAligned; }
+		}
+
+		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index)
 		{
 			this.StatementInstance = StatementInstance;
+			this.Name = Name;
 			this.Type = Type;
 			this.Index = Index;
 		}

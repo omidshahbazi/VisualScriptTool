@@ -9,10 +9,10 @@ namespace VisualScriptTool.Editor
 		public IfStatementInstance(IfStatement Statement, PointF Position) :
 			base(Statement, Position)
 		{
-			AddSlot(Slot.Types.Argument, 1);
+			AddSlot("Condition", Slot.Types.Argument, 1);
 
-			AddSlot(Slot.Types.Executer, 1);
-			AddSlot(Slot.Types.Executer, 2);
+			AddSlot("True", Slot.Types.Executer, 1);
+			AddSlot("False", Slot.Types.Executer, 2);
 		}
 	}
 }

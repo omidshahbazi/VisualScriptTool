@@ -9,11 +9,11 @@ namespace VisualScriptTool.Editor
 		public ForStatementInstance(ForStatement Statement, PointF Position) :
 			base(Statement, Position)
 		{
-			AddSlot(Slot.Types.Executer, 1);
+			AddSlot("Body", Slot.Types.Executer, 1);
 
-			AddSlot(Slot.Types.Argument, 1);
-			AddSlot(Slot.Types.Argument, 2);
-			AddSlot(Slot.Types.Argument, 3);
+			AddSlot("Minimum", Slot.Types.Argument, 1);
+			AddSlot("Maximum", Slot.Types.Argument, 2);
+			AddSlot("Step", Slot.Types.Argument, 3);
 		}
 	}
 }

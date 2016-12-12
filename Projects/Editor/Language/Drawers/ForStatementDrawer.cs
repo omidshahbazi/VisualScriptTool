@@ -30,17 +30,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			backBrush = new SolidBrush(Color.Black);
 		}
 
-		protected override void DrawBody(StatementInstance StatementInstance)
-		{
-			base.DrawBody(StatementInstance);
-
-			//DrawExecuteSlot(GetRightSlotPosition(StatementInstance, 1));
-
-			//DrawVariableSlot(GetLeftSlotPosition(StatementInstance, 1));
-			//DrawVariableSlot(GetLeftSlotPosition(StatementInstance, 2));
-			//DrawVariableSlot(GetLeftSlotPosition(StatementInstance, 3));
-		}
-
 		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
 		{
 			base.DrawConections(Graphics, StatementInstance);
