@@ -7,6 +7,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 {
 	public class VariableDrawer : Drawer
 	{
+		public static readonly Color HEADER_COLOR =  Color.Purple;
+
 		protected override float MinimumWidth
 		{
 			get { return 100.0F; }
@@ -19,7 +21,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected override Color HeaderBackColor
 		{
-			get { return Color.Purple; }
+			get { return HEADER_COLOR; }
 		}
 
 		protected override Color BodyBackColor
@@ -35,16 +37,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		public VariableDrawer(IStatementInstanceHolder StatementInstanceHolder) :
 			base(StatementInstanceHolder)
 		{
-		}
-
-		protected override void DrawBody(StatementInstance StatementInstance)
-		{
-			base.DrawBody(StatementInstance);
-
-			//DrawSlots(GetRightSlotPosition(StatementInstance, 0));
-			SlotList slots = StatementInstance.Slots;
-			for (int i = 0; i < slots.Count; ++i)
-				DrawSlot(slots[i]);
 		}
 
 		public override bool IsLeftSlotActive(uint Index)

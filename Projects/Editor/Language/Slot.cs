@@ -9,9 +9,10 @@ namespace VisualScriptTool.Editor
 		public enum Types
 		{
 			EntryPoint = 0,
-			Executer = 0,
+			Executer,
 			Setter,
-			Getter
+			Getter,
+			Argument
 		}
 
 		private RectangleF bounds;

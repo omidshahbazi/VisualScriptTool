@@ -48,6 +48,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="IStatementInstanceHolder.cs" />
+    <Compile Include="Language\ControlStatementInstance.cs" />
     <Compile Include="Language\Drawers\ForStatementDrawer.cs" />
     <Compile Include="Language\Drawers\IfStatementDrawer.cs" />
     <Compile Include="Language\Drawers\ControlStatementDrawer.cs" />
