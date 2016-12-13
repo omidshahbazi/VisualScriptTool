@@ -263,8 +263,5 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			return new RectangleF(position.X - HALF_SLOT_SIZE - halfEnlargeAmount, position.Y - HALF_SLOT_SIZE - halfEnlargeAmount, SLOT_SIZE + EnlargeAmount, SLOT_SIZE + EnlargeAmount);
 		}
-
-		public abstract bool IsLeftSlotActive(uint Index);
-		public abstract bool IsRightSlotActive(uint Index);
 	}
 }

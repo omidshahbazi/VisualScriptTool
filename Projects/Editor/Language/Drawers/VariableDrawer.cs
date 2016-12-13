@@ -38,15 +38,5 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			base(StatementInstanceHolder)
 		{
 		}
-
-		public override bool IsLeftSlotActive(uint Index)
-		{
-			return false;
-		}
-
-		public override bool IsRightSlotActive(uint Index)
-		{
-			return (Index == 0);
-		}
 	}
 }

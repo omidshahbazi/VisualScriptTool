@@ -49,16 +49,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			line.Draw(Graphics, Pen);
 		}
 
-		public override bool IsLeftSlotActive(uint Index)
-		{
-			return (Index == 0);
-		}
-
-		public override bool IsRightSlotActive(uint Index)
-		{
-			return (Index == 0);
-		}
-
 		private float DirectionToOffset(Slot Slot)
 		{
 			if (Slot.IsLeftAligned)
