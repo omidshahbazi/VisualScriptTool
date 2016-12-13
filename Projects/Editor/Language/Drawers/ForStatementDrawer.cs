@@ -19,7 +19,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return new Type[] { typeof(ForStatement) }; }
 		}
 
-		public override uint SlotsCount
+		public override uint RowCount
 		{
 			get { return 4; }
 		}

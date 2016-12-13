@@ -7,7 +7,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 	public abstract class ControlStatementDrawer : Drawer
 	{
 		public static readonly Color EXECUTION_SLOT_COLOR = Color.White;
-		private const float LINE_START_OFFSET_AMOUNT = 100.0F;
+		public const float LINE_START_OFFSET_AMOUNT = 100.0F;
 
 		private CubicSPLine line = new CubicSPLine();
 
@@ -33,8 +33,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			ControlStatement statement = (ControlStatement)StatementInstance.Statement;
 
-			if (statement.CompleteStatement != null)
-				DrawLine(StatementInstance.Slots[0], GetInstanceByStatement(statement.CompleteStatement).Slots[0], Pens.White);
+			//if (statement.CompleteStatement != null)
+			//	DrawLine(StatementInstance.Slots[0], GetInstanceByStatement(statement.CompleteStatement).Slots[0], Pens.White);
 		}
 
 		protected void DrawLine(Slot From, Slot To, Pen Pen)

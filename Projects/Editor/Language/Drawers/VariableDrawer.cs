@@ -14,7 +14,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return 100.0F; }
 		}
 
-		public override uint SlotsCount
+		public override uint RowCount
 		{
 			get { return 1; }
 		}

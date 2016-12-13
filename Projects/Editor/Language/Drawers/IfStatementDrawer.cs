@@ -11,10 +11,10 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected override float MinimumWidth
 		{
-			get { return 140.0F; }
+			get { return 170.0F; }
 		}
 
-		public override uint SlotsCount
+		public override uint RowCount
 		{
 			get { return 3; }
 		}

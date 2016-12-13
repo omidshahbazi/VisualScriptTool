@@ -50,14 +50,14 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get;
 		}
 
-		public abstract uint SlotsCount
+		public abstract uint RowCount
 		{
 			get;
 		}
 
 		protected virtual float BodyHeight
 		{
-			get { return ROW_HEIGHT * SlotsCount; }
+			get { return ROW_HEIGHT * RowCount; }
 		}
 
 		protected abstract Color HeaderBackColor
@@ -244,16 +244,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		protected virtual PointF GetRightSlotPosition(Slot Slot)
 		{
 			return new PointF(Slot.StatementInstance.Bounds.Right - SLOT_MARGIN, Slot.StatementInstance.Bounds.Top + Slot.StatementInstance.HeaderSize.Height + GetSlotYOffset(Slot));
-		}
-
-		protected virtual PointF GetLeftSlotConnectionPosition(Slot Slot)
-		{
-			return new PointF(Slot.StatementInstance.Bounds.Left, Slot.StatementInstance.Bounds.Top + Slot.StatementInstance.HeaderSize.Height + GetSlotYOffset(Slot));
-		}
-
-		protected virtual PointF GetRightSlotConnectionPosition(Slot Slot)
-		{
-			return new PointF(Slot.StatementInstance.Bounds.Right, Slot.StatementInstance.Bounds.Top + Slot.StatementInstance.HeaderSize.Height + GetSlotYOffset(Slot));
 		}
 
 		public virtual RectangleF GetLeftSlotBounds(Slot Slot, float EnlargeAmount = 0.0F)

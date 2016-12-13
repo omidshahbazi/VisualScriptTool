@@ -9,11 +9,13 @@ namespace VisualScriptTool.Editor
 	public class StatementCanvas : GridCanvas, IStatementInstanceHolder
 	{
 		private const float SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = 20.0F;
+		private const float HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT / 2.0F;
 
 		private StatementDrawer drawer = null;
 		private StatementInstanceList candidateToSelectStatements = new StatementInstanceList();
 		private PointF lastMousePosition;
 		private Pen selectedPen = null;
+		private CubicSPLine newConnectionLine = new CubicSPLine();
 
 		public StatementInstanceList Statements
 		{
@@ -25,6 +27,12 @@ namespace VisualScriptTool.Editor
 		{
 			get;
 			private set;
+		}
+
+		public Slot SelectedSlot
+		{
+			get;
+			set;
 		}
 
 		public StatementCanvas()
@@ -52,6 +60,11 @@ namespace VisualScriptTool.Editor
 
 			for (int i = 0; i < Statements.Count; ++i)
 				drawer.DrawConections(Graphics, Statements[i]);
+
+			if (SelectedSlot != null)
+			{
+				newConnectionLine.Draw(Graphics, Pens.White);
+			}
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
@@ -63,28 +76,14 @@ namespace VisualScriptTool.Editor
 			if (e.Button == MouseButtons.Middle)
 				return;
 
-			if (SelectedStatements.Count != 0)
-			{
-				for (int i = 0; i < SelectedStatements.Count; ++i)
-				{
-					StatementInstance instance = SelectedStatements[i];
-
-					Drawer draw = drawer.GetDrawer(instance);
-
-					for (uint j = 0; j < draw.SlotsCount; ++j)
-					{
-						//if (draw.IsLeftSlotActive(j) && draw.GetLeftSlotBounds(instance, j, SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT).Contains(location))
-						//{
-						//}
-						//else if (draw.IsRightSlotActive(j) && draw.GetRightSlotBounds(instance, j, SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT).Contains(location))
-						//{
-						//}
-					}
-				}
-			}
-
 			SelectedStatements.Clear();
 			candidateToSelectStatements.Clear();
+
+			if ((SelectedSlot = GetSlotAtLocation(location)) != null)
+			{
+				SelectedStatements.Add(SelectedSlot.StatementInstance);
+				return;
+			}
 
 			for (int i = Statements.Count - 1; i >= 0; --i)
 			{
@@ -106,12 +105,24 @@ namespace VisualScriptTool.Editor
 		{
 			base.OnMouseUp(e);
 
-			if (candidateToSelectStatements.Count == 0)
-				return;
+			if (SelectedSlot != null)
+			{
+				Slot endSlot = GetSlotAtLocation(ScreenToCanvas(e.Location));
 
-			SelectedStatements.Clear();
-			SelectedStatements.AddRange(candidateToSelectStatements);
-			candidateToSelectStatements.Clear();
+				if (endSlot != null)
+				{
+
+				}
+
+				newConnectionLine.Clear();
+			}
+
+			if (candidateToSelectStatements.Count != 0)
+			{
+				SelectedStatements.Clear();
+				SelectedStatements.AddRange(candidateToSelectStatements);
+				candidateToSelectStatements.Clear();
+			}
 
 			Refresh();
 		}
@@ -126,22 +137,66 @@ namespace VisualScriptTool.Editor
 				candidateToSelectStatements.Clear();
 			}
 
-			if (e.Button == MouseButtons.Left && SelectedStatements.Count != 0)
+			if (e.Button == MouseButtons.Left)
 			{
 				PointF location = ScreenToCanvas(e.Location);
-				PointF delta = location.Subtract(lastMousePosition);
 
-				for (int i = 0; i < SelectedStatements.Count; ++i)
+				if (SelectedSlot != null)
 				{
-					StatementInstance statement = SelectedStatements[i];
+					PointF startOffset = PointF.Empty;
+					PointF endOffset = PointF.Empty;
+					if (SelectedSlot.IsLeftAligned)
+					{
+						startOffset.X = -ControlStatementDrawer.LINE_START_OFFSET_AMOUNT;
+						endOffset.X = ControlStatementDrawer.LINE_START_OFFSET_AMOUNT;
+					}
+					else
+					{
+						startOffset.X = ControlStatementDrawer.LINE_START_OFFSET_AMOUNT;
+						endOffset.X = -ControlStatementDrawer.LINE_START_OFFSET_AMOUNT;
+					}
 
-					statement.Position = statement.Position.Add(delta);
+					newConnectionLine.Update(SelectedSlot.Center, startOffset, location, endOffset);
 				}
+				else if (SelectedStatements.Count != 0)
+				{
+					PointF delta = location.Subtract(lastMousePosition);
 
-				lastMousePosition = location;
+					for (int i = 0; i < SelectedStatements.Count; ++i)
+					{
+						StatementInstance statement = SelectedStatements[i];
+
+						statement.Position = statement.Position.Add(delta);
+					}
+
+					lastMousePosition = location;
+				}
 
 				Refresh();
 			}
+		}
+
+		private Slot GetSlotAtLocation(PointF Location)
+		{
+			for (int i = Statements.Count - 1; i >= 0; --i)
+			{
+				StatementInstance instance = Statements[i];
+
+				for (uint j = 0; j < instance.Slots.Length; ++j)
+				{
+					Slot slot = instance.Slots[j];
+
+					RectangleF bounds = slot.Bounds;
+
+					bounds.Location.Add(new PointF(-HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT, -HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT));
+					bounds.Inflate(SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT, SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT);
+
+					if (bounds.Contains(Location))
+						return slot;
+				}
+			}
+
+			return null;
 		}
 
 		StatementInstance IStatementInstanceHolder.GetByStatement(Statement Statement)

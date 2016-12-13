@@ -32,8 +32,16 @@ namespace VisualScriptTool.Editor
 			}
 		}
 
+		public void Clear()
+		{
+			points.Clear();
+		}
+
 		public void Draw(Graphics Graphics, Pen Pen)
 		{
+			if (points.Count == 0)
+				return;
+
 			Graphics.DrawLines(Pen, points.ToArray());
 		}
 	}
