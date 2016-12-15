@@ -15,6 +15,9 @@ namespace VisualScriptTool.Editor
 		private StatementInstanceList candidateToSelectStatements = new StatementInstanceList();
 		private PointF lastMousePosition;
 		private Pen selectedPen = null;
+		private ContextMenuStrip contextMenu;
+		private System.ComponentModel.IContainer components;
+		private ToolStripMenuItem sampleToolStripMenuItem;
 		private CubicSPLine newConnectionLine = new CubicSPLine();
 
 		public StatementInstanceList Statements
@@ -35,8 +38,16 @@ namespace VisualScriptTool.Editor
 			set;
 		}
 
+		public Slot MouseOverSlot
+		{
+			get;
+			set;
+		}
+
 		public StatementCanvas()
 		{
+			InitializeComponent();
+
 			drawer = new StatementDrawer(this);
 			Statements = new StatementInstanceList();
 			SelectedStatements = new StatementInstanceList();
@@ -107,11 +118,12 @@ namespace VisualScriptTool.Editor
 
 			if (SelectedSlot != null)
 			{
-				Slot endSlot = GetSlotAtLocation(ScreenToCanvas(e.Location));
-
-				if (endSlot != null)
+				if (MouseOverSlot == null)
+					contextMenu.Show(this, e.Location);
+				else
 				{
-
+					MouseOverSlot.AssignConnection(SelectedSlot);
+					SelectedSlot.AssignConnection(MouseOverSlot);
 				}
 
 				newConnectionLine.Clear();
@@ -131,6 +143,14 @@ namespace VisualScriptTool.Editor
 		{
 			base.OnMouseMove(e);
 
+			PointF location = ScreenToCanvas(e.Location);
+
+			if (SelectedSlot != null && (MouseOverSlot = GetSlotAtLocation(location)) != null)
+			{
+				if (!SelectedSlot.IsAssignmentAllowed(MouseOverSlot))
+					MouseOverSlot = null;
+			}
+
 			if (candidateToSelectStatements.Count != 0)
 			{
 				SelectedStatements.AddRange(candidateToSelectStatements);
@@ -139,8 +159,6 @@ namespace VisualScriptTool.Editor
 
 			if (e.Button == MouseButtons.Left)
 			{
-				PointF location = ScreenToCanvas(e.Location);
-
 				if (SelectedSlot != null)
 				{
 					PointF startOffset = PointF.Empty;
@@ -206,6 +224,35 @@ namespace VisualScriptTool.Editor
 					return Statements[i];
 
 			return null;
+		}
+
+		private void InitializeComponent()
+		{
+			this.components = new System.ComponentModel.Container();
+			this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.sampleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.contextMenu.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// contextMenu
+			// 
+			this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.sampleToolStripMenuItem});
+			this.contextMenu.Name = "contextMenu";
+			this.contextMenu.Size = new System.Drawing.Size(153, 48);
+			// 
+			// sampleToolStripMenuItem
+			// 
+			this.sampleToolStripMenuItem.Name = "sampleToolStripMenuItem";
+			this.sampleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.sampleToolStripMenuItem.Text = "sample";
+			// 
+			// StatementCanvas
+			// 
+			this.Name = "StatementCanvas";
+			this.contextMenu.ResumeLayout(false);
+			this.ResumeLayout(false);
+
 		}
 	}
 }

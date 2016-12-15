@@ -31,10 +31,15 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		{
 			base.DrawConections(Graphics, StatementInstance);
 
-			ControlStatement statement = (ControlStatement)StatementInstance.Statement;
+			Slot[] slots = StatementInstance.Slots;
 
-			//if (statement.CompleteStatement != null)
-			//	DrawLine(StatementInstance.Slots[0], GetInstanceByStatement(statement.CompleteStatement).Slots[0], Pens.White);
+			for (int i = 0; i < slots.Length; ++i)
+			{
+				Slot slot = slots[i];
+
+				if (slot.ConnectedSlot != null)
+					DrawLine(slot, slot.ConnectedSlot, Pens.White);
+			}
 		}
 
 		protected void DrawLine(Slot From, Slot To, Pen Pen)

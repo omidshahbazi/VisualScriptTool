@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using VisualScriptTool.Language.Statements;
@@ -58,14 +59,14 @@ namespace VisualScriptTool.Editor
 			bounds.Size = new SizeF(HeaderSize.Width, HeaderSize.Height + BodySize.Height);
 		}
 
-		protected Slot AddSlot(Slot.Types Type, uint Index)
+		protected Slot AddSlot(Slot.Types Type, uint Index, Action<Slot, Slot> OnAssignment = null)
 		{
-			return AddSlot(string.Empty, Type, Index);
+			return AddSlot(string.Empty, Type, Index, OnAssignment);
 		}
 
-		protected Slot AddSlot(string Name, Slot.Types Type, uint Index)
+		protected Slot AddSlot(string Name, Slot.Types Type, uint Index, Action<Slot, Slot> OnAssignment = null)
 		{
-			Slot slot = new Slot(this, Name, Type, Index);
+			Slot slot = new Slot(this, Name, Type, Index, OnAssignment);
 			slots.Add(slot);
 			return slot;
 		}

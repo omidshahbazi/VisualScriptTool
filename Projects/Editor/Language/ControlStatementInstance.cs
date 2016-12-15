@@ -10,7 +10,15 @@ namespace VisualScriptTool.Editor
 			base(Statement, Position)
 		{
 			AddSlot(Slot.Types.EntryPoint, 0);
-			AddSlot(Slot.Types.Executer, 0);
+			AddSlot(Slot.Types.Executer, 0, OnExecuterAssigned);
+		}
+
+		private void OnExecuterAssigned(Slot Self, Slot Other)
+		{
+			ControlStatement statement = (ControlStatement)Statement;
+
+			Self.ConnectedSlot = Other;
+			statement.CompleteStatement = Other.StatementInstance.Statement;
 		}
 	}
 }

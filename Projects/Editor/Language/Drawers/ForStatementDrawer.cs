@@ -35,34 +35,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			base.DrawConections(Graphics, StatementInstance);
 
 			ForStatement statement = (ForStatement)StatementInstance.Statement;
-
-			//if (statement.MinimumValue != null)
-			//	DrawLine(GetLeftSlotConnectionPosition(StatementInstance, 1), Directions.In, GetRightSlotConnectionPosition(GetInstanceByStatement(statement.MinimumValue), 0), Directions.Out, VariableConnectionPen);
-
-			//if (statement.MaximumValue != null)
-			//	DrawLine(GetLeftSlotConnectionPosition(StatementInstance, 2), Directions.In, GetRightSlotConnectionPosition(GetInstanceByStatement(statement.MaximumValue), 0), Directions.Out, VariableConnectionPen);
-
-			//if (statement.StepValue != null)
-			//	DrawLine(GetLeftSlotConnectionPosition(StatementInstance, 3), Directions.In, GetRightSlotConnectionPosition(GetInstanceByStatement(statement.StepValue), 0), Directions.Out, VariableConnectionPen);
-
-			//if (statement.Statement != null)
-			//	DrawLine(GetRightSlotConnectionPosition(StatementInstance, 1), Directions.Out, GetLeftSlotConnectionPosition(GetInstanceByStatement(statement.Statement), 0), Directions.In, ExecuteConnectionPen);
-		}
-
-		public override bool IsLeftSlotActive(uint Index)
-		{
-			if (base.IsLeftSlotActive(Index))
-				return true;
-
-			return (Index == 1 || Index == 2 || Index == 3);
-		}
-
-		public override bool IsRightSlotActive(uint Index)
-		{
-			if (base.IsRightSlotActive(Index))
-				return true;
-
-			return (Index == 1);
 		}
 	}
 }
