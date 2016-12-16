@@ -10,15 +10,20 @@ namespace VisualScriptTool.Editor
 		public IfStatementInstance(IfStatement Statement, PointF Position) :
 			base(Statement, Position)
 		{
-			AddSlot("Condition", Slot.Types.Argument, 1, OnConditionAssigned);
+			AddSlot("Condition", Slot.Types.Argument, 1, CheckConditionAssignment, OnConditionAssigned);
 
-			AddSlot("True", Slot.Types.Executer, 1, OnTrueAssigned);
-			AddSlot("False", Slot.Types.Executer, 2, OnFalseAssigned);
+			AddSlot("True", Slot.Types.Executer, 1, null, OnTrueAssigned);
+			AddSlot("False", Slot.Types.Executer, 2, null, OnFalseAssigned);
+		}
+
+		private bool CheckConditionAssignment(Slot Other)
+		{
+			return (Other.StatementInstance.Statement is BooleanVariable);
 		}
 
 		private void OnConditionAssigned(Slot Self, Slot Other)
 		{
-			IfStatement statement = (IfStatement)this.Statement;
+			IfStatement statement = (IfStatement)Statement;
 
 			Self.ConnectedSlot = Other;
 			statement.Condition = (BooleanVariable)Other.StatementInstance.Statement;
@@ -26,7 +31,7 @@ namespace VisualScriptTool.Editor
 
 		private void OnTrueAssigned(Slot Self, Slot Other)
 		{
-			IfStatement statement = (IfStatement)this.Statement;
+			IfStatement statement = (IfStatement)Statement;
 
 			Self.ConnectedSlot = Other;
 			statement.Statement = Other.StatementInstance.Statement;
@@ -34,7 +39,7 @@ namespace VisualScriptTool.Editor
 
 		private void OnFalseAssigned(Slot Self, Slot Other)
 		{
-			IfStatement statement = (IfStatement)this.Statement;
+			IfStatement statement = (IfStatement)Statement;
 
 			Self.ConnectedSlot = Other;
 			statement.ElseStatment = Other.StatementInstance.Statement;

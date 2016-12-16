@@ -18,6 +18,7 @@ namespace VisualScriptTool.Editor
 		}
 
 		private RectangleF bounds;
+		private Func<Slot, bool> checkAssignment = null;
 		private Action<Slot, Slot> onAssignment = null;
 
 		public StatementInstance StatementInstance
@@ -83,18 +84,19 @@ namespace VisualScriptTool.Editor
 			set;
 		}
 
-		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, Action<Slot, Slot> OnAssignment)
+		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, Func<Slot, bool> CheckAssignment, Action<Slot, Slot> OnAssignment)
 		{
 			this.StatementInstance = StatementInstance;
 			this.Name = Name;
 			this.Type = Type;
 			this.Index = Index;
+			checkAssignment = CheckAssignment;
 			onAssignment = OnAssignment;
 		}
 
 		public void AssignConnection(Slot Slot)
 		{
-			if (onAssignment != null)
+			if (onAssignment != null && (checkAssignment == null || checkAssignment(Slot)))
 				onAssignment(this, Slot);
 		}
 

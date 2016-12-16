@@ -10,11 +10,11 @@ namespace VisualScriptTool.Editor
 		public ForStatementInstance(ForStatement Statement, PointF Position) :
 			base(Statement, Position)
 		{
-			AddSlot("Body", Slot.Types.Executer, 1, OnBodyAssigned);
+			AddSlot("Body", Slot.Types.Executer, 1, null, OnBodyAssigned);
 
-			AddSlot("Minimum", Slot.Types.Argument, 1, OnMinimumAssigned);
-			AddSlot("Maximum", Slot.Types.Argument, 2, OnMaximumAssigned);
-			AddSlot("Step", Slot.Types.Argument, 3, OnStepAssigned);
+			AddSlot("Minimum", Slot.Types.Argument, 1, CheckVariableAssignment, OnMinimumAssigned);
+			AddSlot("Maximum", Slot.Types.Argument, 2, CheckVariableAssignment, OnMaximumAssigned);
+			AddSlot("Step", Slot.Types.Argument, 3, CheckVariableAssignment, OnStepAssigned);
 		}
 
 		private void OnBodyAssigned(Slot Self, Slot Other)
@@ -23,6 +23,11 @@ namespace VisualScriptTool.Editor
 
 			Self.ConnectedSlot = Other;
 			statement.Statement = Other.StatementInstance.Statement;
+		}
+
+		private bool CheckVariableAssignment(Slot Other)
+		{
+			return (Other.StatementInstance.Statement is IntegerVariable);
 		}
 
 		private void OnMinimumAssigned(Slot Self, Slot Other)
