@@ -73,9 +73,7 @@ namespace VisualScriptTool.Editor
 				drawer.DrawConections(Graphics, Statements[i]);
 
 			if (SelectedSlot != null)
-			{
 				newConnectionLine.Draw(Graphics, Pens.White);
-			}
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
@@ -94,6 +92,10 @@ namespace VisualScriptTool.Editor
 			{
 				SelectedStatements.Add(SelectedSlot.StatementInstance);
 				return;
+			}
+			else
+			{
+
 			}
 
 			for (int i = Statements.Count - 1; i >= 0; --i)
@@ -119,7 +121,10 @@ namespace VisualScriptTool.Editor
 			if (SelectedSlot != null)
 			{
 				if (MouseOverSlot == null)
-					contextMenu.Show(this, e.Location);
+				{
+					if (GetSlotAtLocation(ScreenToCanvas(e.Location)) == null)
+						contextMenu.Show(this, e.Location);
+				}
 				else
 				{
 					MouseOverSlot.AssignConnection(SelectedSlot);
@@ -189,6 +194,21 @@ namespace VisualScriptTool.Editor
 
 					lastMousePosition = location;
 				}
+
+				Refresh();
+			}
+		}
+
+		protected override void OnKeyUp(KeyEventArgs e)
+		{
+			base.OnKeyUp(e);
+
+			if (e.KeyCode == Keys.Delete)
+			{
+				for (int i = 0; i < SelectedStatements.Count; ++i)
+					Statements.Remove(SelectedStatements[i]);
+
+				SelectedStatements.Clear();
 
 				Refresh();
 			}
