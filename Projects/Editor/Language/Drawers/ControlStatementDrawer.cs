@@ -1,6 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System.Drawing;
-using VisualScriptTool.Language.Statements.Control;
 
 namespace VisualScriptTool.Editor.Language.Drawers
 {
@@ -10,6 +9,9 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		public const float LINE_START_OFFSET_AMOUNT = 100.0F;
 
 		private CubicSPLine line = new CubicSPLine();
+
+		private static Pen executionPen = null;
+		private static Pen argumentPen = null;
 
 		protected override Color HeaderBackColor
 		{
@@ -25,6 +27,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			base(StatementInstanceHolder)
 		{
 			line = new CubicSPLine();
+			executionPen = new Pen(EXECUTION_SLOT_COLOR, 2.0F);
+			argumentPen = new Pen(VariableDrawer.HEADER_COLOR, 1.0F);
 		}
 
 		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
@@ -38,11 +42,11 @@ namespace VisualScriptTool.Editor.Language.Drawers
 				Slot slot = slots[i];
 
 				if (slot.ConnectedSlot != null)
-					DrawLine(slot, slot.ConnectedSlot, Pens.White);
+					DrawLine(slot, slot.ConnectedSlot);
 			}
 		}
 
-		protected void DrawLine(Slot From, Slot To, Pen Pen)
+		protected void DrawLine(Slot From, Slot To)
 		{
 			PointF startOffset = PointF.Empty;
 			PointF endOffset = PointF.Empty;
@@ -51,7 +55,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			endOffset.X = DirectionToOffset(To);
 
 			line.Update(From.Center, startOffset, To.Center, endOffset);
-			line.Draw(Graphics, Pen);
+			line.Draw(Graphics, GetPen(From.Type));
 		}
 
 		private float DirectionToOffset(Slot Slot)
@@ -60,6 +64,23 @@ namespace VisualScriptTool.Editor.Language.Drawers
 				return -LINE_START_OFFSET_AMOUNT;
 
 			return LINE_START_OFFSET_AMOUNT;
+		}
+
+		public static Pen GetPen(Slot.Types Type)
+		{
+			switch (Type)
+			{
+				case Slot.Types.EntryPoint:
+				case Slot.Types.Executer:
+					return executionPen;
+
+				case Slot.Types.Setter:
+				case Slot.Types.Getter:
+				case Slot.Types.Argument:
+					return argumentPen;
+			}
+
+			return null;
 		}
 	}
 }

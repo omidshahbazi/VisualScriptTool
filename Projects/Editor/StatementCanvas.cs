@@ -73,7 +73,7 @@ namespace VisualScriptTool.Editor
 				drawer.DrawConections(Graphics, Statements[i]);
 
 			if (SelectedSlot != null)
-				newConnectionLine.Draw(Graphics, Pens.White);
+				newConnectionLine.Draw(Graphics, ControlStatementDrawer.GetPen(SelectedSlot.Type));
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
