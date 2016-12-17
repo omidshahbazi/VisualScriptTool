@@ -24,8 +24,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return 4; }
 		}
 
-		public ForStatementDrawer(IStatementInstanceHolder StatementInstanceHolder) :
-			base(StatementInstanceHolder)
+		public ForStatementDrawer()
 		{
 			backBrush = new SolidBrush(Color.Black);
 		}

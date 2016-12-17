@@ -23,8 +23,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return Color.Black; }
 		}
 
-		public ControlStatementDrawer(IStatementInstanceHolder StatementInstanceHolder) :
-			base(StatementInstanceHolder)
+		public ControlStatementDrawer()
 		{
 			line = new CubicSPLine();
 			executionPen = new Pen(EXECUTION_SLOT_COLOR, 2.0F);

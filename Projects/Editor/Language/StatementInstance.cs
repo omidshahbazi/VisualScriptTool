@@ -1,16 +1,21 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using VisualScriptTool.Language.Statements;
+using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
 {
+	[Serializable]
 	public abstract class StatementInstance
 	{
+		[Serializable]
 		private RectangleF bounds;
+
+		[Serializable]
 		private SlotList slots = null;
 
+		[Serializable]
 		public Statement Statement
 		{
 			get;
@@ -23,12 +28,14 @@ namespace VisualScriptTool.Editor
 			set { bounds.Location = value; }
 		}
 
+		[Serializable]
 		public SizeF HeaderSize
 		{
 			get;
 			set;
 		}
 
+		[Serializable]
 		public SizeF BodySize
 		{
 			get;
@@ -59,12 +66,12 @@ namespace VisualScriptTool.Editor
 			bounds.Size = new SizeF(HeaderSize.Width, HeaderSize.Height + BodySize.Height);
 		}
 
-		protected Slot AddSlot(Slot.Types Type, uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null)
+		protected Slot AddSlot(Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null)
 		{
 			return AddSlot(string.Empty, Type, Index, CheckAssignment, OnAssignment);
 		}
 
-		protected Slot AddSlot(string Name, Slot.Types Type, uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null)
+		protected Slot AddSlot(string Name, Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null)
 		{
 			Slot slot = new Slot(this, Name, Type, Index, CheckAssignment, OnAssignment);
 			slots.Add(slot);

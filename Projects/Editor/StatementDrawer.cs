@@ -32,7 +32,7 @@ namespace VisualScriptTool.Editor
 				if (type.IsAbstract)
 					continue;
 
-				Drawer drawer = (Drawer)Activator.CreateInstance(types[i], Canvas);
+				Drawer drawer = (Drawer)Activator.CreateInstance(types[i]);
 
 				Type[] handleTypes = drawer.StatementTypes;
 				if (handleTypes != null)

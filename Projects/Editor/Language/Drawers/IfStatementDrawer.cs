@@ -24,8 +24,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return new Type[] { typeof(IfStatement) }; }
 		}
 
-		public IfStatementDrawer(IStatementInstanceHolder StatementInstanceHolder) :
-			base(StatementInstanceHolder)
+		public IfStatementDrawer()
 		{
 		}
 

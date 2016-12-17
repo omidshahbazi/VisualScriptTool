@@ -47,7 +47,6 @@
     <Compile Include="GridCanvas.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="IStatementInstanceHolder.cs" />
     <Compile Include="Language\ControlStatementInstance.cs" />
     <Compile Include="Language\Drawers\ForStatementDrawer.cs" />
     <Compile Include="Language\Drawers\IfStatementDrawer.cs" />
@@ -108,6 +107,10 @@
     <ProjectReference Include="..\Renderer\Renderer.csproj">
       <Project>{cf198119-9e6b-4f90-a878-088cbf2ce90d}</Project>
       <Name>Renderer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Serialization\Serialization.csproj">
+      <Project>{cf111332-3a81-4d4a-a04c-6634d8b6a8c6}</Project>
+      <Name>Serialization</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

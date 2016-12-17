@@ -2,11 +2,10 @@
 using System.Drawing;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Language.Drawers;
-using VisualScriptTool.Language.Statements;
 
 namespace VisualScriptTool.Editor
 {
-	public class StatementCanvas : GridCanvas, IStatementInstanceHolder
+	public class StatementCanvas : GridCanvas
 	{
 		private const float SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = 20.0F;
 		private const float HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT / 2.0F;
@@ -233,15 +232,6 @@ namespace VisualScriptTool.Editor
 						return slot;
 				}
 			}
-
-			return null;
-		}
-
-		StatementInstance IStatementInstanceHolder.GetByStatement(Statement Statement)
-		{
-			for (int i = 0; i < Statements.Count; ++i)
-				if (Statements[i].Statement == Statement)
-					return Statements[i];
 
 			return null;
 		}

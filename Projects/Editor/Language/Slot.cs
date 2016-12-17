@@ -1,8 +1,7 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using VisualScriptTool.Language.Statements;
+using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
 {
@@ -18,8 +17,8 @@ namespace VisualScriptTool.Editor
 		}
 
 		private RectangleF bounds;
-		private Func<Slot, bool> checkAssignment = null;
-		private Action<Slot, Slot> onAssignment = null;
+		private System.Func<Slot, bool> checkAssignment = null;
+		private System.Action<Slot, Slot> onAssignment = null;
 
 		public StatementInstance StatementInstance
 		{
@@ -84,7 +83,7 @@ namespace VisualScriptTool.Editor
 			set;
 		}
 
-		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, Func<Slot, bool> CheckAssignment, Action<Slot, Slot> OnAssignment)
+		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, System.Func<Slot, bool> CheckAssignment, System.Action<Slot, Slot> OnAssignment)
 		{
 			this.StatementInstance = StatementInstance;
 			this.Name = Name;
@@ -121,6 +120,7 @@ namespace VisualScriptTool.Editor
 		}
 	}
 
+	[Serializable]
 	public class SlotList : List<Slot>
 	{ }
 }

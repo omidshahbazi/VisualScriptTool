@@ -34,8 +34,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return new Type[] { typeof(BooleanVariable), typeof(FloatVariable), typeof(IntegerVariable), typeof(StringVariable) }; }
 		}
 
-		public VariableDrawer(IStatementInstanceHolder StatementInstanceHolder) :
-			base(StatementInstanceHolder)
+		public VariableDrawer()
 		{
 		}
 	}

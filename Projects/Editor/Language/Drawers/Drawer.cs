@@ -22,12 +22,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		private Brush variableSlotBrush = null;
 		private Brush argumentSlotBrush = null;
 
-		protected IStatementInstanceHolder StatementInstanceHolder
-		{
-			get;
-			private set;
-		}
-
 		protected Graphics Graphics
 		{
 			get;
@@ -75,10 +69,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get;
 		}
 
-		public Drawer(IStatementInstanceHolder StatementInstanceHolder)
+		public Drawer()
 		{
-			this.StatementInstanceHolder = StatementInstanceHolder;
-
 			Font = new Font("Tahoma", 9.0F, FontStyle.Bold);
 			HeaderTextColor = Color.White;
 			headeTextBrush = new SolidBrush(HeaderTextColor);
@@ -224,11 +216,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		protected SizeF MeasureString(string Value, Font Font)
 		{
 			return Graphics.MeasureString(Value, Font);
-		}
-
-		protected StatementInstance GetInstanceByStatement(Statement Statement)
-		{
-			return StatementInstanceHolder.GetByStatement(Statement);
 		}
 
 		protected virtual float GetSlotYOffset(Slot Slot)
