@@ -50,6 +50,9 @@ namespace VisualScriptTool.Editor
 			diagramTab.Statements.Add(new VariableStatementInstance(intVariable, new PointF(50, 20)));
 			diagramTab.Statements.Add(new VariableStatementInstance(boolVariable, new PointF(150, 120)));
 
+			Serialization.Serializer ser = new Serialization.Serializer();
+			ser.Serialize(new IfStatementInstance(ifStatement1, new PointF(650, 220)));
+
 			tabControl1.TabPages.Add(diagramTab);
 		}
 	}

@@ -6,7 +6,6 @@ using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
 {
-	[Serializable]
 	public abstract class StatementInstance
 	{
 		[Serializable]
@@ -22,20 +21,24 @@ namespace VisualScriptTool.Editor
 			private set;
 		}
 
+		private PointF Position1
+		{
+			get { return bounds.Location; }
+			set { bounds.Location = value; }
+		}
+
 		public PointF Position
 		{
 			get { return bounds.Location; }
 			set { bounds.Location = value; }
 		}
 
-		[Serializable]
 		public SizeF HeaderSize
 		{
 			get;
 			set;
 		}
 
-		[Serializable]
 		public SizeF BodySize
 		{
 			get;

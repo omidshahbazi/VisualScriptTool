@@ -4,7 +4,6 @@ using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Language.Statements
 {
-	[Serializable]
 	public abstract class Statement
 	{
 		[Serializable]

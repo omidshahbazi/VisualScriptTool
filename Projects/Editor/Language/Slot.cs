@@ -120,7 +120,6 @@ namespace VisualScriptTool.Editor
 		}
 	}
 
-	[Serializable]
 	public class SlotList : List<Slot>
 	{ }
 }
