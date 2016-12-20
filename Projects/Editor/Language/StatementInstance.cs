@@ -21,10 +21,11 @@ namespace VisualScriptTool.Editor
 			private set;
 		}
 
-		private PointF Position1
+		[Serializable]
+		private int Position1
 		{
-			get { return bounds.Location; }
-			set { bounds.Location = value; }
+			get;
+			set;
 		}
 
 		public PointF Position
