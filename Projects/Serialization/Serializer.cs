@@ -1,6 +1,7 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System.Collections.Generic;
 using System.Reflection;
+using VisualScriptTool.Serialization.JSONSerializer;
 
 namespace VisualScriptTool.Serialization
 {
@@ -8,9 +9,17 @@ namespace VisualScriptTool.Serialization
 	{
 		public string Serialize(object Object)
 		{
-			System.Type type = Object.GetType();
+			ISerializeObject data = new JSONSerializeObject(null);
 
-			ISerializeArray membersArray = new JSONSerializer.JSONSerializeArray();
+			StoreObject(data, Object);
+
+			return data.Content;
+		}
+
+		private void StoreObject(ISerializeObject Parent, object Object)
+		{
+			System.Type type = Object.GetType();
+			ISerializeArray membersArray = Parent.AddArray("Value");
 
 			if (type.IsArray)
 			{
@@ -24,8 +33,7 @@ namespace VisualScriptTool.Serialization
 				{
 					FieldInfo field = fields[i];
 
-					if (field.FieldType.IsPrimitive)
-						StoreMember(membersArray, field.FieldType, field.Name, field.GetValue(Object));
+					StoreMember(membersArray, field.FieldType, field.Name, field.GetValue(Object));
 				}
 
 				PropertyInfo[] properties = GetProperties(type);
@@ -34,12 +42,9 @@ namespace VisualScriptTool.Serialization
 				{
 					PropertyInfo property = properties[i];
 
-					if (property.PropertyType.IsPrimitive)
-						StoreMember(membersArray, property.PropertyType, property.Name, property.GetValue(Object, null));
+					StoreMember(membersArray, property.PropertyType, property.Name, property.GetValue(Object, null));
 				}
 			}
-
-			return "";
 		}
 
 		private void StoreMember(ISerializeArray MembersArray, System.Type Type, string Name, object Value)
@@ -48,7 +53,20 @@ namespace VisualScriptTool.Serialization
 
 			memberObject.Set("Type", Type.FullName);
 			memberObject.Set("Name", Name);
-			memberObject.Set("Value", Value);
+
+			if (Value == null)
+				return;
+
+			if (IsTypeStorable(Type))
+				memberObject.Set("Value", Value);
+			else
+				StoreObject(memberObject, Value);
+
+		}
+
+		private static bool IsTypeStorable(System.Type Type)
+		{
+			return (Type.IsPrimitive || Type == typeof(string));
 		}
 
 		private PropertyInfo[] GetProperties(System.Type Type)
@@ -63,9 +81,9 @@ namespace VisualScriptTool.Serialization
 				{
 					PropertyInfo property = properties[i];
 
-					object[] serializableAttr = property.GetCustomAttributes(typeof(SerializableAttribute), false);
+					NotSerializableAttribute serializableAttr = GetAttribute<NotSerializableAttribute>(property);
 
-					if (serializableAttr.Length == 0)
+					if (serializableAttr != null)
 						continue;
 
 					list.Add(property);
@@ -101,6 +119,16 @@ namespace VisualScriptTool.Serialization
 			}
 
 			return list.ToArray();
+		}
+
+		private static T GetAttribute<T>(MemberInfo Member) where T : System.Attribute
+		{
+			object[] attr = Member.GetCustomAttributes(typeof(T), false);
+
+			if (attr.Length == 0)
+				return null;
+
+			return (T)attr[0];
 		}
 	}
 }

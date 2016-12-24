@@ -5,5 +5,7 @@ namespace VisualScriptTool.Serialization
 	{
 		ISerializeArray AddArray();
 		ISerializeObject AddObject();
+
+		T GetObject<T>(uint Index);
 	}
 }

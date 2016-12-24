@@ -3,6 +3,11 @@ namespace VisualScriptTool.Serialization
 {
 	public interface ISerializeObject : ISerializeData
 	{
+		string Content
+		{
+			get;
+		}
+
 		ISerializeArray AddArray(string Name);
 		ISerializeObject AddObject(string Name);
 

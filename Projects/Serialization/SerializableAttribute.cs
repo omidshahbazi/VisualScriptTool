@@ -7,4 +7,9 @@ namespace VisualScriptTool.Serialization
 	public class SerializableAttribute : Attribute
 	{
 	}
+
+	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
+	public class NotSerializableAttribute : Attribute
+	{
+	}
 }

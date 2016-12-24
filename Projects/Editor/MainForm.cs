@@ -8,6 +8,32 @@ namespace VisualScriptTool.Editor
 {
 	public partial class MainForm : Form
 	{
+		class Test
+		{
+			//[Serialization.Serializable]
+			//private int i;
+
+			//[Serialization.Serializable]
+			//public int j;
+
+			//[Serialization.Serializable]
+			//private float Rate
+			//{
+			//	get;
+			//	set;
+			//}
+
+			[Serialization.Serializable]
+			public string Name = "omid";
+
+			[Serialization.Serializable]
+			public Point Poisition
+			{
+				get;
+				set;
+			}
+		}
+
 		public MainForm()
 		{
 			InitializeComponent();
@@ -51,7 +77,7 @@ namespace VisualScriptTool.Editor
 			diagramTab.Statements.Add(new VariableStatementInstance(boolVariable, new PointF(150, 120)));
 
 			Serialization.Serializer ser = new Serialization.Serializer();
-			ser.Serialize(new IfStatementInstance(ifStatement1, new PointF(650, 220)));
+			System.IO.File.WriteAllText("E:/1.txt", ser.Serialize(new Test()));
 
 			tabControl1.TabPages.Add(diagramTab);
 		}
