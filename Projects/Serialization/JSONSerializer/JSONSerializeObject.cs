@@ -97,6 +97,11 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			map[Name] = Value;
 		}
 
+		public static JSONSerializeObject Deserialize(string JSON)
+		{
+			return null;
+		}
+
 		private static void GetContent(JsonObject Object, Map Map)
 		{
 			Map.Enumerator it = Map.GetEnumerator();

@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using VisualScriptTool.Serialization.JSONSerializer;
@@ -14,6 +15,15 @@ namespace VisualScriptTool.Serialization
 			StoreObject(data, Object);
 
 			return data.Content;
+		}
+
+		public object Deserialize(string Path)
+		{
+			ISerializeObject data = JSONSerializeObject.Deserialize(System.IO.File.ReadAllText(Path));
+
+			//StoreObject(data, Object);
+
+			return null;
 		}
 
 		private void StoreObject(ISerializeObject Parent, object Object)

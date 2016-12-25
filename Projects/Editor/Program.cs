@@ -48,8 +48,14 @@ namespace VisualScriptTool.Editor
 			Application.SetCompatibleTextRenderingDefault(false);
 			//Application.Run(new MainForm());
 
+			string path = Application.StartupPath + "/1.json";
+
+
 			Serialization.Serializer ser = new Serialization.Serializer();
-			System.IO.File.WriteAllText(Application.StartupPath + "/1.json", ser.Serialize(new Test()));
+			//System.IO.File.WriteAllText(path, ser.Serialize(new Test()));
+
+			ser = new Serialization.Serializer();
+			Test test = (Test)ser.Deserialize(path);
 		}
 	}
 }
