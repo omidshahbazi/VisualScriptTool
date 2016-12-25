@@ -55,7 +55,12 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			return obj;
 		}
 
-		T ISerializeArray.GetObject<T>(uint Index)
+		void ISerializeArray.AddItem(object Item)
+		{
+			items.Add(Item);
+		}
+
+		T ISerializeArray.GetItem<T>(uint Index)
 		{
 			return (T)items[(int)Index];
 		}

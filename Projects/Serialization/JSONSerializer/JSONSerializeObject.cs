@@ -126,7 +126,7 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 		{
 			for (uint i = 0; i < SerializeArray.Count; ++i)
 			{
-				object value = SerializeArray.GetObject<object>(i);
+				object value = SerializeArray.GetItem<object>(i);
 
 				if (value is ISerializeObject)
 				{

@@ -6,6 +6,7 @@ namespace VisualScriptTool.Serialization
 		ISerializeArray AddArray();
 		ISerializeObject AddObject();
 
-		T GetObject<T>(uint Index);
+		void AddItem(object Item);
+		T GetItem<T>(uint Index);
 	}
 }

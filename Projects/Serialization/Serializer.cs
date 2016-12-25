@@ -59,7 +59,21 @@ namespace VisualScriptTool.Serialization
 			{
 				ISerializeArray membersArray = Object.AddArray("Value");
 
+				System.Array array = (System.Array)Value;
 
+				for (int i = 0; i < array.Length; ++i)
+				{
+					object item = array.GetValue(i);
+					System.Type itemType = item.GetType();
+
+					if (IsTypeStorable(itemType))
+						membersArray.AddItem(array.GetValue(i));
+					else
+					{
+						ISerializeObject memberObject = membersArray.AddObject();
+						StoreValue(memberObject, itemType, item);
+                    }
+				}
 			}
 			else if (IsTypeStorable(Type))
 				Object.Set("Value", Value);
