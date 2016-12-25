@@ -21,29 +21,22 @@ namespace VisualScriptTool.Serialization
 			System.Type type = Object.GetType();
 			ISerializeArray membersArray = Parent.AddArray("Value");
 
-			if (type.IsArray)
-			{
+			FieldInfo[] fields = GetFields(type);
 
+			for (int i = 0; i < fields.Length; ++i)
+			{
+				FieldInfo field = fields[i];
+
+				StoreMember(membersArray, field.FieldType, field.Name, field.GetValue(Object));
 			}
-			else
+
+			PropertyInfo[] properties = GetProperties(type);
+
+			for (int i = 0; i < properties.Length; ++i)
 			{
-				FieldInfo[] fields = GetFields(type);
+				PropertyInfo property = properties[i];
 
-				for (int i = 0; i < fields.Length; ++i)
-				{
-					FieldInfo field = fields[i];
-
-					StoreMember(membersArray, field.FieldType, field.Name, field.GetValue(Object));
-				}
-
-				PropertyInfo[] properties = GetProperties(type);
-
-				for (int i = 0; i < properties.Length; ++i)
-				{
-					PropertyInfo property = properties[i];
-
-					StoreMember(membersArray, property.PropertyType, property.Name, property.GetValue(Object, null));
-				}
+				StoreMember(membersArray, property.PropertyType, property.Name, property.GetValue(Object, null));
 			}
 		}
 
@@ -54,14 +47,24 @@ namespace VisualScriptTool.Serialization
 			memberObject.Set("Type", Type.FullName);
 			memberObject.Set("Name", Name);
 
+			StoreValue(memberObject, Type, Value);
+		}
+
+		private void StoreValue(ISerializeObject Object, System.Type Type, object Value)
+		{
 			if (Value == null)
 				return;
 
-			if (IsTypeStorable(Type))
-				memberObject.Set("Value", Value);
-			else
-				StoreObject(memberObject, Value);
+			if (Type.IsArray)
+			{
+				ISerializeArray membersArray = Object.AddArray("Value");
 
+
+			}
+			else if (IsTypeStorable(Type))
+				Object.Set("Value", Value);
+			else
+				StoreObject(Object, Value);
 		}
 
 		private static bool IsTypeStorable(System.Type Type)
