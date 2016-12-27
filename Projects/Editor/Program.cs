@@ -21,19 +21,19 @@ namespace VisualScriptTool.Editor
 			//	set;
 			//}
 
-			[Serialization.Serializable]
+			[Serialization.Serializable(1)]
 			public int Index = 3;
 
-			[Serialization.Serializable]
+			[Serialization.Serializable(2)]
 			public string[] Name = new string[] { "omid", "ali" };
 
-			[Serialization.Serializable]
+			[Serialization.Serializable(3)]
 			public System.Drawing.Point[] Points = new System.Drawing.Point[] { new System.Drawing.Point(10, 100), new System.Drawing.Point(1000, 230) };
 
-			[Serialization.Serializable]
+			[Serialization.Serializable(4)]
 			public Random child = new Random();
 
-			[Serialization.Serializable]
+			[Serialization.Serializable(5)]
 			public System.Drawing.Point Poisition
 			{
 				get;
@@ -52,7 +52,7 @@ namespace VisualScriptTool.Editor
 
 
 			Serialization.Serializer ser = new Serialization.Serializer();
-			//System.IO.File.WriteAllText(path, ser.Serialize(new Test()));
+			System.IO.File.WriteAllText(path, ser.Serialize(new Test()));
 
 			ser = new Serialization.Serializer();
 			Test test = (Test)ser.Deserialize(path);

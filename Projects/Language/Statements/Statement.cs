@@ -6,7 +6,7 @@ namespace VisualScriptTool.Language.Statements
 {
 	public abstract class Statement
 	{
-		[Serializable]
+		//[Serializable]
 		public abstract string Name
 		{
 			get;
