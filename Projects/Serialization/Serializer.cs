@@ -47,6 +47,9 @@ namespace VisualScriptTool.Serialization
 
 		public void Serialize(ISerializeObject Object, object Instance)
 		{
+			if (IsTypeStorable(Instance.GetType()))
+				return;
+
 			AddInstance(Instance);
 
 			for (int i = 0; i < instances.Count; ++i)
@@ -57,13 +60,19 @@ namespace VisualScriptTool.Serialization
 			}
 		}
 
-		public object Deserialize(ISerializeObject Object)
+		public T Deserialize<T>(ISerializeObject Object)
 		{
-			//ISerializeObject data = JSONSerializeObject.Deserialize(System.IO.File.ReadAllText(Path));
+			//Deserialize(Object new T());
+
+			return default(T);
+		}
+
+		public void Deserialize(ISerializeObject Object, object Instance)
+		{
+			if (Instance == null)
+				return;
 
 			//StoreObject(data, Object);
-
-			return null;
 		}
 
 		private void StoreInstance(ISerializeObject Object, InstanceData Instance)

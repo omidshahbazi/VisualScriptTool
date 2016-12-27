@@ -93,7 +93,8 @@ namespace VisualScriptTool.Editor
 			System.IO.File.WriteAllText(path, ser.Serialize(new Test()).Content);
 
 			ser = new Serialization.Serializer();
-			//Test test = (Test)ser.Deserialize(path);
+			Test test = new Test();
+			ser.Deserialize(JSONSerializeObject.Deserialize(System.IO.File.ReadAllText(Path)), test);
 		}
 	}
 }
