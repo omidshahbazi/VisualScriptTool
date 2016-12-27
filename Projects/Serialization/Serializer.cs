@@ -8,74 +8,131 @@ namespace VisualScriptTool.Serialization
 {
 	public class Serializer
 	{
-		public string Serialize(object Object)
+		private class InstanceData
+		{
+			private static uint globalID;
+
+			public string ID
+			{
+				get;
+				private set;
+			}
+
+			public object Instance
+			{
+				get;
+				private set;
+			}
+
+			public InstanceData(object Instance)
+			{
+				ID = "O#" + (globalID++).ToString();
+				this.Instance = Instance;
+			}
+		}
+
+		private class InstanceDataList : List<InstanceData>
+		{ }
+
+		private InstanceDataList instances = new InstanceDataList();
+
+		public ISerializeObject Serialize(object Instance)
 		{
 			ISerializeObject data = new JSONSerializeObject(null);
 
-			StoreObject(data, Object);
+			Serialize(data, Instance);
 
-			return data.Content;
+			return data;
 		}
 
-		public object Deserialize(string Path)
+		public void Serialize(ISerializeObject Object, object Instance)
 		{
-			ISerializeObject data = JSONSerializeObject.Deserialize(System.IO.File.ReadAllText(Path));
+			AddInstance(Instance);
+
+			for (int i = 0; i < instances.Count; ++i)
+			{
+				InstanceData instance = instances[i];
+
+				StoreInstance(Object.AddObject(instance.ID), instance);
+			}
+		}
+
+		public object Deserialize(ISerializeObject Object)
+		{
+			//ISerializeObject data = JSONSerializeObject.Deserialize(System.IO.File.ReadAllText(Path));
 
 			//StoreObject(data, Object);
 
 			return null;
 		}
 
-		private void StoreObject(ISerializeObject Parent, object Object)
+		private void StoreInstance(ISerializeObject Object, InstanceData Instance)
 		{
-			List<MemberData> members = new List<MemberData>();
+			MemberData[] members = GetMembers(Instance.Instance);
 
-			members.AddRange(GetFields(Object));
-			members.AddRange(GetProperties(Object));
-
-			ISerializeArray membersArray = Parent.AddArray("Value");
-
-			for (int i = 0; i < members.Count; ++i)
-				StoreMember(membersArray, members[i]);
+			for (int i = 0; i < members.Length; ++i)
+				StoreMember(Object, members[i]);
 		}
 
-		private void StoreMember(ISerializeArray MembersArray, MemberData Member)
+		private void StoreMember(ISerializeObject Object, MemberData Member)
 		{
-			ISerializeObject memberObject = MembersArray.AddObject();
+			string identifier = Member.Identifier.ToString();
 
-			object value = Member.Value;
-
-			System.Type valueType = value.GetType();
-
-			if (valueType.IsArray)
+			if (Member.Value == null)
 			{
-				ISerializeArray membersArray = memberObject.AddArray(Member.Identifier.ToString());
-
-				//System.Array array = (System.Array)Value;
-
-				//for (int i = 0; i < array.Length; ++i)
-				//{
-				//	object item = array.GetValue(i);
-				//	System.Type itemType = item.GetType();
-
-				//	if (IsTypeStorable(itemType))
-				//		membersArray.AddItem(array.GetValue(i));
-				//	else
-				//	{
-				//		ISerializeObject memberObject = membersArray.AddObject();
-				//		StoreValue(memberObject, itemType, item);
-				//	}
-				//}
+				Object.Set(identifier, null);
+				return;
 			}
-			else if (IsTypeStorable(valueType))
-				memberObject.Set(Member.Identifier.ToString(), value);
-			//else
-			//	StoreObject(Object, Value);
+
+			if (Member.Type.IsArray)
+			{
+				ISerializeArray membersArray = Object.AddArray(identifier);
+
+				System.Array array = (System.Array)Member.Value;
+
+				for (int i = 0; i < array.Length; ++i)
+				{
+					object item = array.GetValue(i);
+
+					if (item == null)
+					{
+						membersArray.AddItem(null);
+						continue;
+					}
+
+					membersArray.AddItem(IsTypeStorable(item.GetType()) ? item : GetOrAddInstance(item).ID);
+				}
+			}
+			else if (IsTypeStorable(Member.Type))
+				Object.Set(identifier, Member.Value);
+			else
+				Object.Set(identifier, GetOrAddInstance(Member.Value).ID);
 		}
 
-		private void StoreValue(ISerializeObject Object, object Value)
+		private InstanceData GetInstance(object Instance)
 		{
-			
+			for (int i = 0; i < instances.Count; ++i)
+				if (instances[i].Instance == Instance)
+					return instances[i];
+
+			return null;
+		}
+
+		private InstanceData AddInstance(object Instance)
+		{
+			InstanceData instance = new InstanceData(Instance);
+			instances.Add(instance);
+			return instance;
+		}
+
+		private InstanceData GetOrAddInstance(object Instance)
+		{
+			InstanceData instance = GetInstance(Instance);
+
+			if (instance != null)
+				return instance;
+
+			return AddInstance(Instance);
 		}
 
 		private static bool IsTypeStorable(System.Type Type)
@@ -83,7 +140,30 @@ namespace VisualScriptTool.Serialization
 			return (Type.IsPrimitive || Type == typeof(string));
 		}
 
-		private MemberData[] GetProperties(object Instance)
+		private static SerializableAttribute GetSerializableAttribute(MemberInfo Member)
+		{
+			SerializableAttribute serializableAttr = GetAttribute<SerializableAttribute>(Member);
+
+			if (serializableAttr != null)
+				return serializableAttr;
+
+			if (Member.Module.Name.StartsWith("System."))
+				return new SerializableAttribute((Member.DeclaringType.FullName + "::" + Member.Name).GetHashCode());
+
+			return null;
+		}
+
+		private static MemberData[] GetMembers(object Instance)
+		{
+			List<MemberData> members = new List<MemberData>();
+
+			members.AddRange(GetFields(Instance));
+			members.AddRange(GetProperties(Instance));
+
+			return members.ToArray();
+		}
+
+		private static MemberData[] GetProperties(object Instance)
 		{
 			List<MemberData> list = new List<MemberData>();
 
@@ -97,7 +177,7 @@ namespace VisualScriptTool.Serialization
 				{
 					PropertyInfo property = properties[i];
 
-					SerializableAttribute serializableAttr = GetAttribute<SerializableAttribute>(property);
+					SerializableAttribute serializableAttr = GetSerializableAttribute(property);
 
 					if (serializableAttr == null)
 						continue;
@@ -111,7 +191,7 @@ namespace VisualScriptTool.Serialization
 			return list.ToArray();
 		}
 
-		private MemberData[] GetFields(object Instance)
+		private static MemberData[] GetFields(object Instance)
 		{
 			List<MemberData> list = new List<MemberData>();
 
@@ -125,7 +205,7 @@ namespace VisualScriptTool.Serialization
 				{
 					FieldInfo field = fields[i];
 
-					SerializableAttribute serializableAttr = GetAttribute<SerializableAttribute>(field);
+					SerializableAttribute serializableAttr = GetSerializableAttribute(field);
 
 					if (serializableAttr == null)
 						continue;

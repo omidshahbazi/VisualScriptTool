@@ -7,24 +7,27 @@ namespace VisualScriptTool.Serialization
 	{
 		private object instance = null;
 		private MemberInfo memberInfo = null;
-		private SerializableAttribute attribute = null;
+		private object cachedValue = null;
 
 		public int Identifier
 		{
-			get { return attribute.Identifier; }
+			get;
+			private set;
+		}
+
+		public System.Type Type
+		{
+			get;
+			private set;
 		}
 
 		public object Value
 		{
-			get
-			{
-				if (memberInfo is FieldInfo)
-					return ((FieldInfo)memberInfo).GetValue(instance);
-
-				return ((PropertyInfo)memberInfo).GetValue(instance, null);
-			}
+			get { return cachedValue; }
 			set
 			{
+				cachedValue = value;
+
 				if (memberInfo is FieldInfo)
 					((FieldInfo)memberInfo).SetValue(instance, Value);
 
@@ -36,7 +39,22 @@ namespace VisualScriptTool.Serialization
 		{
 			instance = Instance;
 			memberInfo = MemberInfo;
-			attribute = Attribute;
+			Identifier = Attribute.Identifier;
+
+			if (memberInfo is FieldInfo)
+			{
+				FieldInfo field = (FieldInfo)memberInfo;
+
+				cachedValue = field.GetValue(instance);
+				Type = field.FieldType;
+			}
+			else
+			{
+				PropertyInfo property = (PropertyInfo)memberInfo;
+
+				cachedValue = property.GetValue(instance, null);
+				Type = property.PropertyType;
+			}
 		}
 	}
 }
