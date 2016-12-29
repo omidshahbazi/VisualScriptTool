@@ -1,8 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using SimpleJson;
 using System.Collections.Generic;
-using System;
-using System.Collections;
 
 namespace VisualScriptTool.Serialization.JSONSerializer
 {
@@ -38,14 +36,6 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 				GetContent(obj, map);
 
 				return obj.ToString();
-			}
-		}
-
-		ISerializeData ISerializeData.Parent
-		{
-			get
-			{
-				throw new NotImplementedException();
 			}
 		}
 
@@ -115,6 +105,16 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 		void ISerializeObject.Set(string Name, object Value)
 		{
 			map[Name] = Value;
+		}
+
+		T ISerializeObject.Get<T>(string Name)
+		{
+			return (T)map[Name];
+		}
+
+		IEnumerator<KeyValuePair<string, object>> ISerializeObject.GetEnumerator()
+		{
+			return map.GetEnumerator();
 		}
 
 		public static JSONSerializeObject Deserialize(string JSON)
@@ -224,16 +224,6 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 				else
 					Array.Add(value);
 			}
-		}
-
-		T ISerializeObject.Get<T>(string Name)
-		{
-			return (T)map[Name];
-		}
-
-		IEnumerator<KeyValuePair<string, object>> ISerializeObject.GetEnumerator()
-		{
-			return map.GetEnumerator();
 		}
 	}
 }

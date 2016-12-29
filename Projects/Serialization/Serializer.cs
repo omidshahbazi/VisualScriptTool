@@ -7,12 +7,27 @@ namespace VisualScriptTool.Serialization
 {
 	public class Serializer
 	{
+		public class ObjectFactoryList : List<IObjectFactory>
+		{ }
+
 		private SerializeReferences serializeRefernces = null;
 		private DeserializeReferences deserializeRefernces = null;
 
+		public ObjectFactoryList ObjectFactories
+		{
+			get;
+			private set;
+		}
+
+		public Serializer()
+		{
+			ObjectFactories = new ObjectFactoryList();
+			ObjectFactories.Add(new DefaultObjectFactory());
+		}
+
 		public ISerializeObject Serialize(object Instance)
 		{
-			ISerializeObject data = Factory.Create();
+			ISerializeObject data = Creator.Create();
 
 			Serialize(data, Instance);
 
@@ -36,7 +51,7 @@ namespace VisualScriptTool.Serialization
 			}
 		}
 
-		public T Deserialize<T>(ISerializeObject Object) where T : new()
+		public T Deserialize<T>(ISerializeObject Object)
 		{
 			if (Object == null || Object.Count == 0)
 				return default(T);
@@ -44,11 +59,11 @@ namespace VisualScriptTool.Serialization
 			if (!IsComplexType(typeof(T)))
 				return default(T);
 
-			T obj = new T();
+			object obj = Instantiate(typeof(T));
 
 			Deserialize(Object, obj);
 
-			return obj;
+			return (T)obj;
 		}
 
 		public void Deserialize(ISerializeObject Object, object Instance)
@@ -176,7 +191,7 @@ namespace VisualScriptTool.Serialization
 			DeserializeReferences.InstanceData referenceIntance = deserializeRefernces.GetInstance(ID);
 
 			if (!referenceIntance.HasReference)
-				referenceIntance.Instance = Activator.CreateInstance(Type);
+				referenceIntance.Instance = Instantiate(Type);
 
 			return referenceIntance.Instance;
 		}
@@ -185,6 +200,15 @@ namespace VisualScriptTool.Serialization
 		{
 			serializeRefernces = new SerializeReferences();
 			deserializeRefernces = new DeserializeReferences();
+		}
+
+		private object Instantiate(Type Type)
+		{
+			for (int i = 0; i < ObjectFactories.Count; ++i)
+				if (ObjectFactories[i].CanInstantiate(Type))
+					return ObjectFactories[i].Instantiate(Type);
+
+			throw new FactoryNotFoundException(Type);
 		}
 
 		private static bool IsPrimitiveType(Type Type)

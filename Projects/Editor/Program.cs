@@ -48,14 +48,14 @@ namespace VisualScriptTool.Editor
 				private set;
 			}
 
-			public Test()
-			{
-				Index = 3;
-				child = new Test1();
-				child1 = child;
-				Points = new Random[] { new Random(), null, new Random() };
-				Flag = true;
-			}
+			//public Test()
+			//{
+			//	Index = 3;
+			//	child = new Test1();
+			//	child1 = child;
+			//	Points = new Random[] { new Random(), null, new Random() };
+			//	Flag = true;
+			//}
 		}
 
 		[STAThread]
@@ -72,15 +72,15 @@ namespace VisualScriptTool.Editor
 			//
 			//System.IO.File.WriteAllText(path, ser.Serialize(new Test[] { new Test(), new Editor.Program.Test() }).Content);
 
-			Test test = new Test();
+			//Test test = new Test(1);
 
-			Serialization.Serializer ser = new Serialization.Serializer();
+			Serializer ser = new Serializer();
 
 			//System.IO.File.WriteAllText(path, ser.Serialize(test).Content);
 
-			//ser = new Serialization.Serializer();
+			//ser = new Serializer();
 			//ser.Deserialize(Factory.Create(System.IO.File.ReadAllText(path)), test);
-			test = ser.Deserialize<Test>(Factory.Create(System.IO.File.ReadAllText(path)));
+			Test test1 = ser.Deserialize<Test>(Creator.Create(System.IO.File.ReadAllText(path)));
 		}
 	}
 }
