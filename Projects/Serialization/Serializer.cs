@@ -1,7 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Reflection;
 
 namespace VisualScriptTool.Serialization
@@ -134,9 +133,29 @@ namespace VisualScriptTool.Serialization
 				ISerializeArray dataArray = Object.Get<ISerializeArray>(identifier);
 
 				if (dataArray == null)
+				{
+					Member.Value = null;
 					return;
+				}
 
+				Type itemType = Type.GetType(Member.Type.FullName.Replace("[]", ""));
 
+				Array array = Array.CreateInstance(itemType, dataArray.Count);
+
+				for (uint i = 0; i < dataArray.Count; ++i)
+				{
+					object value = dataArray[i];
+
+					if (value == null)
+						continue;
+
+					if (DeserializeReferences.InstanceData.IsReferenceIDFormat(value.ToString()))
+						value = CreateReferencedValue(value.ToString(), itemType);
+
+					array.SetValue(value, i);
+				}
+
+				Member.Value = array;
 			}
 			else
 			{
@@ -146,17 +165,20 @@ namespace VisualScriptTool.Serialization
 					value = Object[identifier];
 
 				if (DeserializeReferences.InstanceData.IsReferenceIDFormat(value.ToString()))
-				{
-					DeserializeReferences.InstanceData referenceIntance = deserializeRefernces.GetInstance(value.ToString());
-
-					if (!referenceIntance.HasReference)
-						referenceIntance.Instance = Activator.CreateInstance(Member.Type);
-
-					value = referenceIntance.Instance;
-				}
+					value = CreateReferencedValue(value.ToString(), Member.Type);
 
 				Member.Value = Convert.ChangeType(value, Member.Type);
 			}
+		}
+
+		private object CreateReferencedValue(string ID, Type Type)
+		{
+			DeserializeReferences.InstanceData referenceIntance = deserializeRefernces.GetInstance(ID);
+
+			if (!referenceIntance.HasReference)
+				referenceIntance.Instance = Activator.CreateInstance(Type);
+
+			return referenceIntance.Instance;
 		}
 
 		private void Reset()

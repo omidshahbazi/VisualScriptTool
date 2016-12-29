@@ -9,17 +9,17 @@ namespace VisualScriptTool.Editor
 	{
 		class Test1
 		{
-			//[Serialization.Serializable(2)]
-			//public string[] Name;
+			[Serialization.Serializable(2)]
+			public string[] Name;
 
 			[Serialization.Serializable(4)]
 			public Random child;
 
-			//public Test1()
-			//{
-			//	Name = new string[] { "omid", "ali" };
-			//	child = new Random();
-			//}
+			public Test1()
+			{
+				Name = new string[] { "omid", "ali" };
+				child = new Random();
+			}
 		}
 		class Test
 		{
@@ -29,11 +29,11 @@ namespace VisualScriptTool.Editor
 			[Serialization.Serializable(0)]
 			public bool Flag;
 
-			//[Serialization.Serializable(6)]
-			//public string[] Name2;
+			[Serialization.Serializable(6)]
+			public string[] Name2;
 
-			//[Serialization.Serializable(3)]
-			//public Random[] Points;
+			[Serialization.Serializable(3)]
+			public Random[] Points;
 
 			[Serialization.Serializable(4)]
 			public Test1 child;
@@ -48,14 +48,14 @@ namespace VisualScriptTool.Editor
 				private set;
 			}
 
-			//public Test()
-			//{
-			//	Index = 3;
-			//	child = new Test1();
-			//	child1 = child;
-			//	Points = new Random[] { new Random(), null, new Random() };
-			//	Flag = true;
-			//}
+			public Test()
+			{
+				Index = 3;
+				child = new Test1();
+				child1 = child;
+				Points = new Random[] { new Random(), null, new Random() };
+				Flag = true;
+			}
 		}
 
 		[STAThread]
@@ -72,12 +72,13 @@ namespace VisualScriptTool.Editor
 			//
 			//System.IO.File.WriteAllText(path, ser.Serialize(new Test[] { new Test(), new Editor.Program.Test() }).Content);
 
+			Test test = new Test();
 
 			Serialization.Serializer ser = new Serialization.Serializer();
-			//System.IO.File.WriteAllText(path, ser.Serialize(new Test()).Content);
 
-			ser = new Serialization.Serializer();
-			Test test = new Test();
+			//System.IO.File.WriteAllText(path, ser.Serialize(test).Content);
+
+			//ser = new Serialization.Serializer();
 			ser.Deserialize(Factory.Create(System.IO.File.ReadAllText(path)), test);
 		}
 	}
