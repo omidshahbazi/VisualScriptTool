@@ -24,12 +24,9 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			private set;
 		}
 
-		ISerializeData ISerializeData.Parent
+		object ISerializeArray.this[uint Index]
 		{
-			get
-			{
-				throw new NotImplementedException();
-			}
+			get { return items[(int)Index]; }
 		}
 
 		public JSONSerializeArray(ISerializeData Parent)
@@ -55,12 +52,12 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			return obj;
 		}
 
-		void ISerializeArray.AddItem(object Item)
+		void ISerializeArray.Add(object Item)
 		{
 			items.Add(Item);
 		}
 
-		T ISerializeArray.GetItem<T>(uint Index)
+		T ISerializeArray.Get<T>(uint Index)
 		{
 			return (T)items[(int)Index];
 		}

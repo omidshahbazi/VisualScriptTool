@@ -8,6 +8,8 @@ namespace VisualScriptTool.Serialization
 		private object instance = null;
 		private MemberInfo memberInfo = null;
 		private object cachedValue = null;
+		private bool isProperty = false;
+		private MethodInfo setAccessor = null;
 
 		public int Identifier
 		{
@@ -28,10 +30,13 @@ namespace VisualScriptTool.Serialization
 			{
 				cachedValue = value;
 
-				if (memberInfo is FieldInfo)
-					((FieldInfo)memberInfo).SetValue(instance, Value);
+				if (isProperty)
+				{
+					setAccessor.Invoke(instance, new object[] { Value });
+					return;
+				}
 
-				((PropertyInfo)memberInfo).SetValue(instance, Value, null);
+				((FieldInfo)memberInfo).SetValue(instance, Value);
 			}
 		}
 
@@ -54,6 +59,8 @@ namespace VisualScriptTool.Serialization
 
 				cachedValue = property.GetValue(instance, null);
 				Type = property.PropertyType;
+				isProperty = true;
+				setAccessor = property.GetSetMethod(true);
 			}
 		}
 	}

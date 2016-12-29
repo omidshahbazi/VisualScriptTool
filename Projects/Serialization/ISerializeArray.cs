@@ -3,10 +3,15 @@ namespace VisualScriptTool.Serialization
 {
 	public interface ISerializeArray : ISerializeData
 	{
+		object this[uint Index]
+		{
+			get;
+		}
+
 		ISerializeArray AddArray();
 		ISerializeObject AddObject();
 
-		void AddItem(object Item);
-		T GetItem<T>(uint Index);
+		void Add(object Item);
+		T Get<T>(uint Index);
 	}
 }

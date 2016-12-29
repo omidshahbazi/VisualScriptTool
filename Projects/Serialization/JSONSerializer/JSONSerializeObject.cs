@@ -1,6 +1,8 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using SimpleJson;
 using System.Collections.Generic;
+using System;
+using System.Collections;
 
 namespace VisualScriptTool.Serialization.JSONSerializer
 {
@@ -39,9 +41,27 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			}
 		}
 
+		ISerializeData ISerializeData.Parent
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		object ISerializeObject.this[string Name]
+		{
+			get { return map[Name]; }
+		}
+
 		public JSONSerializeObject(ISerializeData Parent)
 		{
 			this.Parent = Parent;
+		}
+
+		bool ISerializeObject.Contains(string Name)
+		{
+			return map.ContainsKey(Name);
 		}
 
 		ISerializeArray ISerializeObject.AddArray(string Name)
@@ -99,7 +119,13 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 
 		public static JSONSerializeObject Deserialize(string JSON)
 		{
-			return null;
+			JsonObject jsonObject = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(JSON);
+
+			JSONSerializeObject obj = new JSONSerializeObject(null);
+
+			SetContent(obj, jsonObject);
+
+			return obj;
 		}
 
 		private static void GetContent(JsonObject Object, Map Map)
@@ -131,7 +157,7 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 		{
 			for (uint i = 0; i < SerializeArray.Count; ++i)
 			{
-				object value = SerializeArray.GetItem<object>(i);
+				object value = SerializeArray[i];
 
 				if (value is ISerializeObject)
 				{
@@ -148,6 +174,66 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 				else
 					Array.Add(value);
 			}
+		}
+
+		private static void SetContent(JSONSerializeObject Object, JsonObject JsonObject)
+		{
+			Map map = Object.map;
+
+			IEnumerator<KeyValuePair<string, object>> it = JsonObject.GetEnumerator();
+			while (it.MoveNext())
+			{
+				string key = it.Current.Key;
+				object value = it.Current.Value;
+
+				if (value is JsonObject)
+				{
+					JSONSerializeObject jsonObj = new JSONSerializeObject(Object);
+					map[key] = jsonObj;
+					SetContent(jsonObj, (JsonObject)value);
+				}
+				else if (value is JsonArray)
+				{
+					JSONSerializeArray jsonArray = new JSONSerializeArray(Object);
+					map[key] = jsonArray;
+					SetContent(jsonArray, (JsonArray)value);
+				}
+				else
+					map[key] = value;
+			}
+		}
+
+		private static void SetContent(ISerializeArray Array, JsonArray JsonArray)
+		{
+			for (int i = 0; i < JsonArray.Count; ++i)
+			{
+				object value = JsonArray[i];
+
+				if (value is JsonObject)
+				{
+					JSONSerializeObject jsonObj = new JSONSerializeObject(Array);
+					Array.Add(jsonObj);
+					SetContent(jsonObj, (JsonObject)value);
+				}
+				else if (value is JsonArray)
+				{
+					JSONSerializeArray jsonArray = new JSONSerializeArray(Array);
+					Array.Add(jsonArray);
+					SetContent(jsonArray, (JsonArray)value);
+				}
+				else
+					Array.Add(value);
+			}
+		}
+
+		T ISerializeObject.Get<T>(string Name)
+		{
+			return (T)map[Name];
+		}
+
+		IEnumerator<KeyValuePair<string, object>> ISerializeObject.GetEnumerator()
+		{
+			return map.GetEnumerator();
 		}
 	}
 }

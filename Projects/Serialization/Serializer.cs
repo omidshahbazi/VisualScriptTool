@@ -1,44 +1,19 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
-using VisualScriptTool.Serialization.JSONSerializer;
 
 namespace VisualScriptTool.Serialization
 {
 	public class Serializer
 	{
-		private class InstanceData
-		{
-			private static uint globalID;
-
-			public string ID
-			{
-				get;
-				private set;
-			}
-
-			public object Instance
-			{
-				get;
-				private set;
-			}
-
-			public InstanceData(object Instance)
-			{
-				ID = "O#" + (globalID++).ToString();
-				this.Instance = Instance;
-			}
-		}
-
-		private class InstanceDataList : List<InstanceData>
-		{ }
-
-		private InstanceDataList instances = new InstanceDataList();
+		private SerializeReferences serializeRefernces = null;
+		private DeserializeReferences deserializeRefernces = null;
 
 		public ISerializeObject Serialize(object Instance)
 		{
-			ISerializeObject data = new JSONSerializeObject(null);
+			ISerializeObject data = Factory.Create();
 
 			Serialize(data, Instance);
 
@@ -47,35 +22,59 @@ namespace VisualScriptTool.Serialization
 
 		public void Serialize(ISerializeObject Object, object Instance)
 		{
-			if (IsTypeStorable(Instance.GetType()))
+			Reset();
+
+			if (IsPrimitiveType(Instance.GetType()))
 				return;
 
-			AddInstance(Instance);
+			serializeRefernces.AddInstance(Instance);
 
-			for (int i = 0; i < instances.Count; ++i)
+			for (int i = 0; i < serializeRefernces.Instances.Length; ++i)
 			{
-				InstanceData instance = instances[i];
+				SerializeReferences.InstanceData instance = serializeRefernces.Instances[i];
 
 				StoreInstance(Object.AddObject(instance.ID), instance);
 			}
 		}
 
-		public T Deserialize<T>(ISerializeObject Object)
+		public T Deserialize<T>(ISerializeObject Object) where T : new()
 		{
-			//Deserialize(Object new T());
+			if (Object == null || Object.Count == 0)
+				return default(T);
 
-			return default(T);
+			if (!IsComplexType(typeof(T)))
+				return default(T);
+
+			T obj = new T();
+
+			Deserialize(Object, obj);
+
+			return obj;
 		}
 
 		public void Deserialize(ISerializeObject Object, object Instance)
 		{
-			if (Instance == null)
+			Reset();
+
+			if (Object == null || Object.Count == 0 || Instance == null)
 				return;
 
-			//StoreObject(data, Object);
+			if (!IsComplexType(Instance.GetType()))
+				return;
+
+			IEnumerator<KeyValuePair<string, object>> it = Object.GetEnumerator();
+
+			while (it.MoveNext())
+				deserializeRefernces.AddInstance(it.Current.Key, (ISerializeObject)it.Current.Value);
+
+			deserializeRefernces.Instances[0].Instance = Instance;
+			DeserializeInstance(deserializeRefernces.Instances[0]);
+
+			for (int i = 1; i < deserializeRefernces.Instances.Length; ++i)
+				DeserializeInstance(deserializeRefernces.Instances[i]);
 		}
 
-		private void StoreInstance(ISerializeObject Object, InstanceData Instance)
+		private void StoreInstance(ISerializeObject Object, SerializeReferences.InstanceData Instance)
 		{
 			MemberData[] members = GetMembers(Instance.Instance);
 
@@ -105,48 +104,75 @@ namespace VisualScriptTool.Serialization
 
 					if (item == null)
 					{
-						membersArray.AddItem(null);
+						membersArray.Add(null);
 						continue;
 					}
 
-					membersArray.AddItem(IsTypeStorable(item.GetType()) ? item : GetOrAddInstance(item).ID);
+					membersArray.Add(IsPrimitiveType(item.GetType()) ? item : serializeRefernces.GetOrAddInstance(item).ID);
 				}
 			}
-			else if (IsTypeStorable(Member.Type))
+			else if (IsPrimitiveType(Member.Type))
 				Object.Set(identifier, Member.Value);
 			else
-				Object.Set(identifier, GetOrAddInstance(Member.Value).ID);
+				Object.Set(identifier, serializeRefernces.GetOrAddInstance(Member.Value).ID);
 		}
 
-		private InstanceData GetInstance(object Instance)
+		private void DeserializeInstance(DeserializeReferences.InstanceData Instance)
 		{
-			for (int i = 0; i < instances.Count; ++i)
-				if (instances[i].Instance == Instance)
-					return instances[i];
+			MemberData[] members = GetMembers(Instance.Instance);
 
-			return null;
+			for (int i = 0; i < members.Length; ++i)
+				SetValue(Instance.SerializeObject, members[i]);
 		}
 
-		private InstanceData AddInstance(object Instance)
+		private void SetValue(ISerializeObject Object, MemberData Member)
 		{
-			InstanceData instance = new InstanceData(Instance);
-			instances.Add(instance);
-			return instance;
+			string identifier = Member.Identifier.ToString();
+
+			if (Member.Type.IsArray)
+			{
+				ISerializeArray dataArray = Object.Get<ISerializeArray>(identifier);
+
+				if (dataArray == null)
+					return;
+
+
+			}
+			else
+			{
+				object value = null;
+
+				if (Object.Contains(identifier))
+					value = Object[identifier];
+
+				if (DeserializeReferences.InstanceData.IsReferenceIDFormat(value.ToString()))
+				{
+					DeserializeReferences.InstanceData referenceIntance = deserializeRefernces.GetInstance(value.ToString());
+
+					if (!referenceIntance.HasReference)
+						referenceIntance.Instance = Activator.CreateInstance(Member.Type);
+
+					value = referenceIntance.Instance;
+				}
+
+				Member.Value = Convert.ChangeType(value, Member.Type);
+			}
 		}
 
-		private InstanceData GetOrAddInstance(object Instance)
+		private void Reset()
 		{
-			InstanceData instance = GetInstance(Instance);
-
-			if (instance != null)
-				return instance;
-
-			return AddInstance(Instance);
+			serializeRefernces = new SerializeReferences();
+			deserializeRefernces = new DeserializeReferences();
 		}
 
-		private static bool IsTypeStorable(System.Type Type)
+		private static bool IsPrimitiveType(System.Type Type)
 		{
 			return (Type.IsPrimitive || Type == typeof(string));
+		}
+
+		private static bool IsComplexType(System.Type Type)
+		{
+			return (!Type.IsPrimitive && Type != typeof(string));
 		}
 
 		private static SerializableAttribute GetSerializableAttribute(MemberInfo Member)
@@ -188,7 +214,7 @@ namespace VisualScriptTool.Serialization
 
 					SerializableAttribute serializableAttr = GetSerializableAttribute(property);
 
-					if (serializableAttr == null)
+					if (serializableAttr == null || property.GetSetMethod(true) == null)
 						continue;
 
 					list.Add(new MemberData(Instance, property, serializableAttr));
