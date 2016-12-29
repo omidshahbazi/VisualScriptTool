@@ -187,12 +187,12 @@ namespace VisualScriptTool.Serialization
 			deserializeRefernces = new DeserializeReferences();
 		}
 
-		private static bool IsPrimitiveType(System.Type Type)
+		private static bool IsPrimitiveType(Type Type)
 		{
 			return (Type.IsPrimitive || Type == typeof(string));
 		}
 
-		private static bool IsComplexType(System.Type Type)
+		private static bool IsComplexType(Type Type)
 		{
 			return (!Type.IsPrimitive && Type != typeof(string));
 		}

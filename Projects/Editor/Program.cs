@@ -79,7 +79,8 @@ namespace VisualScriptTool.Editor
 			//System.IO.File.WriteAllText(path, ser.Serialize(test).Content);
 
 			//ser = new Serialization.Serializer();
-			ser.Deserialize(Factory.Create(System.IO.File.ReadAllText(path)), test);
+			//ser.Deserialize(Factory.Create(System.IO.File.ReadAllText(path)), test);
+			test = ser.Deserialize<Test>(Factory.Create(System.IO.File.ReadAllText(path)));
 		}
 	}
 }
