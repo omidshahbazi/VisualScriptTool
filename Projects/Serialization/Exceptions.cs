@@ -3,7 +3,7 @@ using System;
 
 namespace VisualScriptTool.Serialization
 {
-	public class FactoryNotFoundException : Exception
+	public class ObjectFactoryNotFoundException : Exception
 	{
 		public Type Type
 		{
@@ -11,7 +11,21 @@ namespace VisualScriptTool.Serialization
 			private set;
 		}
 
-		public FactoryNotFoundException(Type Type)
+		public ObjectFactoryNotFoundException(Type Type)
+		{
+			this.Type = Type;
+		}
+	}
+
+	public class StrategyNotFoundException : Exception
+	{
+		public Type Type
+		{
+			get;
+			private set;
+		}
+
+		public StrategyNotFoundException(Type Type)
 		{
 			this.Type = Type;
 		}

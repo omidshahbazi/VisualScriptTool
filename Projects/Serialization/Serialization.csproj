@@ -39,7 +39,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DefaultStrategy.cs" />
+    <Compile Include="Exceptions.cs" />
     <Compile Include="DefaultObjectFactory.cs" />
+    <Compile Include="IStrategy.cs" />
     <Compile Include="IObjectFactory.cs" />
     <Compile Include="ISerializeArray.cs" />
     <Compile Include="ISerializeData.cs" />
@@ -54,6 +57,7 @@
     <Compile Include="SerializableAttribute.cs" />
     <Compile Include="Creator.cs" />
     <Compile Include="Serializer.cs" />
+    <Compile Include="SystemStrategy.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

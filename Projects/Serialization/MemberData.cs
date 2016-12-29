@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace VisualScriptTool.Serialization
 {
-	class MemberData
+	public sealed class MemberData
 	{
 		private object instance = null;
 		private MemberInfo memberInfo = null;
@@ -18,6 +18,12 @@ namespace VisualScriptTool.Serialization
 		}
 
 		public System.Type Type
+		{
+			get;
+			private set;
+		}
+
+		public bool IsPrimitive
 		{
 			get;
 			private set;
@@ -40,11 +46,11 @@ namespace VisualScriptTool.Serialization
 			}
 		}
 
-		public MemberData(object Instance, MemberInfo MemberInfo, SerializableAttribute Attribute)
+		public MemberData(object Instance, MemberInfo MemberInfo, int Identifier)
 		{
 			instance = Instance;
 			memberInfo = MemberInfo;
-			Identifier = Attribute.Identifier;
+			this.Identifier = Identifier;
 
 			if (memberInfo is FieldInfo)
 			{
@@ -62,6 +68,8 @@ namespace VisualScriptTool.Serialization
 				isProperty = true;
 				setAccessor = property.GetSetMethod(true);
 			}
+
+			IsPrimitive = (Type.IsPrimitive || Type == typeof(string));
 		}
 	}
 }

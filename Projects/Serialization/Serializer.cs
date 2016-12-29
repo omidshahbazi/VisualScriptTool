@@ -1,13 +1,15 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace VisualScriptTool.Serialization
 {
 	public class Serializer
 	{
 		public class ObjectFactoryList : List<IObjectFactory>
+		{ }
+
+		public class StrategyList : List<IStrategy>
 		{ }
 
 		private SerializeReferences serializeRefernces = null;
@@ -19,10 +21,19 @@ namespace VisualScriptTool.Serialization
 			private set;
 		}
 
+		public StrategyList Strategies
+		{
+			get;
+			private set;
+		}
+
 		public Serializer()
 		{
 			ObjectFactories = new ObjectFactoryList();
 			ObjectFactories.Add(new DefaultObjectFactory());
+
+			Strategies = new StrategyList();
+			Strategies.Add(new DefaultStrategy());
 		}
 
 		public ISerializeObject Serialize(object Instance)
@@ -37,9 +48,6 @@ namespace VisualScriptTool.Serialization
 		public void Serialize(ISerializeObject Object, object Instance)
 		{
 			Reset();
-
-			if (IsPrimitiveType(Instance.GetType()))
-				return;
 
 			serializeRefernces.AddInstance(Instance);
 
@@ -122,10 +130,10 @@ namespace VisualScriptTool.Serialization
 						continue;
 					}
 
-					membersArray.Add(IsPrimitiveType(item.GetType()) ? item : serializeRefernces.GetOrAddInstance(item).ID);
+					membersArray.Add(Member.IsPrimitive ? item : serializeRefernces.GetOrAddInstance(item).ID);
 				}
 			}
-			else if (IsPrimitiveType(Member.Type))
+			else if (Member.IsPrimitive)
 				Object.Set(identifier, Member.Value);
 			else
 				Object.Set(identifier, serializeRefernces.GetOrAddInstance(Member.Value).ID);
@@ -208,106 +216,23 @@ namespace VisualScriptTool.Serialization
 				if (ObjectFactories[i].CanInstantiate(Type))
 					return ObjectFactories[i].Instantiate(Type);
 
-			throw new FactoryNotFoundException(Type);
+			throw new ObjectFactoryNotFoundException(Type);
 		}
 
-		private static bool IsPrimitiveType(Type Type)
+		private MemberData[] GetMembers(object Instance)
 		{
-			return (Type.IsPrimitive || Type == typeof(string));
+			Type type = Instance.GetType();
+
+            for (int i = 0; i < Strategies.Count; ++i)
+				if (Strategies[i].CanHandle(type))
+					return Strategies[i].GetMembers(Instance);
+
+			throw new ObjectFactoryNotFoundException(type);
 		}
 
 		private static bool IsComplexType(Type Type)
 		{
 			return (!Type.IsPrimitive && Type != typeof(string));
-		}
-
-		private static SerializableAttribute GetSerializableAttribute(MemberInfo Member)
-		{
-			SerializableAttribute serializableAttr = GetAttribute<SerializableAttribute>(Member);
-
-			if (serializableAttr != null)
-				return serializableAttr;
-
-			if (Member.Module.Name.StartsWith("System."))
-				return new SerializableAttribute((Member.DeclaringType.FullName + "::" + Member.Name).GetHashCode());
-
-			return null;
-		}
-
-		private static MemberData[] GetMembers(object Instance)
-		{
-			List<MemberData> members = new List<MemberData>();
-
-			members.AddRange(GetFields(Instance));
-			members.AddRange(GetProperties(Instance));
-
-			return members.ToArray();
-		}
-
-		private static MemberData[] GetProperties(object Instance)
-		{
-			List<MemberData> list = new List<MemberData>();
-
-			Type type = Instance.GetType();
-
-			while (type != null)
-			{
-				PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-				for (int i = 0; i < properties.Length; ++i)
-				{
-					PropertyInfo property = properties[i];
-
-					SerializableAttribute serializableAttr = GetSerializableAttribute(property);
-
-					if (serializableAttr == null || property.GetSetMethod(true) == null)
-						continue;
-
-					list.Add(new MemberData(Instance, property, serializableAttr));
-				}
-
-				type = type.BaseType;
-			}
-
-			return list.ToArray();
-		}
-
-		private static MemberData[] GetFields(object Instance)
-		{
-			List<MemberData> list = new List<MemberData>();
-
-			Type type = Instance.GetType();
-
-			while (type != null)
-			{
-				FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-				for (int i = 0; i < fields.Length; ++i)
-				{
-					FieldInfo field = fields[i];
-
-					SerializableAttribute serializableAttr = GetSerializableAttribute(field);
-
-					if (serializableAttr == null)
-						continue;
-
-					list.Add(new MemberData(Instance, field, serializableAttr));
-				}
-
-				type = type.BaseType;
-			}
-
-			return list.ToArray();
-		}
-
-		private static T GetAttribute<T>(MemberInfo Member) where T : System.Attribute
-		{
-			object[] attr = Member.GetCustomAttributes(typeof(T), false);
-
-			if (attr.Length == 0)
-				return null;
-
-			return (T)attr[0];
 		}
 	}
 }
