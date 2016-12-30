@@ -31,9 +31,11 @@ namespace VisualScriptTool.Serialization
 		{
 			ObjectFactories = new ObjectFactoryList();
 			ObjectFactories.Add(new DefaultObjectFactory());
+			ObjectFactories.Add(new SystemObjectFactory());
 
 			Strategies = new StrategyList();
 			Strategies.Add(new DefaultStrategy());
+			Strategies.Add(new SystemStrategy());
 		}
 
 		public ISerializeObject Serialize(object Instance)
@@ -55,7 +57,12 @@ namespace VisualScriptTool.Serialization
 			{
 				SerializeReferences.InstanceData instance = serializeRefernces.Instances[i];
 
-				StoreInstance(Object.AddObject(instance.ID), instance);
+				Type type = instance.Instance.GetType();
+
+				if (type.IsArray)
+					StoreInstance(Object.AddArray(instance.ID), instance);
+				else
+					StoreInstance(Object.AddObject(instance.ID), instance);
 			}
 		}
 
@@ -94,6 +101,38 @@ namespace VisualScriptTool.Serialization
 
 			for (int i = 1; i < deserializeRefernces.Instances.Length; ++i)
 				DeserializeInstance(deserializeRefernces.Instances[i]);
+		}
+
+		private void StoreInstance(ISerializeArray Array, SerializeReferences.InstanceData Instance)
+		{
+			Array array = (Array)Instance.Instance;
+
+			bool isItemPrimitive = MemberData.IsTypePrimitive(GetArrayItemType(Instance.Instance.GetType()));
+
+			for (int i = 0; i < array.Length; ++i)
+			{
+				object item = array.GetValue(i);
+
+				if (item == null)
+				{
+					Array.Add(null);
+
+					continue;
+				}
+
+				if (isItemPrimitive)
+					Array.Add(item);
+				else
+				{
+					Array.Add(serializeRefernces.GetOrAddInstance(item).ID);
+
+					//MemberData[] members = GetMembers(item);
+					//ISerializeObject itemObject = Array.AddObject();
+
+					//for (int j = 0; j < members.Length; ++j)
+					//	StoreMember(itemObject, members[j]);
+				}
+			}
 		}
 
 		private void StoreInstance(ISerializeObject Object, SerializeReferences.InstanceData Instance)
@@ -161,7 +200,7 @@ namespace VisualScriptTool.Serialization
 					return;
 				}
 
-				Type itemType = Type.GetType(Member.Type.FullName.Replace("[]", ""));
+				Type itemType = GetArrayItemType(Member.Type);
 
 				Array array = Array.CreateInstance(itemType, dataArray.Count);
 
@@ -185,12 +224,14 @@ namespace VisualScriptTool.Serialization
 				object value = null;
 
 				if (Object.Contains(identifier))
+				{
 					value = Object[identifier];
 
-				if (DeserializeReferences.InstanceData.IsReferenceIDFormat(value.ToString()))
-					value = CreateReferencedValue(value.ToString(), Member.Type);
+					if (DeserializeReferences.InstanceData.IsReferenceIDFormat(value.ToString()))
+						value = CreateReferencedValue(value.ToString(), Member.Type);
+				}
 
-				Member.Value = Convert.ChangeType(value, Member.Type);
+				Member.Value = (value == null ? null : Convert.ChangeType(value, Member.Type));
 			}
 		}
 
@@ -223,7 +264,7 @@ namespace VisualScriptTool.Serialization
 		{
 			Type type = Instance.GetType();
 
-            for (int i = 0; i < Strategies.Count; ++i)
+			for (int i = 0; i < Strategies.Count; ++i)
 				if (Strategies[i].CanHandle(type))
 					return Strategies[i].GetMembers(Instance);
 
@@ -233,6 +274,11 @@ namespace VisualScriptTool.Serialization
 		private static bool IsComplexType(Type Type)
 		{
 			return (!Type.IsPrimitive && Type != typeof(string));
+		}
+
+		private static Type GetArrayItemType(Type Type)
+		{
+			return Type.GetType(Type.FullName.Replace("[]", "") + "," + Type.Assembly.FullName.Split(',')[0]);
 		}
 	}
 }

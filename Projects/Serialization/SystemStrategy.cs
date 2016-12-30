@@ -35,11 +35,14 @@ namespace VisualScriptTool.Serialization
 
 			while (type != null)
 			{
-				PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				PropertyInfo[] properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public);
 
 				for (int i = 0; i < properties.Length; ++i)
 				{
 					PropertyInfo property = properties[i];
+
+					if (property.GetSetMethod(true) == null)
+						continue;
 
 					list.Add(new MemberData(Instance, property, GetIdentifier(property)));
 				}
@@ -58,7 +61,7 @@ namespace VisualScriptTool.Serialization
 
 			while (type != null)
 			{
-				FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public);
 
 				for (int i = 0; i < fields.Length; ++i)
 				{

@@ -69,7 +69,12 @@ namespace VisualScriptTool.Serialization
 				setAccessor = property.GetSetMethod(true);
 			}
 
-			IsPrimitive = (Type.IsPrimitive || Type == typeof(string));
+			IsPrimitive = IsTypePrimitive(Type);
+        }
+
+		public static bool IsTypePrimitive(System.Type Type)
+		{
+			return (Type.IsPrimitive || Type == typeof(string));
 		}
 	}
 }
