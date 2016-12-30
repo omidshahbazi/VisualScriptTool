@@ -1,5 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using VisualScriptTool.Serialization;
 
@@ -78,13 +79,14 @@ namespace VisualScriptTool.Editor
 
 
 			Test test = new Test();
-            Test[] testArray = new Test[] { test, null, test, new Test() };
+			Test[] testArray = new Test[] { test, null, test, new Test() };
+			List<Test> testList = new List<Test> { test, null, test, new Test() };
 
-			System.IO.File.WriteAllText(path, ser.Serialize(testArray).Content);
+			System.IO.File.WriteAllText(path, ser.Serialize(testList).Content);
 
 			//ser = new Serializer();
 			//ser.Deserialize(Factory.Create(System.IO.File.ReadAllText(path)), test);
-			//Test test1 = ser.Deserialize<Test>(Creator.Create(System.IO.File.ReadAllText(path)));
+			//Test[] test1 = ser.Deserialize<Test[]>(Creator.Create(System.IO.File.ReadAllText(path)));
 		}
 	}
 }

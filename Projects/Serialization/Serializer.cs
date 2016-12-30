@@ -59,7 +59,8 @@ namespace VisualScriptTool.Serialization
 
 				Type type = instance.Instance.GetType();
 
-				if (type.IsArray)
+				if (type.IsArray) what about List<> or Dictionary or any costum types
+					should we expose set value functionality into strategy interface ?
 					StoreInstance(Object.AddArray(instance.ID), instance);
 				else
 					StoreInstance(Object.AddObject(instance.ID), instance);
