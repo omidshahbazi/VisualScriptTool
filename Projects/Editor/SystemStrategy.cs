@@ -2,8 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using VisualScriptTool.Serialization;
 
-namespace VisualScriptTool.Serialization
+namespace VisualScriptTool.Editor
 {
 	public class SystemStrategy : IStrategy
 	{

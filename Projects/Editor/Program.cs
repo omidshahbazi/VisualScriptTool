@@ -76,17 +76,19 @@ namespace VisualScriptTool.Editor
 			//Test test = new Test(1);
 
 			Serializer ser = new Serializer();
+			ser.ObjectFactories.Add(new SystemObjectFactory());
+			ser.Strategies.Add(new SystemStrategy());
 
 
 			Test test = new Test();
 			Test[] testArray = new Test[] { test, null, test, new Test() };
-			List<Test> testList = new List<Test> { test, null, test, new Test() };
+			List<Test> testList = new List<Test> { test, null, new Test() };
 
-			System.IO.File.WriteAllText(path, ser.Serialize(testList).Content);
+			//System.IO.File.WriteAllText(path, ser.Serialize(testList).Content);
 
 			//ser = new Serializer();
 			//ser.Deserialize(Factory.Create(System.IO.File.ReadAllText(path)), test);
-			//Test[] test1 = ser.Deserialize<Test[]>(Creator.Create(System.IO.File.ReadAllText(path)));
+			Test[] test1 = ser.Deserialize<Test[]>(Creator.Create(System.IO.File.ReadAllText(path)));
 		}
 	}
 }

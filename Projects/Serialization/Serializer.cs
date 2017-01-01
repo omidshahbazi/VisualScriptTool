@@ -1,5 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace VisualScriptTool.Serialization
@@ -31,11 +32,9 @@ namespace VisualScriptTool.Serialization
 		{
 			ObjectFactories = new ObjectFactoryList();
 			ObjectFactories.Add(new DefaultObjectFactory());
-			ObjectFactories.Add(new SystemObjectFactory());
 
 			Strategies = new StrategyList();
 			Strategies.Add(new DefaultStrategy());
-			Strategies.Add(new SystemStrategy());
 		}
 
 		public ISerializeObject Serialize(object Instance)
@@ -59,10 +58,12 @@ namespace VisualScriptTool.Serialization
 
 				Type type = instance.Instance.GetType();
 
-				if (type.IsArray) what about List<> or Dictionary or any costum types
-					should we expose set value functionality into strategy interface ?
+				// what about List<> or Dictionary<,> or any costum types
+				// should we expose set value functionality into strategy interface ?
+
+				if (IsArrayOrList(type))
 					StoreInstance(Object.AddArray(instance.ID), instance);
-				else
+				else if (type.IsClass)
 					StoreInstance(Object.AddObject(instance.ID), instance);
 			}
 		}
@@ -106,32 +107,52 @@ namespace VisualScriptTool.Serialization
 
 		private void StoreInstance(ISerializeArray Array, SerializeReferences.InstanceData Instance)
 		{
-			Array array = (Array)Instance.Instance;
+			Type type = Instance.Instance.GetType();
 
-			bool isItemPrimitive = MemberData.IsTypePrimitive(GetArrayItemType(Instance.Instance.GetType()));
-
-			for (int i = 0; i < array.Length; ++i)
+			if (IsArray(type))
 			{
-				object item = array.GetValue(i);
+				Array array = (Array)Instance.Instance;
 
-				if (item == null)
+				bool isItemPrimitive = MemberData.IsTypePrimitive(GetArrayItemType(type));
+
+				for (int i = 0; i < array.Length; ++i)
 				{
-					Array.Add(null);
+					object item = array.GetValue(i);
 
-					continue;
+					if (item == null)
+					{
+						Array.Add(null);
+
+						continue;
+					}
+
+					if (isItemPrimitive)
+						Array.Add(item);
+					else
+						Array.Add(serializeRefernces.GetOrAddInstance(item).ID);
 				}
+			}
+			else if (IsList(type))
+			{
+				IList list = (IList)Instance.Instance;
 
-				if (isItemPrimitive)
-					Array.Add(item);
-				else
+				bool isItemPrimitive = MemberData.IsTypePrimitive(GetListItemType(type));
+
+				for (int i = 0; i < list.Count; ++i)
 				{
-					Array.Add(serializeRefernces.GetOrAddInstance(item).ID);
+					object item = list[i];
 
-					//MemberData[] members = GetMembers(item);
-					//ISerializeObject itemObject = Array.AddObject();
+					if (item == null)
+					{
+						Array.Add(null);
 
-					//for (int j = 0; j < members.Length; ++j)
-					//	StoreMember(itemObject, members[j]);
+						continue;
+					}
+
+					if (isItemPrimitive)
+						Array.Add(item);
+					else
+						Array.Add(serializeRefernces.GetOrAddInstance(item).ID);
 				}
 			}
 		}
@@ -154,7 +175,9 @@ namespace VisualScriptTool.Serialization
 				return;
 			}
 
-			if (Member.Type.IsArray)
+			if (Member.IsPrimitive)
+				Object.Set(identifier, Member.Value);
+			else if (Member.Type.IsArray)
 			{
 				ISerializeArray membersArray = Object.AddArray(identifier);
 
@@ -173,8 +196,6 @@ namespace VisualScriptTool.Serialization
 					membersArray.Add(Member.IsPrimitive ? item : serializeRefernces.GetOrAddInstance(item).ID);
 				}
 			}
-			else if (Member.IsPrimitive)
-				Object.Set(identifier, Member.Value);
 			else
 				Object.Set(identifier, serializeRefernces.GetOrAddInstance(Member.Value).ID);
 		}
@@ -279,7 +300,35 @@ namespace VisualScriptTool.Serialization
 
 		private static Type GetArrayItemType(Type Type)
 		{
-			return Type.GetType(Type.FullName.Replace("[]", "") + "," + Type.Assembly.FullName.Split(',')[0]);
+			//return Type.GetType(Type.FullName.Replace("[]", "") + "," + Type.Assembly.FullName.Split(',')[0]);
+
+			if (!Type.HasElementType)
+				return null;
+
+			return Type.GetElementType();
+		}
+
+		private static Type GetListItemType(Type Type)
+		{
+			if (Type.GetGenericArguments().Length == 0)
+				return null;
+
+			return Type.GetGenericArguments()[0];
+		}
+
+		private static bool IsArrayOrList(Type Type)
+		{
+			return (IsArray(Type) || IsList(Type));
+		}
+
+		private static bool IsArray(Type Type)
+		{
+			return Type.IsArray;
+		}
+
+		private static bool IsList(Type Type)
+		{
+			return (Type.GetInterface("IList") != null);
 		}
 	}
 }
