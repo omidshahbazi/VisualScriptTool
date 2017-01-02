@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialization", "Serializat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reflection", "Reflection\Reflection.csproj", "{39F79A2C-581F-4D5D-AFDC-501E9DE6B343}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{3158839F-FAD7-4A52-B2F9-EE61D42670D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{39F79A2C-581F-4D5D-AFDC-501E9DE6B343}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39F79A2C-581F-4D5D-AFDC-501E9DE6B343}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39F79A2C-581F-4D5D-AFDC-501E9DE6B343}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3158839F-FAD7-4A52-B2F9-EE61D42670D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3158839F-FAD7-4A52-B2F9-EE61D42670D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3158839F-FAD7-4A52-B2F9-EE61D42670D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3158839F-FAD7-4A52-B2F9-EE61D42670D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

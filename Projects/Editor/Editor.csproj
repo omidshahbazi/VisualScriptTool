@@ -61,6 +61,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CubicSPLine.cs" />
+    <Compile Include="Test.cs" />
     <Compile Include="TypeHelper.cs" />
     <Compile Include="StatementDrawer.cs" />
     <Compile Include="DiagramTab.cs">

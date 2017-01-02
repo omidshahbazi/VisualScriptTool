@@ -9,59 +9,88 @@ namespace VisualScriptTool.Serialization
 {
 	public sealed class SchemaCompiler
 	{
+		public ICompileStrategy Strategy
+		{
+			get;
+			set;
+		}
+
+		public SchemaCompiler()
+		{
+			Strategy = new DefaultCompileStrategy();
+		}
+
 		public void Compile()
 		{
-
 		}
 
 		public string Compile(Type Type)
 		{
-			CodeBuilder code = new CodeBuilder();
+			CodeBuilder header = new CodeBuilder();
+			CodeBuilder footer = new CodeBuilder();
+			CodeBuilder serialize = new CodeBuilder();
+			CodeBuilder deserialize = new CodeBuilder();
 
+			string typeName = Type.Name;
 			bool hasNamespace = !string.IsNullOrEmpty(Type.Namespace);
 			uint indent = 0;
 
 			if (hasNamespace)
 			{
-				code.AppendLine("namespace " + Type.Namespace, indent);
-				code.AppendLine("{", indent);
+				header.Append("// Generaterd file");
+				header.AppendLine("using VisualScriptTool.Serialization;", indent);
+				header.AppendLine("namespace " + Type.Namespace, indent);
+				header.AppendLine("{", indent);
 
 				++indent;
 			}
 
-			code.AppendLine(indent);
+			header.AppendLine(indent);
 
 			if (Type.IsPublic)
-				code.Append("public ");
-			code.Append("class " + Type.Name + "_Serializer : Serializer");
-			code.AppendLine("{", indent);
+				header.Append("public ");
+			header.Append("class " + Type.Name + "_Serializer : Serializer");
+			header.AppendLine("{", indent);
 
-			//MemberInfo[] members = GetMembers(Type);
+			++indent;
+			serialize.AppendLine("public void Serialize(ISerializeObject Object, " + typeName + " Instance)", indent);
+			serialize.AppendLine("{", indent);
+			deserialize.AppendLine("public void Deserialize(ISerializeObject Object, " + typeName + " Instance)", indent);
+			deserialize.AppendLine("{", indent);
 
-			//for (int i = 0; i < members.Length; ++i)
-			//{
+			MemberInfo[] members = Strategy.GetMembers(Type);
 
-			//}
+			++indent;
+			for (int i = 0; i < members.Length; ++i)
+			{
+				MemberInfo member = members[i];
+				Type memberType = (member is FieldInfo ? ((FieldInfo)member).FieldType : ((PropertyInfo)member).PropertyType);
 
-			code.AppendLine("}", indent);
+				serialize.AppendLine("Object.Set(\"" + i + "\", Instance." + member.Name + ");", indent);
+
+				deserialize.AppendLine("Instance." + member.Name + " = Object.Get<" + memberType.FullName + ">(\"" + i + "\");", indent);
+			}
+			--indent;
+
+			serialize.AppendLine("}", indent);
+			deserialize.AppendLine("}", indent);
+
+			--indent;
+			footer.AppendLine("}", indent);
 
 			if (hasNamespace)
 			{
 				--indent;
-				code.AppendLine("}", indent);
+				footer.AppendLine("}", indent);
 			}
 
+			CodeBuilder code = new CodeBuilder();
+			code.Append(header.ToString());
+			code.AppendLine(serialize.ToString());
+			code.AppendLine(deserialize.ToString());
+			code.AppendLine(footer.ToString());
+
 			return code.ToString();
-		}
-
-		private static MemberInfo[] GetMembers(Type Type)
-		{
-			List<MemberInfo> list = new List<MemberInfo>();
-
-			list.AddRange(TypeUtils.GetProperties(Type));
-			list.AddRange(TypeUtils.GetFields(Type));
-
-			return list.ToArray();
 		}
 	}
 }

@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeBuilder.cs" />
+    <Compile Include="DefaultCompileStrategy.cs" />
+    <Compile Include="ICompileStrategy.cs" />
     <Compile Include="ISerializeArray.cs" />
     <Compile Include="ISerializeData.cs" />
     <Compile Include="ISerializeObject.cs" />
