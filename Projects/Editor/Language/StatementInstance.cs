@@ -8,20 +8,16 @@ namespace VisualScriptTool.Editor
 {
 	public abstract class StatementInstance
 	{
-		[Serializable(0)]
 		private RectangleF bounds;
 
-		//[Serializable]
 		private SlotList slots = null;
 
-		//[Serializable]
 		public Statement Statement
 		{
 			get;
 			private set;
 		}
 
-		[Serializable(1)]
 		private int Position1
 		{
 			get;
