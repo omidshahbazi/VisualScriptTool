@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes.cs" />
     <Compile Include="CodeBuilder.cs" />
     <Compile Include="DefaultCompileStrategy.cs" />
     <Compile Include="ICompileStrategy.cs" />

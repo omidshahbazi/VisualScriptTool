@@ -2,13 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
-using VisualScriptTool.Reflection;
 
 namespace VisualScriptTool.Serialization
 {
 	public sealed class SchemaCompiler
 	{
+		private const string SERIALIZE_METHOD_NAME = "Serialize";
+		private const string DESERIALIZE_METHOD_NAME = "Deserialize";
+
+		private uint indent;
+
 		public ICompileStrategy Strategy
 		{
 			get;
@@ -33,7 +36,7 @@ namespace VisualScriptTool.Serialization
 
 			string typeName = Type.Name;
 			bool hasNamespace = !string.IsNullOrEmpty(Type.Namespace);
-			uint indent = 0;
+			indent = 0;
 
 			if (hasNamespace)
 			{
@@ -47,30 +50,16 @@ namespace VisualScriptTool.Serialization
 
 			header.AppendLine(indent);
 
-			if (Type.IsPublic)
-				header.Append("public ");
-			header.Append("class " + Type.Name + "_Serializer : Serializer");
+			header.Append("static class " + GetSchemaName(Type));
 			header.AppendLine("{", indent);
 
 			++indent;
-			serialize.AppendLine("public void Serialize(ISerializeObject Object, " + typeName + " Instance)", indent);
+			serialize.AppendLine("public static void " + SERIALIZE_METHOD_NAME + "(ISerializeObject Object, " + typeName + " Instance)", indent);
 			serialize.AppendLine("{", indent);
-			deserialize.AppendLine("public void Deserialize(ISerializeObject Object, " + typeName + " Instance)", indent);
+			deserialize.AppendLine("public static void " + DESERIALIZE_METHOD_NAME + "(ISerializeObject Object, " + typeName + " Instance)", indent);
 			deserialize.AppendLine("{", indent);
 
-			MemberInfo[] members = Strategy.GetMembers(Type);
-
-			++indent;
-			for (int i = 0; i < members.Length; ++i)
-			{
-				MemberInfo member = members[i];
-				Type memberType = (member is FieldInfo ? ((FieldInfo)member).FieldType : ((PropertyInfo)member).PropertyType);
-
-				serialize.AppendLine("Object.Set(\"" + i + "\", Instance." + member.Name + ");", indent);
-
-				deserialize.AppendLine("Instance." + member.Name + " = Object.Get<" + memberType.FullName + ">(\"" + i + "\");", indent);
-			}
-			--indent;
+			CompileMembers(Type, serialize, deserialize);
 
 			serialize.AppendLine("}", indent);
 			deserialize.AppendLine("}", indent);
@@ -91,6 +80,85 @@ namespace VisualScriptTool.Serialization
 			code.AppendLine(footer.ToString());
 
 			return code.ToString();
+		}
+
+		private void CompileMembers(Type Type, CodeBuilder SerializeMethod, CodeBuilder DeserializeMethod)
+		{
+			MemberInfo[] members = Strategy.GetMembers(Type);
+			List<int> ids = new List<int>();
+
+			++indent;
+			for (int i = 0; i < members.Length; ++i)
+			{
+				MemberInfo member = members[i];
+
+				if (!Strategy.IsSerializableMember(member))
+					continue;
+
+				int id = Strategy.GetMemberID(member, i);
+
+				if (ids.Contains(id))
+					throw new ArgumentException("ID [" + id + "] used more than once");
+
+				ids.Add(id);
+
+				Type memberType = (member is FieldInfo ? ((FieldInfo)member).FieldType : ((PropertyInfo)member).PropertyType);
+				string memberAccessName = "Instance." + member.Name;
+
+				if (Strategy.IsPrimitive(memberType))
+				{
+					SerializeMethod.AppendLine("Serializer.Set(Object, " + id + ", " + memberAccessName + ");", indent);
+
+					DeserializeMethod.AppendLine(memberAccessName + " = Serializer.Get<" + memberType.FullName + ">(Object, " + id + ", " + Strategy.GetMemberDefaultValue(member) + ");", indent);
+				}
+				else if (Strategy.IsArray(memberType))
+				{
+					string arrayName = member.Name + "Array";
+
+					SerializeMethod.AppendLine("if (" + memberAccessName + " == null)", indent);
+					SerializeMethod.AppendLine("Serializer.Set(Object, " + id + ", null);", ++indent);
+					SerializeMethod.AppendLine("else", --indent);
+					SerializeMethod.AppendLine("{", indent);
+					++indent;
+
+					SerializeMethod.AppendLine("System.Array " + arrayName + " = (System.Array)" + memberAccessName + ";", indent);
+					SerializeMethod.AppendLine("for (int i = 0; i < " + arrayName + ".Length; ++i)", indent);
+					SerializeMethod.AppendLine("{", indent);
+
+					++indent;
+				   --indent;
+
+					SerializeMethod.AppendLine("}", indent);
+
+					--indent;
+					SerializeMethod.AppendLine("}", indent);
+
+				}
+				else if (Strategy.IsList(memberType))
+				{
+
+				}
+				else if (Strategy.IsMap(memberType))
+				{
+
+				}
+				else
+				{
+					SerializeMethod.AppendLine("if (" + memberAccessName + " == null)", indent);
+					SerializeMethod.AppendLine("Serializer.Set(Object, " + id + ", null);", ++indent);
+					SerializeMethod.AppendLine("else", --indent);
+					SerializeMethod.AppendLine(GetSchemaName(memberType) + "." + SERIALIZE_METHOD_NAME + "(Serializer.AddObject(Object, " + id + "), " + memberAccessName + ");", ++indent);
+					--indent;
+
+					// deserialize
+				}
+			}
+			--indent;
+		}
+
+		private static string GetSchemaName(Type Type)
+		{
+			return Type.Name + "_Schema";
 		}
 	}
 }

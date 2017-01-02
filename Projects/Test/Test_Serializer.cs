@@ -2,23 +2,41 @@
 using VisualScriptTool.Serialization;
 namespace VisualScriptTool.Editor
 {
-	class Test_Serializer : Serializer
+	static class Test_Schema
 	{
 
-		public void Serialize(ISerializeObject Object, Test Instance)
+		public static void Serialize(ISerializeObject Object, Test Instance)
 		{
-			Object.Set("0", Instance.Index);
-			Object.Set("1", Instance.Flag);
-			Object.Set("2", Instance.Name2);
-			Object.Set("3", Instance.Points);
+			Serializer.Set(Object, 0, Instance.Index);
+			Serializer.Set(Object, 1, Instance.Flag);
+			if (Instance.Name2 == null)
+				Serializer.Set(Object, 2, null);
+			else
+			{
+				System.Array Name2Array = (System.Array)Instance.Name2;
+				for (int i = 0; i < Name2Array.Length; ++i)
+				{
+				}
+			}
+			if (Instance.Points == null)
+				Serializer.Set(Object, 3, null);
+			else
+			{
+				System.Array PointsArray = (System.Array)Instance.Points;
+				for (int i = 0; i < PointsArray.Length; ++i)
+				{
+				}
+			}
+			if (Instance.child == null)
+				Serializer.Set(Object, 6, null);
+			else
+				Test_Schema.Serialize(Serializer.AddObject(Object, 6), Instance.child);
 		}
 
-		public void Deserialize(ISerializeObject Object, Test Instance)
+		public static void Deserialize(ISerializeObject Object, Test Instance)
 		{
-			Instance.Index = Object.Get<System.Int32>("0");
-			Instance.Flag = Object.Get<System.Boolean>("1");
-			Instance.Name2 = Object.Get<System.String[]>("2");
-			Instance.Points = Object.Get<System.Random[]>("3");
+			Instance.Index = Serializer.Get<System.Int32>(Object, 0, 10123);
+			Instance.Flag = Serializer.Get<System.Boolean>(Object, 1, true);
 		}
 
 	}

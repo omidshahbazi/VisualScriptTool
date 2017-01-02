@@ -7,5 +7,14 @@ namespace VisualScriptTool.Serialization
 	public interface ICompileStrategy
 	{
 		MemberInfo[] GetMembers(Type Type);
+
+		bool IsSerializableMember(MemberInfo Member);
+		int GetMemberID(MemberInfo Member, int DefaultID);
+		string GetMemberDefaultValue(MemberInfo Member);
+
+		bool IsPrimitive(Type Type);
+		bool IsArray(Type Type);
+		bool IsList(Type Type);
+		bool IsMap(Type Type);
 	}
 }

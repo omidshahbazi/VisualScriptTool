@@ -109,7 +109,12 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 
 		T ISerializeObject.Get<T>(string Name)
 		{
-			return (T)map[Name];
+			object obj = map[Name];
+
+			if (obj is T)
+				return (T)obj;
+
+			throw new System.InvalidCastException("Value of key [" + Name + "] is " + obj.GetType().Name + ", but desire type is " + typeof(T).Name);
 		}
 
 		IEnumerator<KeyValuePair<string, object>> ISerializeObject.GetEnumerator()
