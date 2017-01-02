@@ -50,6 +50,10 @@ namespace VisualScriptTool.Editor
 			diagramTab.Statements.Add(new VariableStatementInstance(intVariable, new PointF(50, 20)));
 			diagramTab.Statements.Add(new VariableStatementInstance(boolVariable, new PointF(150, 120)));
 
+			string path = Application.StartupPath + "/1.json";
+			Serialization.Serializer ser = new Serialization.Serializer();
+			System.IO.File.WriteAllText(path, ser.Serialize(diagramTab.Statements).Content);
+
 			tabControl1.TabPages.Add(diagramTab);
 		}
 	}

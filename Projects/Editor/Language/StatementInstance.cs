@@ -8,7 +8,7 @@ namespace VisualScriptTool.Editor
 {
 	public abstract class StatementInstance
 	{
-		//[Serializable]
+		[Serializable(0)]
 		private RectangleF bounds;
 
 		//[Serializable]
@@ -21,7 +21,7 @@ namespace VisualScriptTool.Editor
 			private set;
 		}
 
-		//[Serializable]
+		[Serializable(1)]
 		private int Position1
 		{
 			get;

@@ -7,30 +7,9 @@ namespace VisualScriptTool.Editor
 {
 	public class SystemObjectFactory : IObjectFactory
 	{
-		bool IObjectFactory.CanInstantiate(Type Type)
+		public Array InstantiateArray(Type Type, uint Length)
 		{
-			ConstructorInfo[] constructors = Type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-			for (int i = 0; i < constructors.Length; ++i)
-			{
-				ParameterInfo[] parameters = constructors[i].GetParameters();
-
-				if (parameters.Length == 0)
-					return true;
-
-				bool canProceed = true;
-				for (int j = 0; j < parameters.Length; ++j)
-					if (!parameters[i].ParameterType.IsPrimitive)
-					{
-						canProceed = false;
-						break;
-					}
-
-				if (canProceed)
-					return true;
-			}
-
-			return false;
+			return Array.CreateInstance(Type.GetElementType(), Length);
 		}
 
 		object IObjectFactory.Instantiate(Type Type)
@@ -83,6 +62,37 @@ namespace VisualScriptTool.Editor
 				arguments[i] = Activator.CreateInstance(parameters[i].ParameterType);
 
 			return properConstructor.Invoke(arguments);
+		}
+
+		public bool CanInstantiateArray(Type Type)
+		{
+			return true;
+		}
+
+		bool IObjectFactory.CanInstantiate(Type Type)
+		{
+			ConstructorInfo[] constructors = Type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+			for (int i = 0; i < constructors.Length; ++i)
+			{
+				ParameterInfo[] parameters = constructors[i].GetParameters();
+
+				if (parameters.Length == 0)
+					return true;
+
+				bool canProceed = true;
+				for (int j = 0; j < parameters.Length; ++j)
+					if (!parameters[i].ParameterType.IsPrimitive)
+					{
+						canProceed = false;
+						break;
+					}
+
+				if (canProceed)
+					return true;
+			}
+
+			return false;
 		}
 	}
 }

@@ -64,7 +64,7 @@ namespace VisualScriptTool.Editor
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			//Application.Run(new MainForm());
+			Application.Run(new MainForm());
 
 			string path = Application.StartupPath + "/1.json";
 
@@ -88,7 +88,7 @@ namespace VisualScriptTool.Editor
 
 			//ser = new Serializer();
 			//ser.Deserialize(Factory.Create(System.IO.File.ReadAllText(path)), test);
-			Test[] test1 = ser.Deserialize<Test[]>(Creator.Create(System.IO.File.ReadAllText(path)));
+			//Test[] test1 = ser.Deserialize<Test[]>(Creator.Create(System.IO.File.ReadAllText(path)));
 		}
 	}
 }

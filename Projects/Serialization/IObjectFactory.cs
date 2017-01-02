@@ -6,7 +6,9 @@ namespace VisualScriptTool.Serialization
 	public interface IObjectFactory
 	{
 		object Instantiate(Type Type);
+		Array InstantiateArray(Type Type, uint Length);
 
 		bool CanInstantiate(Type Type);
+		bool CanInstantiateArray(Type Type);
 	}
 }

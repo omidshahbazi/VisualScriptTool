@@ -1,8 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System.Drawing;
 using System.Windows.Forms;
-using VisualScriptTool.Editor.Properties;
-using VisualScriptTool.Renderer;
 
 namespace VisualScriptTool.Editor
 {

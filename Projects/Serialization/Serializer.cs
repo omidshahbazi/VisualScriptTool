@@ -58,7 +58,7 @@ namespace VisualScriptTool.Serialization
 
 				Type type = instance.Instance.GetType();
 
-				// what about List<> or Dictionary<,> or any costum types
+				// what about multi-dimensional array, Dictionary<,> or any costum types
 				// should we expose set value functionality into strategy interface ?
 
 				if (IsArrayOrList(type))
@@ -76,7 +76,14 @@ namespace VisualScriptTool.Serialization
 			if (!IsComplexType(typeof(T)))
 				return default(T);
 
-			object obj = Instantiate(typeof(T));
+			Type type = typeof(T);
+
+			object obj = null;
+
+			if (IsArray(type))
+				obj = InstantiateArray(type, 0);
+			else
+				obj = Instantiate(type);
 
 			Deserialize(Object, obj);
 
@@ -95,8 +102,8 @@ namespace VisualScriptTool.Serialization
 
 			IEnumerator<KeyValuePair<string, object>> it = Object.GetEnumerator();
 
-			while (it.MoveNext())
-				deserializeRefernces.AddInstance(it.Current.Key, (ISerializeObject)it.Current.Value);
+			while (it.MoveNext()) ; ;
+			deserializeRefernces.AddInstance(it.Current.Key, (ISerializeObject)it.Current.Value);
 
 			deserializeRefernces.Instances[0].Instance = Instance;
 			DeserializeInstance(deserializeRefernces.Instances[0]);
@@ -224,7 +231,7 @@ namespace VisualScriptTool.Serialization
 
 				Type itemType = GetArrayItemType(Member.Type);
 
-				Array array = Array.CreateInstance(itemType, dataArray.Count);
+				Array array = InstantiateArray(Member.Type, dataArray.Count);
 
 				for (uint i = 0; i < dataArray.Count; ++i)
 				{
@@ -282,6 +289,15 @@ namespace VisualScriptTool.Serialization
 			throw new ObjectFactoryNotFoundException(Type);
 		}
 
+		private Array InstantiateArray(Type Type, uint Length)
+		{
+			for (int i = 0; i < ObjectFactories.Count; ++i)
+				if (ObjectFactories[i].CanInstantiateArray(Type))
+					return ObjectFactories[i].InstantiateArray(Type, Length);
+
+			throw new ObjectFactoryNotFoundException(Type);
+		}
+
 		private MemberData[] GetMembers(object Instance)
 		{
 			Type type = Instance.GetType();
@@ -310,10 +326,14 @@ namespace VisualScriptTool.Serialization
 
 		private static Type GetListItemType(Type Type)
 		{
-			if (Type.GetGenericArguments().Length == 0)
-				return null;
+			do
+			{
+				if (Type.GetGenericArguments().Length != 0)
+					return Type.GetGenericArguments()[0];
+			}
+			while ((Type = Type.BaseType) != null);
 
-			return Type.GetGenericArguments()[0];
+			return null;
 		}
 
 		private static bool IsArrayOrList(Type Type)

@@ -6,6 +6,21 @@ namespace VisualScriptTool.Serialization
 {
 	public class DefaultObjectFactory : IObjectFactory
 	{
+		public Array InstantiateArray(Type Type, uint Length)
+		{
+			return Array.CreateInstance(Type.GetElementType(), Length);
+		}
+
+		object IObjectFactory.Instantiate(Type Type)
+		{
+			return Activator.CreateInstance(Type, true);
+		}
+
+		public bool CanInstantiateArray(Type Type)
+		{
+			return true;
+		}
+
 		bool IObjectFactory.CanInstantiate(Type Type)
 		{
 			ConstructorInfo[] constructors = Type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
@@ -15,11 +30,6 @@ namespace VisualScriptTool.Serialization
 					return true;
 
 			return false;
-		}
-
-		object IObjectFactory.Instantiate(Type Type)
-		{
-			return Activator.CreateInstance(Type, true);
 		}
 	}
 }
