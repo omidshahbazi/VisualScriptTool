@@ -2,8 +2,21 @@
 
 namespace VisualScriptTool.Serialization
 {
-	public static class Serializer
+	public abstract class Serializer
 	{
+		public abstract System.Type Type
+		{
+			get;
+		}
+
+		public abstract void Serialize(ISerializeObject Object, object Instance);
+		public abstract void Deserialize(ISerializeObject Object, object Instance);
+
+		public static Serializer GetSerializer(System.Type Type)
+		{
+			return Creator.GetSerializer(Type);
+		}
+
 		public static ISerializeArray AddArray(ISerializeObject Object, int ID)
 		{
 			return Object.AddArray(ID.ToString());
@@ -12,6 +25,16 @@ namespace VisualScriptTool.Serialization
 		public static ISerializeObject AddObject(ISerializeObject Object, int ID)
 		{
 			return Object.AddObject(ID.ToString());
+		}
+
+		public static ISerializeArray AddArray(ISerializeArray Array)
+		{
+			return Array.AddArray();
+		}
+
+		public static ISerializeObject AddObject(ISerializeArray Array)
+		{
+			return Array.AddObject();
 		}
 
 		public static void Set(ISerializeObject Object, int ID, object Value)
@@ -55,6 +78,16 @@ namespace VisualScriptTool.Serialization
 				return Object.Get<T>(ID.ToString());
 
 			return DefaultValue;
+		}
+
+		public static void Add(ISerializeArray Array, object Item)
+		{
+			Array.Add(Item);
+		}
+
+		public static T Get<T>(ISerializeArray Array, uint Index)
+		{
+			return Array.Get<T>(Index);
 		}
 	}
 }

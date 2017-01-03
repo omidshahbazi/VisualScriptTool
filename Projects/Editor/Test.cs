@@ -1,13 +1,16 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 
+using System.Collections.Generic;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
 {
 	class Test1
 	{
+		[SerializableElement(1)]
 		public string[] Name;
 
+		[SerializableElement(3)]
 		public System.Random child;
 
 		public Test1()
@@ -27,8 +30,14 @@ namespace VisualScriptTool.Editor
 		[SerializableElement(2)]
 		public string[] Name2;
 
+		[SerializableElement(7)]
+		public List<string> Name3;
+
+		[SerializableElement(9)]
+		public System.Random[] Points1;
+
 		[SerializableElement(3)]
-		public System.Random[] Points;
+		public List<System.Random> Points2;
 
 		[SerializableElement(6)]
 		public Test child;
@@ -44,9 +53,8 @@ namespace VisualScriptTool.Editor
 		public Test()
 		{
 			Index = 3;
-			//child = new Test1();
 			//child1 = child;
-			Points = null;
+			Points1 = null;
 			Flag = true;
 		}
 	}

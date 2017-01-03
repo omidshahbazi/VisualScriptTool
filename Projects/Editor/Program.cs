@@ -15,11 +15,10 @@ namespace VisualScriptTool.Editor
 			Application.SetCompatibleTextRenderingDefault(false);
 			//Application.Run(new MainForm());
 
-			string path = Application.StartupPath + "/../Test/Test_Serializer.cs";
+			SerializerCompiler compiler = new SerializerCompiler();
 
-			SchemaCompiler compiler = new SchemaCompiler();
-
-			File.WriteAllText(path, compiler.Compile(typeof(Test)));
+			File.WriteAllText(Application.StartupPath + "/../Test/Test_Serializer.cs", compiler.Compile(typeof(Test)));
+			File.WriteAllText(Application.StartupPath + "/../Test/Test1_Serializer.cs", compiler.Compile(typeof(Test1)));
 
 			//Serializer ser = new Serializer();
 		}

@@ -1,5 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using SimpleJson;
+using System;
 using System.Collections.Generic;
 
 namespace VisualScriptTool.Serialization.JSONSerializer
@@ -114,7 +115,11 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			if (obj is T)
 				return (T)obj;
 
-			throw new System.InvalidCastException("Value of key [" + Name + "] is " + obj.GetType().Name + ", but desire type is " + typeof(T).Name);
+			obj = Convert.ChangeType(obj, typeof(T));
+
+			return (T)obj;
+
+			//throw new System.InvalidCastException("Value of key [" + Name + "] is " + obj.GetType().Name + ", but desire type is " + typeof(T).Name);
 		}
 
 		IEnumerator<KeyValuePair<string, object>> ISerializeObject.GetEnumerator()
