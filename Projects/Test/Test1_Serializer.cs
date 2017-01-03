@@ -9,6 +9,11 @@ namespace VisualScriptTool.Editor
 			get { return typeof(VisualScriptTool.Editor.Test1); }
 		}
 
+		public override object CreateInstance()
+		{
+			return null;
+		}
+
 		public override void Serialize(ISerializeObject Object, object Instance)
 		{
 			if (Type != Instance.GetType())
@@ -35,7 +40,12 @@ namespace VisualScriptTool.Editor
 			if (Test1.child == null)
 				Set(Object, 3, null);
 			else
-				GetSerializer(Test1.child.GetType()).Serialize(AddObject(Object, 3), Test1.child);
+			{
+				ISerializeObject childObject = AddObject(Object, 3); 
+				System.Type type = Test1.child.GetType();
+				Set(childObject, 0, type.FullName);
+				GetSerializer(type).Serialize(AddObject(childObject, 1), Test1.child);
+			}
 		}
 
 		public override void Deserialize(ISerializeObject Object, object Instance)
@@ -61,8 +71,10 @@ namespace VisualScriptTool.Editor
 				Test1.child = null;
 			else
 			{
-				// Test1.child Allocation
-				GetSerializer(Test1.child.GetType()).Deserialize(childObject, Test1.child);
+				ISerializeObject childObjectValue = Get<ISerializeObject>(Object, 3); 
+				Serializer childSerializer = GetSerializer(System.Type.GetType(Get<string>(childObjectValue, 0)));
+				Test1.child = (System.Random)childSerializer.CreateInstance();
+				childSerializer.Deserialize(Get<ISerializeObject>(childObjectValue, 1), Test1.child);
 			}
 		}
 

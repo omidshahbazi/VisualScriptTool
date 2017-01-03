@@ -9,6 +9,7 @@ namespace VisualScriptTool.Serialization
 			get;
 		}
 
+		public abstract object CreateInstance();
 		public abstract void Serialize(ISerializeObject Object, object Instance);
 		public abstract void Deserialize(ISerializeObject Object, object Instance);
 

@@ -7,8 +7,11 @@ namespace VisualScriptTool.Serialization
 {
 	public sealed class SerializerCompiler
 	{
+		private const string CREATE_INSTANCE_METHOD_NAME = "CreateInstance";
 		private const string SERIALIZE_METHOD_NAME = "Serialize";
 		private const string DESERIALIZE_METHOD_NAME = "Deserialize";
+		private const int DATA_STRUCTURE_TYPE_ID = 0;
+		private const int DATA_STRUCTURE_VALUE_ID = 1;
 
 		private enum ValueType
 		{
@@ -40,6 +43,7 @@ namespace VisualScriptTool.Serialization
 		{
 			CodeBuilder header = new CodeBuilder();
 			CodeBuilder footer = new CodeBuilder();
+			CodeBuilder instatiator = new CodeBuilder();
 			CodeBuilder serialize = new CodeBuilder();
 			CodeBuilder deserialize = new CodeBuilder();
 
@@ -68,6 +72,11 @@ namespace VisualScriptTool.Serialization
 			header.AppendLine("get { return typeof(" + typeName + "); }", ++indent);
 			header.AppendLine("}", --indent);
 
+			instatiator.AppendLine("public override object " + CREATE_INSTANCE_METHOD_NAME + "()", indent);
+			instatiator.AppendLine("{", indent);
+			instatiator.AppendLine("return null;", ++indent);
+			instatiator.AppendLine("}", --indent);
+
 			serialize.AppendLine("public override void " + SERIALIZE_METHOD_NAME + "(ISerializeObject Object, object Instance)", indent);
 			serialize.AppendLine("{", indent);
 			AppendTypeCast(Type, serialize);
@@ -92,6 +101,7 @@ namespace VisualScriptTool.Serialization
 
 			CodeBuilder code = new CodeBuilder();
 			code.Append(header.ToString());
+			code.AppendLine(instatiator.ToString());
 			code.AppendLine(serialize.ToString());
 			code.AppendLine(deserialize.ToString());
 			code.AppendLine(footer.ToString());
@@ -192,7 +202,13 @@ namespace VisualScriptTool.Serialization
 
 			//}
 			else if (elementValueType == ValueType.DataStructure)
-				SerializeMethod.AppendLine("GetSerializer(element.GetType())." + SERIALIZE_METHOD_NAME + "(AddObject(" + arrayName + "), element); ", indent);
+			{
+				string arrayObjectName = Member.Name + "ArrayObject";
+				SerializeMethod.AppendLine("ISerializeObject " + arrayObjectName + " = AddObject(" + arrayName + "); ", indent);
+				SerializeMethod.AppendLine("System.Type elementType = element.GetType();", indent);
+				SerializeMethod.AppendLine("Set(" + arrayObjectName + ", " + DATA_STRUCTURE_TYPE_ID + ", elementType.GUID.ToString());", indent);
+				SerializeMethod.AppendLine("GetSerializer(elementType)." + SERIALIZE_METHOD_NAME + "(AddObject(" + arrayObjectName + ", " + DATA_STRUCTURE_VALUE_ID + "), element); ", indent);
+			}
 
 			SerializeMethod.AppendLine("}", --indent);
 
@@ -231,8 +247,10 @@ namespace VisualScriptTool.Serialization
 			//}
 			else if (elementValueType == ValueType.DataStructure)
 			{
+
+
 				if (ValueType == ValueType.Array)
-					DeserializeMethod.AppendLine("// " + MemberAccessName + "[(int)i] Allocation", indent);
+					DeserializeMethod.AppendLine(MemberAccessName + "[(int)i] = (" + elementType.FullName + ")GetSerializer(" + MemberAccessName + ".GetType())." + CREATE_INSTANCE_METHOD_NAME + "();", indent);
 				else
 					DeserializeMethod.AppendLine("// " + MemberAccessName + ".Add(Allocated);", indent);
 
@@ -246,20 +264,31 @@ namespace VisualScriptTool.Serialization
 
 		private void AppendDataStructure(MemberInfo Member, Type MemberType, int ID, string MemberAccessName, CodeBuilder SerializeMethod, CodeBuilder DeserializeMethod, string ObjectName)
 		{
+			string objectName = Member.Name + "Object";
+
 			SerializeMethod.AppendLine("if (" + MemberAccessName + " == null)", indent);
 			SerializeMethod.AppendLine("Set(" + ObjectName + ", " + ID + ", null);", ++indent);
 			SerializeMethod.AppendLine("else", --indent);
-			SerializeMethod.AppendLine("GetSerializer(" + MemberAccessName + ".GetType())." + SERIALIZE_METHOD_NAME + "(AddObject(" + ObjectName + ", " + ID + "), " + MemberAccessName + ");", ++indent);
-			--indent;
+			SerializeMethod.AppendLine("{", indent);
+			SerializeMethod.AppendLine("ISerializeObject " + objectName + " = AddObject(" + ObjectName + ", " + ID + "); ", ++indent);
+			SerializeMethod.AppendLine("System.Type type = " + MemberAccessName + ".GetType();", indent);
+			SerializeMethod.AppendLine("Set(" + objectName + ", " + DATA_STRUCTURE_TYPE_ID + ", type.FullName);", indent);
+			SerializeMethod.AppendLine("GetSerializer(type)." + SERIALIZE_METHOD_NAME + "(AddObject(" + objectName + ", " + DATA_STRUCTURE_VALUE_ID + "), " + MemberAccessName + ");", indent);
+			SerializeMethod.AppendLine("}", --indent);
 
-			string objectName = Member.Name + "Object";
 			DeserializeMethod.AppendLine("ISerializeObject " + objectName + " = Get<ISerializeObject>(" + ObjectName + ", " + ID + ", null);", indent);
 			DeserializeMethod.AppendLine("if (" + objectName + " == null)", indent);
 			DeserializeMethod.AppendLine(MemberAccessName + " = null;", ++indent);
 			DeserializeMethod.AppendLine("else", --indent);
 			DeserializeMethod.AppendLine("{", indent);
-			DeserializeMethod.AppendLine("// " + MemberAccessName + " Allocation", ++indent);
-			DeserializeMethod.AppendLine("GetSerializer(" + MemberAccessName + ".GetType())." + DESERIALIZE_METHOD_NAME + "(" + objectName + ", " + MemberAccessName + ");", indent);
+
+			string serializerName = Member.Name + "Serializer";
+			objectName += "Value";
+			DeserializeMethod.AppendLine("ISerializeObject " + objectName + " = Get<ISerializeObject>(" + ObjectName + ", " + ID + "); ", ++indent);
+			DeserializeMethod.AppendLine("Serializer " + serializerName + " = GetSerializer(System.Type.GetType(Get<string>(" + objectName + ", " + DATA_STRUCTURE_TYPE_ID + ")));", indent);
+			DeserializeMethod.AppendLine(MemberAccessName + " = (" + MemberType.FullName + ")" + serializerName + "." + CREATE_INSTANCE_METHOD_NAME + "();", indent);
+			DeserializeMethod.AppendLine(serializerName + "." + DESERIALIZE_METHOD_NAME + "(Get<ISerializeObject>(" + objectName + ", " + DATA_STRUCTURE_VALUE_ID + "), " + MemberAccessName + ");", indent);
+
 			DeserializeMethod.AppendLine("}", --indent);
 		}
 
