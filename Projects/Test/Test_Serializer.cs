@@ -11,7 +11,7 @@ namespace VisualScriptTool.Editor
 
 		public override object CreateInstance()
 		{
-			return Type.GetMethod("Instantiate", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).Invoke(null, new object[] {  });
+			return VisualScriptTool.Editor.Test.Instantiate(Type, 1);
 		}
 
 		public override void Serialize(ISerializeObject Object, object Instance)
@@ -176,7 +176,7 @@ namespace VisualScriptTool.Editor
 			{
 				ISerializeObject childObjectValue = Get<ISerializeObject>(Object, 6); 
 				Serializer childSerializer = GetSerializer(System.Type.GetType(Get<string>(childObjectValue, 0)));
-				Test.child = (VisualScriptTool.Editor.Test)childSerializer.CreateInstance();
+				Test.child = (VisualScriptTool.Editor.Test1)childSerializer.CreateInstance();
 				childSerializer.Deserialize(Get<ISerializeObject>(childObjectValue, 1), Test.child);
 			}
 		}

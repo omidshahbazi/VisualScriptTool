@@ -11,6 +11,7 @@ namespace VisualScriptTool.Serialization
 
 		int GetMemberID(MemberInfo Member, int DefaultID);
 		string GetMemberDefaultValue(MemberInfo Member);
+		string GetInstantiatorParameterDefaultValue(MethodBase Method, uint Index);
 
 		bool IsPrimitive(Type Type);
 		bool IsArray(Type Type);

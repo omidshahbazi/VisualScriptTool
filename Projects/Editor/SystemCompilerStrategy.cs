@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using VisualScriptTool.Reflection;
+using VisualScriptTool.Serialization;
 
-namespace VisualScriptTool.Serialization
+namespace VisualScriptTool.Editor
 {
-	public class DefaultCompileStrategy : ICompileStrategy
+	class SystemCompilerStrategy : ICompileStrategy
 	{
 		MethodBase ICompileStrategy.GetInstantiator(Type Type)
 		{
@@ -91,7 +92,7 @@ namespace VisualScriptTool.Serialization
 		string ICompileStrategy.GetMemberDefaultValue(MemberInfo Member)
 		{
 			SerializableElementAttribute serializable = AttributeUtils.GetAttribute<SerializableElementAttribute>(Member);
-			
+
 			return serializable.GetDefaultValueAsString();
 		}
 

@@ -81,50 +81,65 @@ namespace VisualScriptTool.Serialization
 			else
 			{
 				ParameterInfo[] parameters = instantiatorMethod.GetParameters();
+				uint constantParametersCount = 0;
 
-				if (instantiatorMethod is ConstructorInfo)
+				instatiator.AppendLine("return ", indent);
+
+				if (instantiatorMethod.IsPublic)
 				{
-					instatiator.AppendLine("return Type.GetConstructor(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags." + (instantiatorMethod.IsPublic ? "Public" : "NonPublic") + ", null, new System.Type[] { ", indent);
-
-					for (int i = 0; i < parameters.Length; ++i)
+					if (instantiatorMethod is ConstructorInfo)
+						instatiator.Append("new " + instantiatorMethod.DeclaringType.FullName + "(");
+					else if (instantiatorMethod is MethodInfo)
 					{
-						if (i != 0)
-							instatiator.Append(", ");
-						instatiator.Append("System.Type.GetType(\"" + parameters[i].ParameterType.FullName + "\")");
+						constantParametersCount = 1;
+						instatiator.Append(instantiatorMethod.DeclaringType.FullName + "." + instantiatorMethod.Name + "(Type");
 					}
-
-					instatiator.Append(" }, null).Invoke(");
 				}
-				else if (instantiatorMethod is MethodInfo)
+				else
 				{
-					instatiator.AppendLine("return ", indent);
+					if (instantiatorMethod is ConstructorInfo)
+					{
+						instatiator.Append("Type.GetConstructor(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags." + (instantiatorMethod.IsPublic ? "Public" : "NonPublic") + ", null, new System.Type[] { ");
 
-					if (instantiatorMethod.DeclaringType == Type)
-						instatiator.Append("Type");
-					else
-						instatiator.Append("System.Type.GetType(\"" + instantiatorMethod.DeclaringType.FullName + "\")");
+						for (int i = 0; i < parameters.Length; ++i)
+						{
+							if (i != 0)
+								instatiator.Append(", ");
+							instatiator.Append("System.Type.GetType(\"" + parameters[i].ParameterType.FullName + "\")");
+						}
 
-					instatiator.Append(".GetMethod(\"" + instantiatorMethod.Name + "\", ");
-					instatiator.Append("System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags." + (instantiatorMethod.IsPublic ? "Public" : "NonPublic"));
-					instatiator.Append(").Invoke(null, ");
+						instatiator.Append(" }, null).Invoke(new object[] { ");
+					}
+					else if (instantiatorMethod is MethodInfo)
+					{
+						constantParametersCount = 1;
+
+						if (instantiatorMethod.DeclaringType == Type)
+							instatiator.Append("Type");
+						else
+							instatiator.Append("System.Type.GetType(\"" + instantiatorMethod.DeclaringType.FullName + "\")");
+
+						instatiator.Append(".GetMethod(\"" + instantiatorMethod.Name + "\", ");
+						instatiator.Append("System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags." + (instantiatorMethod.IsPublic ? "Public" : "NonPublic"));
+						instatiator.Append(").Invoke(null, new object[] { Type");
+					}
 				}
-
-				instatiator.Append("new object[] { ");
 
 				if (parameters.Length != 0)
 				{
-					SerializableInstantiatorAttribute attributes = Reflection.AttributeUtils.GetAttribute<SerializableInstantiatorAttribute>(instantiatorMethod);
-
-					for (uint i = 0; i < parameters.Length; ++i)
+					for (uint i = constantParametersCount; i < parameters.Length; ++i)
 					{
 						if (i != 0)
 							instatiator.Append(", ");
 
-						instatiator.Append(attributes.GetDefaultParameterAsString(i));
+						instatiator.Append(Strategy.GetInstantiatorParameterDefaultValue(instantiatorMethod, i - constantParametersCount));
 					}
 				}
 
-				instatiator.Append(" });");
+				if (!instantiatorMethod.IsPublic)
+					instatiator.Append(" }");
+
+				instatiator.Append(");");
 			}
 
 			instatiator.AppendLine("}", --indent);

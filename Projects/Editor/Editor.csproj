@@ -61,6 +61,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CubicSPLine.cs" />
+    <Compile Include="SystemCompilerStrategy.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="TypeHelper.cs" />
     <Compile Include="StatementDrawer.cs" />
@@ -104,6 +105,10 @@
     <ProjectReference Include="..\Language\Language.csproj">
       <Project>{c5a2fbe8-a0e9-4ad3-9895-7f39c079ae59}</Project>
       <Name>Language</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Reflection\Reflection.csproj">
+      <Project>{39F79A2C-581F-4D5D-AFDC-501E9DE6B343}</Project>
+      <Name>Reflection</Name>
     </ProjectReference>
     <ProjectReference Include="..\Renderer\Renderer.csproj">
       <Project>{cf198119-9e6b-4f90-a878-088cbf2ce90d}</Project>

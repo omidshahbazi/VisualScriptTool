@@ -18,7 +18,6 @@ namespace Test
 			//ISerializeObject obj = Creator.Create();
 
 			//VisualScriptTool.Editor.Test test = new VisualScriptTool.Editor.Test();
-			//test.child = new VisualScriptTool.Editor.Test();
 
 			//Creator.GetSerializer(test.GetType()).Serialize(obj, test);
 
@@ -28,7 +27,7 @@ namespace Test
 			ISerializeObject obj = Creator.Create(System.IO.File.ReadAllText("D:/1.json"));
 
 			VisualScriptTool.Editor.Test test = new VisualScriptTool.Editor.Test();
-			Creator.GetSerializer(test.GetType()).Deserialize(obj, test);
+			Creator.GetSerializer(test.GetType()).CreateInstance();
 		}
 	}
 }

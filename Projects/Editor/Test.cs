@@ -22,8 +22,8 @@ namespace VisualScriptTool.Editor
 
 	class Test
 	{
-		[SerializableInstantiator]
-		public static Test Instantiate()
+		[SerializableInstantiator(1)]
+		public static object Instantiate(System.Type Type, int i)
 		{
 			return new Test();
 		}
@@ -47,7 +47,7 @@ namespace VisualScriptTool.Editor
 		public List<System.Random> Points2;
 
 		[SerializableElement(6)]
-		public Test child;
+		public Test1 child;
 
 		//public Test1 child1;
 
@@ -68,7 +68,7 @@ namespace VisualScriptTool.Editor
 		public Test(int a = 1)
 		{
 			Index = 3;
-			//child1 = child;
+			child = new Test1();
 			Points1 = null;
 			Flag = true;
 		}

@@ -16,7 +16,11 @@ namespace VisualScriptTool.Editor
 			//Application.Run(new MainForm());
 
 			SerializerCompiler compiler = new SerializerCompiler();
+			compiler.Strategy = new SystemCompilerStrategy();
 
+			File.WriteAllText(Application.StartupPath + "/../Test/Point_Serializer.cs", compiler.Compile(typeof(System.Drawing.Point)));
+
+			compiler = new SerializerCompiler();
 			File.WriteAllText(Application.StartupPath + "/../Test/Test_Serializer.cs", compiler.Compile(typeof(Test)));
 			File.WriteAllText(Application.StartupPath + "/../Test/Test1_Serializer.cs", compiler.Compile(typeof(Test1)));
 
