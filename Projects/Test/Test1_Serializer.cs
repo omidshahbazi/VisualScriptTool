@@ -67,15 +67,15 @@ namespace VisualScriptTool.Editor
 			}
 			// child
 			ISerializeObject childObject = Get<ISerializeObject>(Object, 3, null);
-			if (childObject == null)
-				Test1.child = null;
-			else
+			if (childObject != null)
 			{
 				ISerializeObject childObjectValue = Get<ISerializeObject>(Object, 3); 
 				Serializer childSerializer = GetSerializer(System.Type.GetType(Get<string>(childObjectValue, 0)));
 				Test1.child = (System.Random)childSerializer.CreateInstance();
 				childSerializer.Deserialize(Get<ISerializeObject>(childObjectValue, 1), Test1.child);
 			}
+			else
+				Test1.child = null;
 		}
 
 	}

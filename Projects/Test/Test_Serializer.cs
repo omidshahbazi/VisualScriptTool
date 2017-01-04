@@ -41,22 +41,6 @@ namespace VisualScriptTool.Editor
 				}
 			}
 			// Name3
-			if (Test.Name3 == null)
-				Set(Object, 7, null);
-			else
-			{
-				ISerializeArray Name3Array = AddArray(Object, 7);
-				for (int i = 0; i < Test.Name3.Count; ++i)
-				{
-					System.String element = Test.Name3[i];
-					if (element == null)
-					{
-						Add(Name3Array, null);
-						continue;
-					}
-					Add(Name3Array, element);
-				}
-			}
 			// Points1
 			if (Test.Points1 == null)
 				Set(Object, 9, null);
@@ -78,25 +62,6 @@ namespace VisualScriptTool.Editor
 				}
 			}
 			// Points2
-			if (Test.Points2 == null)
-				Set(Object, 3, null);
-			else
-			{
-				ISerializeArray Points2Array = AddArray(Object, 3);
-				for (int i = 0; i < Test.Points2.Count; ++i)
-				{
-					System.Random element = Test.Points2[i];
-					if (element == null)
-					{
-						Add(Points2Array, null);
-						continue;
-					}
-					ISerializeObject Points2ArrayObject = AddObject(Points2Array); 
-					System.Type elementType = element.GetType();
-					Set(Points2ArrayObject, 0, elementType.GUID.ToString());
-					GetSerializer(elementType).Serialize(AddObject(Points2ArrayObject, 1), element); 
-				}
-			}
 			// child
 			if (Test.child == null)
 				Set(Object, 6, null);
@@ -131,17 +96,6 @@ namespace VisualScriptTool.Editor
 				}
 			}
 			// Name3
-			ISerializeArray Name3Array = Get<ISerializeArray>(Object, 7, null);
-			if (Name3Array == null)
-				Test.Name3 = null;
-			else
-			{
-				// Test.Name3 Allocation
-				for (uint i = 0; i < Name3Array.Count; ++i)
-				{
-					Test.Name3.Add(Name3Array.Get<System.String>(i));
-				}
-			}
 			// Points1
 			ISerializeArray Points1Array = Get<ISerializeArray>(Object, 9, null);
 			if (Points1Array == null)
@@ -156,29 +110,17 @@ namespace VisualScriptTool.Editor
 				}
 			}
 			// Points2
-			ISerializeArray Points2Array = Get<ISerializeArray>(Object, 3, null);
-			if (Points2Array == null)
-				Test.Points2 = null;
-			else
-			{
-				// Test.Points2 Allocation
-				for (uint i = 0; i < Points2Array.Count; ++i)
-				{
-					// Test.Points2.Add(Allocated);
-					GetSerializer(Test.Points2.GetType()).Deserialize(Get<ISerializeObject>(Points2Array, i), Test.Points2[(int)i]);
-				}
-			}
 			// child
 			ISerializeObject childObject = Get<ISerializeObject>(Object, 6, null);
-			if (childObject == null)
-				Test.child = null;
-			else
+			if (childObject != null)
 			{
 				ISerializeObject childObjectValue = Get<ISerializeObject>(Object, 6); 
 				Serializer childSerializer = GetSerializer(System.Type.GetType(Get<string>(childObjectValue, 0)));
 				Test.child = (VisualScriptTool.Editor.Test1)childSerializer.CreateInstance();
 				childSerializer.Deserialize(Get<ISerializeObject>(childObjectValue, 1), Test.child);
 			}
+			else
+				Test.child = null;
 		}
 
 	}

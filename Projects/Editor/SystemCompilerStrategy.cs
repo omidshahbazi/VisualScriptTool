@@ -18,24 +18,21 @@ namespace VisualScriptTool.Editor
 			{
 				ConstructorInfo ctor = ctors[i];
 
-				if (IsMethodACorrectInstantiator(ctor, 0))
+				ParameterInfo[] parameters = ctor.GetParameters();
+
+				if (parameters.Length == 0)
 					return ctor;
-			}
 
-			MethodInfo[] methods = Type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-			for (int i = 0; i < methods.Length; ++i)
-			{
-				MethodInfo method = methods[i];
+				bool isAppropriate = true;
+				for (uint j = 0; j < parameters.Length; ++j)
+					if (!((ICompileStrategy)this).IsPrimitive(parameters[j].ParameterType))
+					{
+						isAppropriate = false;
+						break;
+					}
 
-				if (!method.ReturnType.IsAssignableFrom(Type))
-					continue;
-
-				ParameterInfo[] parameters = method.GetParameters();
-				if (parameters.Length == 0 || parameters[0].ParameterType != typeof(Type))
-					continue;
-
-				if (IsMethodACorrectInstantiator(method, 1))
-					return method;
+				if (isAppropriate)
+					return ctor;
 			}
 
 			return null;
@@ -45,25 +42,19 @@ namespace VisualScriptTool.Editor
 		{
 			List<MemberInfo> list = new List<MemberInfo>();
 
-			PropertyInfo[] properties = TypeUtils.GetProperties(Type);
+			PropertyInfo[] properties = TypeUtils.GetProperties(Type, BindingFlags.Instance | BindingFlags.Public);
 			for (int i = 0; i < properties.Length; ++i)
 			{
 				PropertyInfo property = properties[i];
-
-				if (!IsSerializableMember(property))
-					continue;
 
 				if (property.GetSetMethod() != null)
 					list.Add(property);
 			}
 
-			FieldInfo[] fields = TypeUtils.GetFields(Type);
+			FieldInfo[] fields = TypeUtils.GetFields(Type, BindingFlags.Instance | BindingFlags.Public);
 			for (int i = 0; i < fields.Length; ++i)
 			{
 				FieldInfo field = fields[i];
-
-				if (!IsSerializableMember(field))
-					continue;
 
 				if (AttributeUtils.GetAttribute<CompilerGeneratedAttribute>(field) == null)
 					list.Add(fields[i]);
@@ -74,26 +65,24 @@ namespace VisualScriptTool.Editor
 
 		int ICompileStrategy.GetMemberID(MemberInfo Member, int DefaultID)
 		{
-			SerializableElementAttribute serializable = AttributeUtils.GetAttribute<SerializableElementAttribute>(Member);
-
-			if (serializable == null)
-				return DefaultID;
-
-			return serializable.ID;
+			return DefaultID;
 		}
 
 		string ICompileStrategy.GetInstantiatorParameterDefaultValue(MethodBase Method, uint Index)
 		{
-			SerializableInstantiatorAttribute attributes = AttributeUtils.GetAttribute<SerializableInstantiatorAttribute>(Method);
+			ParameterInfo parameter = Method.GetParameters()[Index];
 
-			return attributes.GetDefaultParameterAsString(Index);
+			return parameter.ParameterType.GetDefaultValue().ToString();
 		}
 
 		string ICompileStrategy.GetMemberDefaultValue(MemberInfo Member)
 		{
-			SerializableElementAttribute serializable = AttributeUtils.GetAttribute<SerializableElementAttribute>(Member);
+			Type type = (Member is FieldInfo ? ((FieldInfo)Member).FieldType : ((PropertyInfo)Member).PropertyType);
 
-			return serializable.GetDefaultValueAsString();
+			if (type == typeof(string))
+				return "\"\"";
+
+			return type.GetDefaultValue().ToString();
 		}
 
 		bool ICompileStrategy.IsPrimitive(Type Type)
@@ -114,33 +103,6 @@ namespace VisualScriptTool.Editor
 		bool ICompileStrategy.IsMap(Type Type)
 		{
 			return (Type.GetInterface(typeof(IDictionary).FullName) != null);
-		}
-
-		private bool IsSerializableMember(MemberInfo Member)
-		{
-			return (AttributeUtils.GetAttribute<SerializableElementAttribute>(Member) != null);
-		}
-
-		private static bool IsMethodACorrectInstantiator(MethodBase Method, uint ConstantParameterCount)
-		{
-			SerializableInstantiatorAttribute serializableInstantiator = AttributeUtils.GetAttribute<SerializableInstantiatorAttribute>(Method);
-
-			if (serializableInstantiator == null)
-				return false;
-
-			ParameterInfo[] parameters = Method.GetParameters();
-
-			if (parameters.Length == ConstantParameterCount)
-				return true;
-
-			if (serializableInstantiator.DefaultParameters == null || serializableInstantiator.DefaultParameters.Length != parameters.Length - ConstantParameterCount)
-				return false;
-
-			for (uint j = 0; j < parameters.Length - ConstantParameterCount; ++j)
-				if (parameters[j + ConstantParameterCount].ParameterType != serializableInstantiator.DefaultParameters[j].GetType())
-					return false;
-
-			return true;
 		}
 	}
 }

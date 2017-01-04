@@ -50,5 +50,16 @@ namespace VisualScriptTool.Reflection
 
 			return list.ToArray();
 		}
+
+		public static object GetDefaultValue(this Type Type)
+		{
+			if (Type == typeof(string))
+				return string.Empty;
+
+			if (Type.IsGenericType && Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+				Type = Type.GetProperty("Value").PropertyType;
+
+			return Type.IsValueType ? Activator.CreateInstance(Type) : null;
+		}
 	}
 }

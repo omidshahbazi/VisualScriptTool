@@ -211,8 +211,10 @@ namespace VisualScriptTool.Serialization
 
 			if (valueType == ValueType.Primitive)
 				AppendPrimitive(Member, memberType, ID, memberAccessName, SerializeMethod, DeserializeMethod, ObjectName);
-			else if (valueType == ValueType.Array || valueType == ValueType.List)
+			else if (valueType == ValueType.Array)
 				AppendArray(Member, memberType, ID, memberAccessName, SerializeMethod, DeserializeMethod, ObjectName, valueType);
+			//else if (valueType == ValueType.Array || valueType == ValueType.List)
+			//	AppendArray(Member, memberType, ID, memberAccessName, SerializeMethod, DeserializeMethod, ObjectName, valueType);
 			//else if (valueType == ValueType.Map)
 			//{
 
@@ -341,9 +343,8 @@ namespace VisualScriptTool.Serialization
 			SerializeMethod.AppendLine("}", --indent);
 
 			DeserializeMethod.AppendLine("ISerializeObject " + objectName + " = Get<ISerializeObject>(" + ObjectName + ", " + ID + ", null);", indent);
-			DeserializeMethod.AppendLine("if (" + objectName + " == null)", indent);
-			DeserializeMethod.AppendLine(MemberAccessName + " = null;", ++indent);
-			DeserializeMethod.AppendLine("else", --indent);
+
+			DeserializeMethod.AppendLine("if (" + objectName + " != null)", indent);
 			DeserializeMethod.AppendLine("{", indent);
 
 			string serializerName = Member.Name + "Serializer";
@@ -354,6 +355,12 @@ namespace VisualScriptTool.Serialization
 			DeserializeMethod.AppendLine(serializerName + "." + DESERIALIZE_METHOD_NAME + "(Get<ISerializeObject>(" + objectName + ", " + DATA_STRUCTURE_VALUE_ID + "), " + MemberAccessName + ");", indent);
 
 			DeserializeMethod.AppendLine("}", --indent);
+			if (!MemberType.IsValueType)
+			{
+				DeserializeMethod.AppendLine("else", indent);
+				DeserializeMethod.AppendLine(MemberAccessName + " = null;", ++indent);
+				--indent;
+			}
 		}
 
 		private void AppendTypeCast(Type Type, CodeBuilder Builder)
