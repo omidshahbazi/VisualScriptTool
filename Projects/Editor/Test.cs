@@ -13,6 +13,7 @@ namespace VisualScriptTool.Editor
 		[SerializableElement(3)]
 		public System.Random child;
 
+		[SerializableInstantiator]
 		public Test1()
 		{
 			Name = new string[] { "omid", "ali" };
@@ -21,6 +22,12 @@ namespace VisualScriptTool.Editor
 
 	class Test
 	{
+		[SerializableInstantiator]
+		public static Test Instantiate()
+		{
+			return new Test();
+		}
+
 		[SerializableElement(0, 10123)]
 		public int Index;
 
@@ -50,7 +57,15 @@ namespace VisualScriptTool.Editor
 			private set;
 		}
 
-		public Test()
+		private Test(int a, bool b, string item)
+		{
+			Index = 3;
+			//child1 = child;
+			Points1 = null;
+			Flag = true;
+		}
+
+		public Test(int a = 1)
 		{
 			Index = 3;
 			//child1 = child;

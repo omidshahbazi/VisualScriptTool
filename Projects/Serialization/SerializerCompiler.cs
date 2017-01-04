@@ -35,10 +35,6 @@ namespace VisualScriptTool.Serialization
 			Strategy = new DefaultCompileStrategy();
 		}
 
-		public void Compile()
-		{
-		}
-
 		public string Compile(Type Type)
 		{
 			CodeBuilder header = new CodeBuilder();
@@ -74,7 +70,63 @@ namespace VisualScriptTool.Serialization
 
 			instatiator.AppendLine("public override object " + CREATE_INSTANCE_METHOD_NAME + "()", indent);
 			instatiator.AppendLine("{", indent);
-			instatiator.AppendLine("return null;", ++indent);
+
+			MethodBase instantiatorMethod = Strategy.GetInstantiator(Type);
+
+			++indent;
+			if (!(instantiatorMethod is ConstructorInfo) && !(instantiatorMethod is MethodInfo))
+			{
+				instatiator.AppendLine("return null;", indent);
+			}
+			else
+			{
+				ParameterInfo[] parameters = instantiatorMethod.GetParameters();
+
+				if (instantiatorMethod is ConstructorInfo)
+				{
+					instatiator.AppendLine("return Type.GetConstructor(System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags." + (instantiatorMethod.IsPublic ? "Public" : "NonPublic") + ", null, new System.Type[] { ", indent);
+
+					for (int i = 0; i < parameters.Length; ++i)
+					{
+						if (i != 0)
+							instatiator.Append(", ");
+						instatiator.Append("System.Type.GetType(\"" + parameters[i].ParameterType.FullName + "\")");
+					}
+
+					instatiator.Append(" }, null).Invoke(");
+				}
+				else if (instantiatorMethod is MethodInfo)
+				{
+					instatiator.AppendLine("return ", indent);
+
+					if (instantiatorMethod.DeclaringType == Type)
+						instatiator.Append("Type");
+					else
+						instatiator.Append("System.Type.GetType(\"" + instantiatorMethod.DeclaringType.FullName + "\")");
+
+					instatiator.Append(".GetMethod(\"" + instantiatorMethod.Name + "\", ");
+					instatiator.Append("System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags." + (instantiatorMethod.IsPublic ? "Public" : "NonPublic"));
+					instatiator.Append(").Invoke(null, ");
+				}
+
+				instatiator.Append("new object[] { ");
+
+				if (parameters.Length != 0)
+				{
+					SerializableInstantiatorAttribute attributes = Reflection.AttributeUtils.GetAttribute<SerializableInstantiatorAttribute>(instantiatorMethod);
+
+					for (uint i = 0; i < parameters.Length; ++i)
+					{
+						if (i != 0)
+							instatiator.Append(", ");
+
+						instatiator.Append(attributes.GetDefaultParameterAsString(i));
+					}
+				}
+
+				instatiator.Append(" });");
+			}
+
 			instatiator.AppendLine("}", --indent);
 
 			serialize.AppendLine("public override void " + SERIALIZE_METHOD_NAME + "(ISerializeObject Object, object Instance)", indent);
@@ -121,9 +173,6 @@ namespace VisualScriptTool.Serialization
 
 				SerializeMethod.AppendLine("// " + member.Name, indent);
 				DeserializeMethod.AppendLine("// " + member.Name, indent);
-
-				if (!Strategy.IsSerializableMember(member))
-					continue;
 
 				int id = Strategy.GetMemberID(member, i);
 

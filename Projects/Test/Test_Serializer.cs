@@ -11,7 +11,7 @@ namespace VisualScriptTool.Editor
 
 		public override object CreateInstance()
 		{
-			return null;
+			return Type.GetMethod("Instantiate", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public).Invoke(null, new object[] {  });
 		}
 
 		public override void Serialize(ISerializeObject Object, object Instance)

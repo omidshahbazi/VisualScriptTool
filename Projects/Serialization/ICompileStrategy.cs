@@ -6,9 +6,9 @@ namespace VisualScriptTool.Serialization
 {
 	public interface ICompileStrategy
 	{
+		MethodBase GetInstantiator(Type Type);
 		MemberInfo[] GetMembers(Type Type);
 
-		bool IsSerializableMember(MemberInfo Member);
 		int GetMemberID(MemberInfo Member, int DefaultID);
 		string GetMemberDefaultValue(MemberInfo Member);
 

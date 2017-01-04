@@ -36,16 +36,40 @@ namespace VisualScriptTool.Serialization
 
 			if (DefaultValue is bool)
 				return ((bool)DefaultValue ? "true" : "false");
+			else if (DefaultValue is string)
+				return "\"" + DefaultValue + "\"";
 
 			return DefaultValue.ToString();
 		}
 	}
 
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
-	public class SerializableTypeAttribute : Attribute
+	[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	public class SerializableInstantiatorAttribute : Attribute
 	{
-		public SerializableTypeAttribute()
+		public object[] DefaultParameters
 		{
+			get;
+			private set;
+		}
+
+		public SerializableInstantiatorAttribute(params object[] DefaultParameters)
+		{
+			this.DefaultParameters = DefaultParameters;
+		}
+
+		public string GetDefaultParameterAsString(uint Index)
+		{
+			object value = DefaultParameters[Index];
+			
+			if (value == null)
+				return "null";
+
+			if (value is bool)
+				return ((bool)value ? "true" : "false");
+			else if (value is string)
+				return "\"" + value + "\"";
+
+			return value.ToString();
 		}
 	}
 }
