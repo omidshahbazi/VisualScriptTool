@@ -12,7 +12,7 @@ namespace VisualScriptTool.Editor
 
 		public override object CreateInstance()
 		{
-			return new VisualScriptTool.Editor.Test1();
+			return null;
 		}
 
 		public override void Serialize(ISerializeData Data, object Instance)
@@ -39,10 +39,7 @@ namespace VisualScriptTool.Editor
 					Test1Array = ((System.Collections.Generic.List<VisualScriptTool.Editor.Test1>)Instance).ToArray();
 				for (int i = 0; i < Test1Array.Length; ++i)
 				{
-					if (Test1Array[i] == null)
-						Add(Array, null);
-					else
-						Serialize(AddObject(Array), Test1Array[i]);
+					Serialize(AddObject(Array), Test1Array[i]);
 				}
 			}
 			else
@@ -104,9 +101,8 @@ namespace VisualScriptTool.Editor
 						Test1Array = (VisualScriptTool.Editor.Test1[])System.Array.CreateInstance(instanceType, Array.Count);
 					for (uint i = 0; i < Array.Count; ++i)
 					{
-						if (Test1Array[i] == null)
-							Test1Array[i] = (VisualScriptTool.Editor.Test1)GetSerializer(elementType).CreateInstance();
-						Deserialize(Get<ISerializeObject>(Array, i), Test1Array[i]);
+						ISerializeObject arrayObj = Get<ISerializeObject>(Array, i);
+						Deserialize(arrayObj, Test1Array[i]);
 					}
 				}
 				else

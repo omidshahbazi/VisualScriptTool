@@ -17,13 +17,13 @@ namespace Test
 
 			ISerializeArray obj = Creator.Create<ISerializeArray>();
 
-			VisualScriptTool.Editor.Test1[] test = new VisualScriptTool.Editor.Test1[2] { new Test1(), null };
-			//Creator.GetSerializer(test.GetType()).Serialize(obj, test);
+			VisualScriptTool.Editor.Test1[] test = new VisualScriptTool.Editor.Test1[2] { new Test1(1), new Test1(2) };
+			Creator.GetSerializer(test.GetType()).Serialize(obj, test);
 
-			//System.IO.File.WriteAllText("D:/1.json", obj.Content);
+			System.IO.File.WriteAllText("E:/1.json", obj.Content);
 
 
-			obj = Creator.Create<ISerializeArray>(System.IO.File.ReadAllText("D:/1.json"));
+			obj = Creator.Create<ISerializeArray>(System.IO.File.ReadAllText("E:/1.json"));
 
 			test = new VisualScriptTool.Editor.Test1[2];
 			Creator.GetSerializer(test.GetType()).Deserialize(obj, test);

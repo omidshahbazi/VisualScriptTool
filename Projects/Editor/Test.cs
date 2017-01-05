@@ -5,7 +5,7 @@ using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
 {
-	class Test1
+	struct Test1
 	{
 		[SerializableElement(1)]
 		public string[] Name;
@@ -14,9 +14,11 @@ namespace VisualScriptTool.Editor
 		public System.Random child;
 
 		[SerializableInstantiator]
-		public Test1()
+		public Test1(int a)
 		{
 			Name = new string[] { "omid", "ali" };
+			child = null;
+
 		}
 	}
 
