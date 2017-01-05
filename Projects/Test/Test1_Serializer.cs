@@ -36,7 +36,12 @@ namespace VisualScriptTool.Editor
 				else
 					Test1Array = ((System.Collections.Generic.List<VisualScriptTool.Editor.Test1>)Instance).ToArray();
 				for (int i = 0; i < Test1Array.Length; ++i)
-					Serialize(AddObject(Array), Test1Array[i]); 
+				{
+					if (Test1Array[i] == null)
+						Add(Array, null);
+					else
+						Serialize(AddObject(Array), Test1Array[i]);
+				}
 			}
 			else
 			{

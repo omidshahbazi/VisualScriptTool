@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using SimpleJson;
 using System.Collections.Generic;
 
 namespace VisualScriptTool.Serialization.JSONSerializer
@@ -21,6 +22,18 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 		{
 			get;
 			private set;
+		}
+
+		string ISerializeData.Content
+		{
+			get
+			{
+				JsonArray array = new JsonArray();
+
+				JSONSerializeObject.GetContent(array, this);
+
+				return array.ToString();
+			}
 		}
 
 		object ISerializeArray.this[uint Index]

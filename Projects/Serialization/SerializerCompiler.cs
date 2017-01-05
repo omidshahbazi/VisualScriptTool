@@ -167,8 +167,15 @@ namespace VisualScriptTool.Serialization
 			--indent;
 
 			serialize.AppendLine("for (int i = 0; i < " + typeArrayName + ".Length; ++i)", indent);
-			serialize.AppendLine(SERIALIZE_METHOD_NAME + "(AddObject(Array), " + typeArrayName + "[i]); ", ++indent);
+			serialize.AppendLine("{", indent);
+			serialize.AppendLine("if (" + typeArrayName + "[i] == null)", ++indent);
+			serialize.AppendLine("Add(Array, null);", ++indent);
 			--indent;
+			serialize.AppendLine("else", indent);
+			serialize.AppendLine(SERIALIZE_METHOD_NAME + "(AddObject(Array), " + typeArrayName + "[i]);", ++indent);
+			--indent;
+			--indent;
+			serialize.AppendLine("}", indent);
 
 			--indent;
 

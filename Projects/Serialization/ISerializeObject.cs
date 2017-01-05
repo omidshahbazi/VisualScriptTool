@@ -5,11 +5,6 @@ namespace VisualScriptTool.Serialization
 {
 	public interface ISerializeObject : ISerializeData
 	{
-		string Content
-		{
-			get;
-		}
-
 		object this[string Name]
 		{
 			get;

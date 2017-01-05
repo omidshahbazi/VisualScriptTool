@@ -15,19 +15,18 @@ namespace Test
 			//Creator.AddSerializer(new Test_Serializer());
 			Creator.AddSerializer(new Test1_Serializer());
 
-			//ISerializeObject obj = Creator.Create();
+			ISerializeArray obj = Creator.Create<ISerializeArray>();
 
-			//VisualScriptTool.Editor.Test test = new VisualScriptTool.Editor.Test();
-
+			VisualScriptTool.Editor.Test1[] test = new VisualScriptTool.Editor.Test1[2] { new Test1(), null };
 			//Creator.GetSerializer(test.GetType()).Serialize(obj, test);
 
 			//System.IO.File.WriteAllText("D:/1.json", obj.Content);
 
 
-			ISerializeData obj = Creator.Create<ISerializeData>(System.IO.File.ReadAllText("D:/1.json"));
+			obj = Creator.Create<ISerializeArray>(System.IO.File.ReadAllText("D:/1.json"));
 
-			VisualScriptTool.Editor.Test1[] test = new VisualScriptTool.Editor.Test1[2];
-			Creator.GetSerializer(typeof(VisualScriptTool.Editor.Test1)).Serialize(obj, test);
+			test = new VisualScriptTool.Editor.Test1[2];
+			Creator.GetSerializer(test.GetType()).Deserialize(obj, test);
 		}
 	}
 }

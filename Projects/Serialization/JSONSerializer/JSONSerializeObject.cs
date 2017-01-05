@@ -28,7 +28,7 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			private set;
 		}
 
-		string ISerializeObject.Content
+		string ISerializeData.Content
 		{
 			get
 			{
@@ -176,7 +176,7 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			}
 		}
 
-		private static void GetContent(JsonArray Array, ISerializeArray SerializeArray)
+		public static void GetContent(JsonArray Array, ISerializeArray SerializeArray)
 		{
 			for (uint i = 0; i < SerializeArray.Count; ++i)
 			{

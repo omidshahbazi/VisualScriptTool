@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using VisualScriptTool.Reflection;
 using VisualScriptTool.Serialization.JSONSerializer;
 
 namespace VisualScriptTool.Serialization
@@ -27,7 +28,7 @@ namespace VisualScriptTool.Serialization
 
 		public static Serializer GetSerializer(System.Type Type)
 		{
-			return serializers[Type];
+			return serializers[(Type.IsArray() ? Type.GetArrayElementType() : (Type.IsList() ? Type.GetListElementType() : Type))];
 		}
 
 		public static void AddSerializer(Serializer Serializer)

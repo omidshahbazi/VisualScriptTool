@@ -17,5 +17,10 @@ namespace VisualScriptTool.Serialization
 		{
 			get;
 		}
+
+		string Content
+		{
+			get;
+		}
 	}
 }
