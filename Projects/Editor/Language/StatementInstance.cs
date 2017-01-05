@@ -18,12 +18,6 @@ namespace VisualScriptTool.Editor
 			private set;
 		}
 
-		private int Position1
-		{
-			get;
-			set;
-		}
-
 		public PointF Position
 		{
 			get { return bounds.Location; }
@@ -36,6 +30,7 @@ namespace VisualScriptTool.Editor
 			set;
 		}
 
+		[SerializableElement(0)]
 		public SizeF BodySize
 		{
 			get;

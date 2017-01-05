@@ -13,7 +13,7 @@ namespace VisualScriptTool.Editor
 		{
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			//Application.Run(new MainForm());
+			Application.Run(new MainForm());
 
 			SerializerCompiler compiler = new SerializerCompiler();
 			//compiler.Strategy = new SystemCompilerStrategy();
@@ -35,10 +35,7 @@ namespace VisualScriptTool.Editor
 			//	}
 
 			compiler = new SerializerCompiler();
-			File.WriteAllText(Application.StartupPath + "/../Test/Test_Serializer.cs", compiler.Compile(typeof(Test)));
-			File.WriteAllText(Application.StartupPath + "/../Test/Test1_Serializer.cs", compiler.Compile(typeof(Test1)));
-
-			//Serializer ser = new Serializer();
+			File.WriteAllText(Application.StartupPath + "/../Test/IfStatementInstance_Serializer.cs", compiler.Compile(typeof(IfStatementInstance)));
 		}
 	}
 }

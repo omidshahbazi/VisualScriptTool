@@ -51,6 +51,8 @@ namespace VisualScriptTool.Editor
 			diagramTab.Statements.Add(new VariableStatementInstance(boolVariable, new PointF(150, 120)));
 
 			tabControl1.TabPages.Add(diagramTab);
+
+
 		}
 	}
 }

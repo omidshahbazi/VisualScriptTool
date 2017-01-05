@@ -17,15 +17,20 @@ namespace VisualScriptTool.Reflection
 		{
 			List<PropertyInfo> list = new List<PropertyInfo>();
 
-			while (Type != null)
-			{
+			//while (Type != null)
+			//{
 				PropertyInfo[] properties = Type.GetProperties(BindingFlags);
 
 				for (int i = 0; i < properties.Length; ++i)
-					list.Add(properties[i]);
+				{
+					if (list.Contains(properties[i]))
+						continue;
 
-				Type = Type.BaseType;
-			}
+					list.Add(properties[i]);
+				}
+
+				//Type = Type.BaseType;
+			//}
 
 			return list.ToArray();
 		}
