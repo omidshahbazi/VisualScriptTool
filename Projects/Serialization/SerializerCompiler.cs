@@ -180,8 +180,11 @@ namespace VisualScriptTool.Serialization
 			}
 
 			serialize.AppendLine(SERIALIZE_METHOD_NAME + "(AddObject(Array), " + typeArrayName + "[i]);", indent);
-			--indent;
-			serialize.AppendLine("}", indent);
+
+			if (!Type.IsValueType)
+				--indent;
+
+			serialize.AppendLine("}", --indent);
 
 			--indent;
 
@@ -191,6 +194,7 @@ namespace VisualScriptTool.Serialization
 
 			serialize.AppendLine("ISerializeObject Object = (ISerializeObject)Data; ", ++indent);
 			serialize.AppendLine(Type.FullName + " " + GetTypeVariableName(Type) + " = (" + Type.FullName + ")Instance;", indent);
+			--indent;
 			--indent;
 
 			deserialize.AppendLine("public override void " + DESERIALIZE_METHOD_NAME + "(ISerializeData Data, object Instance)", indent);
@@ -244,8 +248,10 @@ namespace VisualScriptTool.Serialization
 			CompileMembers(Type, serialize, deserialize);
 
 			serialize.AppendLine("}", indent);
-			serialize.AppendLine("}", indent);
 			deserialize.AppendLine("}", indent);
+
+			--indent;
+			serialize.AppendLine("}", indent);
 			deserialize.AppendLine("}", indent);
 
 			--indent;
