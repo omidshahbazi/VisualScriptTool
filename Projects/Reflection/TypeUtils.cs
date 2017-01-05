@@ -1,5 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -7,12 +8,12 @@ namespace VisualScriptTool.Reflection
 {
 	public static class TypeUtils
 	{
-		public static PropertyInfo[] GetProperties(Type Type)
+		public static PropertyInfo[] GetAllProperties(this Type Type)
 		{
-			return GetProperties(Type, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			return GetAllProperties(Type, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 		}
 
-		public static PropertyInfo[] GetProperties(Type Type, BindingFlags BindingFlags)
+		public static PropertyInfo[] GetAllProperties(this Type Type, BindingFlags BindingFlags)
 		{
 			List<PropertyInfo> list = new List<PropertyInfo>();
 
@@ -29,12 +30,12 @@ namespace VisualScriptTool.Reflection
 			return list.ToArray();
 		}
 
-		public static FieldInfo[] GetFields(Type Type)
+		public static FieldInfo[] GetAllFields(this Type Type)
 		{
-			return GetFields(Type, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			return GetAllFields(Type, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 		}
 
-		public static FieldInfo[] GetFields(Type Type, BindingFlags BindingFlags)
+		public static FieldInfo[] GetAllFields(this Type Type, BindingFlags BindingFlags)
 		{
 			List<FieldInfo> list = new List<FieldInfo>();
 
@@ -60,6 +61,31 @@ namespace VisualScriptTool.Reflection
 				Type = Type.GetProperty("Value").PropertyType;
 
 			return Type.IsValueType ? Activator.CreateInstance(Type) : null;
+		}
+
+		public static Type GetArrayElementType(this Type Type)
+		{
+			return (Type.HasElementType ? Type.GetElementType() : null);
+		}
+
+		public static Type GetListElementType(this Type Type)
+		{
+			return Type.GetGenericArguments()[0];
+		}
+
+		public static bool IsArray(this Type Type)
+		{
+			return Type.IsArray;
+		}
+
+		public static bool IsList(this Type Type)
+		{
+			return (Type.GetInterface(typeof(IList).FullName) != null);
+		}
+
+		public static bool IsArrayOrList(this Type Type)
+		{
+			return (Type.IsArray() || Type.IsList());
 		}
 	}
 }

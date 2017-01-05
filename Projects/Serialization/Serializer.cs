@@ -10,70 +10,70 @@ namespace VisualScriptTool.Serialization
 		}
 
 		public abstract object CreateInstance();
-		public abstract void Serialize(ISerializeObject Object, object Instance);
-		public abstract void Deserialize(ISerializeObject Object, object Instance);
+		public abstract void Serialize(ISerializeData Data, object Instance);
+		public abstract void Deserialize(ISerializeData Data, object Instance);
 
-		public static Serializer GetSerializer(System.Type Type)
+		protected static Serializer GetSerializer(System.Type Type)
 		{
 			return Creator.GetSerializer(Type);
 		}
 
-		public static ISerializeArray AddArray(ISerializeObject Object, int ID)
+		protected static ISerializeArray AddArray(ISerializeObject Object, int ID)
 		{
 			return Object.AddArray(ID.ToString());
 		}
 
-		public static ISerializeObject AddObject(ISerializeObject Object, int ID)
+		protected static ISerializeObject AddObject(ISerializeObject Object, int ID)
 		{
 			return Object.AddObject(ID.ToString());
 		}
 
-		public static ISerializeArray AddArray(ISerializeArray Array)
+		protected static ISerializeArray AddArray(ISerializeArray Array)
 		{
 			return Array.AddArray();
 		}
 
-		public static ISerializeObject AddObject(ISerializeArray Array)
+		protected static ISerializeObject AddObject(ISerializeArray Array)
 		{
 			return Array.AddObject();
 		}
 
-		public static void Set(ISerializeObject Object, int ID, object Value)
+		protected static void Set(ISerializeObject Object, int ID, object Value)
 		{
 			Object.Set(ID.ToString(), Value);
 		}
 
-		public static void Set(ISerializeObject Object, int ID, bool Value)
+		protected static void Set(ISerializeObject Object, int ID, bool Value)
 		{
 			Object.Set(ID.ToString(), Value);
 		}
 
-		public static void Set(ISerializeObject Object, int ID, int Value)
+		protected static void Set(ISerializeObject Object, int ID, int Value)
 		{
 			Object.Set(ID.ToString(), Value);
 		}
 
-		public static void Set(ISerializeObject Object, int ID, uint Value)
+		protected static void Set(ISerializeObject Object, int ID, uint Value)
 		{
 			Object.Set(ID.ToString(), Value);
 		}
 
-		public static void Set(ISerializeObject Object, int ID, float Value)
+		protected static void Set(ISerializeObject Object, int ID, float Value)
 		{
 			Object.Set(ID.ToString(), Value);
 		}
 
-		public static void Set(ISerializeObject Object, int ID, double Value)
+		protected static void Set(ISerializeObject Object, int ID, double Value)
 		{
 			Object.Set(ID.ToString(), Value);
 		}
 
-		public static void Set(ISerializeObject Object, int ID, string Value)
+		protected static void Set(ISerializeObject Object, int ID, string Value)
 		{
 			Object.Set(ID.ToString(), Value);
 		}
 
-		public static T Get<T>(ISerializeObject Object, int ID, T DefaultValue = default(T))
+		protected static T Get<T>(ISerializeObject Object, int ID, T DefaultValue = default(T))
 		{
 			if (Object.Contains(ID.ToString()))
 				return Object.Get<T>(ID.ToString());
@@ -81,12 +81,12 @@ namespace VisualScriptTool.Serialization
 			return DefaultValue;
 		}
 
-		public static void Add(ISerializeArray Array, object Item)
+		protected static void Add(ISerializeArray Array, object Item)
 		{
 			Array.Add(Item);
 		}
 
-		public static T Get<T>(ISerializeArray Array, uint Index)
+		protected static T Get<T>(ISerializeArray Array, uint Index)
 		{
 			return Array.Get<T>(Index);
 		}

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using VisualScriptTool.Reflection;
 
 namespace VisualScriptTool.Serialization
 {
@@ -51,6 +52,7 @@ namespace VisualScriptTool.Serialization
 			{
 				header.Append("// Generaterd file");
 				header.AppendLine("using VisualScriptTool.Serialization;", indent);
+				header.AppendLine("using VisualScriptTool.Reflection;", indent);
 				header.AppendLine("namespace " + Type.Namespace, indent);
 				header.AppendLine("{", indent);
 
@@ -144,16 +146,49 @@ namespace VisualScriptTool.Serialization
 
 			instatiator.AppendLine("}", --indent);
 
-			serialize.AppendLine("public override void " + SERIALIZE_METHOD_NAME + "(ISerializeObject Object, object Instance)", indent);
+			serialize.AppendLine("public override void " + SERIALIZE_METHOD_NAME + "(ISerializeData Data, object Instance)", indent);
 			serialize.AppendLine("{", indent);
-			AppendTypeCast(Type, serialize);
+			++indent;
+			AppendGaurd(Type, serialize);
 
-			deserialize.AppendLine("public override void " + DESERIALIZE_METHOD_NAME + "(ISerializeObject Object, object Instance)", indent);
+			serialize.AppendLine("instanceType = Instance.GetType();", indent);
+			serialize.AppendLine("if (instanceType.IsArrayOrList())", indent);
+			serialize.AppendLine("{", indent);
+
+			serialize.AppendLine("ISerializeArray Array = (ISerializeArray)Data; ", ++indent);
+			string typeArrayName = GetTypeVariableName(Type) + "Array";
+			serialize.AppendLine(Type.FullName + "[] " + typeArrayName + " = null;", indent);
+
+			serialize.AppendLine("if (instanceType.IsArray())", indent);
+			serialize.AppendLine(typeArrayName + " = (" + Type.FullName + "[])Instance;", ++indent);
+			--indent;
+			serialize.AppendLine("else", indent);
+			serialize.AppendLine(typeArrayName + " = ((System.Collections.Generic.List<" + Type.FullName + ">)Instance).ToArray();", ++indent);
+			--indent;
+
+			serialize.AppendLine("for (int i = 0; i < " + typeArrayName + ".Length; ++i)", indent);
+			serialize.AppendLine(SERIALIZE_METHOD_NAME + "(AddObject(Array), " + typeArrayName + "[i]); ", ++indent);
+			--indent;
+
+			--indent;
+
+
+			serialize.AppendLine("}", indent);
+			serialize.AppendLine("else", indent);
+			serialize.AppendLine("{", indent);
+
+			serialize.AppendLine("ISerializeObject Object = (ISerializeObject)Data; ", ++indent);
+			serialize.AppendLine(Type.FullName + " " + GetTypeVariableName(Type) + " = (" + Type.FullName + ")Instance;", indent);
+			--indent;
+
+			deserialize.AppendLine("public override void " + DESERIALIZE_METHOD_NAME + "(ISerializeData Data, object Instance)", indent);
 			deserialize.AppendLine("{", indent);
-			AppendTypeCast(Type, deserialize);
+			++indent;
+			AppendGaurd(Type, deserialize);
 
 			CompileMembers(Type, serialize, deserialize);
 
+			serialize.AppendLine("}", indent);
 			serialize.AppendLine("}", indent);
 			deserialize.AppendLine("}", indent);
 
@@ -232,7 +267,7 @@ namespace VisualScriptTool.Serialization
 
 		private void AppendArray(MemberInfo Member, Type MemberType, int ID, string MemberAccessName, CodeBuilder SerializeMethod, CodeBuilder DeserializeMethod, string ObjectName, ValueType ValueType)
 		{
-			Type elementType = (ValueType == ValueType.Array ? GetArrayElementType(MemberType) : GetListElementType(MemberType));
+			Type elementType = (ValueType == ValueType.Array ? MemberType.GetArrayElementType() : MemberType.GetListElementType());
 
 			SerializeMethod.AppendLine("if (" + MemberAccessName + " == null)", indent);
 			SerializeMethod.AppendLine("Set(" + ObjectName + ", " + ID + ", null);", ++indent);
@@ -363,13 +398,22 @@ namespace VisualScriptTool.Serialization
 			}
 		}
 
-		private void AppendTypeCast(Type Type, CodeBuilder Builder)
+		private void AppendGaurd(Type Type, CodeBuilder Builder)
 		{
-			Builder.AppendLine("if (Type != Instance.GetType())", ++indent);
-			Builder.AppendLine("throw new System.InvalidCastException(\"Expected [\" + Type.FullName + \"]\");", ++indent);
+			Builder.AppendLine("if (Instance == null)", indent);
+			Builder.AppendLine("throw new System.ArgumentNullException(\"Instance cannot be null\");", ++indent);
 			--indent;
 
-			Builder.AppendLine(Type.FullName + " " + GetTypeVariableName(Type) + " = (" + Type.FullName + ")Instance;", indent);
+			Builder.AppendLine("System.Type instanceType = Instance.GetType();", indent);
+			Builder.AppendLine("if (instanceType.IsArray())", indent);
+			Builder.AppendLine("instanceType = instanceType.GetArrayElementType();", ++indent);
+			--indent;
+			Builder.AppendLine("else if (instanceType.IsList())", indent);
+			Builder.AppendLine("instanceType = instanceType.GetListElementType();", ++indent);
+			--indent;
+
+			Builder.AppendLine("if (Type != instanceType)", indent);
+			Builder.AppendLine("throw new System.InvalidCastException(\"Expected [\" + Type.FullName + \"]\");", ++indent);
 			--indent;
 		}
 
@@ -395,16 +439,6 @@ namespace VisualScriptTool.Serialization
 		private static string GetTypeVariableName(Type Type)
 		{
 			return Type.Name;
-		}
-
-		private static Type GetArrayElementType(Type Type)
-		{
-			return (Type.HasElementType ? Type.GetElementType() : null);
-		}
-
-		private static Type GetListElementType(Type Type)
-		{
-			return Type.GetGenericArguments()[0];
 		}
 	}
 }

@@ -44,7 +44,7 @@ namespace VisualScriptTool.Serialization
 		{
 			List<MemberInfo> list = new List<MemberInfo>();
 
-			PropertyInfo[] properties = TypeUtils.GetProperties(Type);
+			PropertyInfo[] properties = Type.GetAllProperties();
 			for (int i = 0; i < properties.Length; ++i)
 			{
 				PropertyInfo property = properties[i];
@@ -56,7 +56,7 @@ namespace VisualScriptTool.Serialization
 					list.Add(property);
 			}
 
-			FieldInfo[] fields = TypeUtils.GetFields(Type);
+			FieldInfo[] fields = Type.GetAllFields();
 			for (int i = 0; i < fields.Length; ++i)
 			{
 				FieldInfo field = fields[i];
@@ -102,12 +102,12 @@ namespace VisualScriptTool.Serialization
 
 		bool ICompileStrategy.IsArray(Type Type)
 		{
-			return Type.IsArray;
+			return Type.IsArray();
 		}
 
 		bool ICompileStrategy.IsList(Type Type)
 		{
-			return (Type.GetInterface(typeof(IList).FullName) != null);
+			return Type.IsList();
 		}
 
 		bool ICompileStrategy.IsMap(Type Type)

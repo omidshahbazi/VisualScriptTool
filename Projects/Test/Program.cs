@@ -12,7 +12,7 @@ namespace Test
 	{
 		static void Main(string[] args)
 		{
-			Creator.AddSerializer(new Test_Serializer());
+			//Creator.AddSerializer(new Test_Serializer());
 			Creator.AddSerializer(new Test1_Serializer());
 
 			//ISerializeObject obj = Creator.Create();
@@ -24,10 +24,10 @@ namespace Test
 			//System.IO.File.WriteAllText("D:/1.json", obj.Content);
 
 
-			ISerializeObject obj = Creator.Create(System.IO.File.ReadAllText("D:/1.json"));
+			ISerializeData obj = Creator.Create<ISerializeData>(System.IO.File.ReadAllText("D:/1.json"));
 
-			VisualScriptTool.Editor.Test test = new VisualScriptTool.Editor.Test();
-			Creator.GetSerializer(test.GetType()).CreateInstance();
+			VisualScriptTool.Editor.Test1[] test = new VisualScriptTool.Editor.Test1[2];
+			Creator.GetSerializer(typeof(VisualScriptTool.Editor.Test1)).Serialize(obj, test);
 		}
 	}
 }

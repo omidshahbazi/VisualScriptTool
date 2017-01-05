@@ -42,7 +42,7 @@ namespace VisualScriptTool.Editor
 		{
 			List<MemberInfo> list = new List<MemberInfo>();
 
-			PropertyInfo[] properties = TypeUtils.GetProperties(Type, BindingFlags.Instance | BindingFlags.Public);
+			PropertyInfo[] properties = Type.GetAllProperties(BindingFlags.Instance | BindingFlags.Public);
 			for (int i = 0; i < properties.Length; ++i)
 			{
 				PropertyInfo property = properties[i];
@@ -51,7 +51,7 @@ namespace VisualScriptTool.Editor
 					list.Add(property);
 			}
 
-			FieldInfo[] fields = TypeUtils.GetFields(Type, BindingFlags.Instance | BindingFlags.Public);
+			FieldInfo[] fields = Type.GetAllFields(BindingFlags.Instance | BindingFlags.Public);
 			for (int i = 0; i < fields.Length; ++i)
 			{
 				FieldInfo field = fields[i];
@@ -92,12 +92,12 @@ namespace VisualScriptTool.Editor
 
 		bool ICompileStrategy.IsArray(Type Type)
 		{
-			return Type.IsArray;
+			return Type.IsArray();
 		}
 
 		bool ICompileStrategy.IsList(Type Type)
 		{
-			return (Type.GetInterface(typeof(IList).FullName) != null);
+			return Type.IsList();
 		}
 
 		bool ICompileStrategy.IsMap(Type Type)

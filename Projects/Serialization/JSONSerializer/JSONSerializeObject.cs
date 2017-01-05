@@ -127,15 +127,28 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			return map.GetEnumerator();
 		}
 
-		public static JSONSerializeObject Deserialize(string JSON)
+		public static T Deserialize<T>(string JSON) where T : ISerializeData
 		{
-			JsonObject jsonObject = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(JSON);
+			object jsonData = SimpleJson.SimpleJson.DeserializeObject(JSON);
 
-			JSONSerializeObject obj = new JSONSerializeObject(null);
+			if (jsonData is JsonObject)
+			{
+				JSONSerializeObject data = new JSONSerializeObject(null);
 
-			SetContent(obj, jsonObject);
+				SetContent(data, (JsonObject)jsonData);
 
-			return obj;
+				return (T)(ISerializeData)data;
+			}
+			else if (jsonData is JsonArray)
+			{
+				JSONSerializeArray data = new JSONSerializeArray(null);
+
+				SetContent(data, (JsonArray)jsonData);
+
+				return (T)(ISerializeData)data;
+			}
+
+			return default(T);
 		}
 
 		private static void GetContent(JsonObject Object, Map Map)
