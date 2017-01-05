@@ -17,8 +17,8 @@ namespace VisualScriptTool.Editor
 
 		public override void Serialize(ISerializeData Data, object Instance)
 		{
-			if (Instance == null)
-				throw new System.ArgumentNullException("Instance cannot be null");
+			if (Data == null || Instance == null)
+				throw new System.ArgumentNullException("Data and Instance cannot be null");
 			System.Type instanceType = Instance.GetType();
 			if (instanceType.IsArray())
 				instanceType = instanceType.GetArrayElementType();
@@ -27,6 +27,8 @@ namespace VisualScriptTool.Editor
 			if (Type != instanceType)
 				throw new System.InvalidCastException("Expected [" + Type.FullName + "]");
 			instanceType = Instance.GetType();
+			if ((Data is ISerializeObject && instanceType.IsArrayOrList()) || (Data is ISerializeArray && !instanceType.IsArrayOrList()))
+				throw new System.ArgumentException("Data and Instance mismatch [" + Type.FullName + "]");
 			if (instanceType.IsArrayOrList())
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
@@ -79,38 +81,62 @@ namespace VisualScriptTool.Editor
 
 			public override void Deserialize(ISerializeData Data, object Instance)
 			{
-				//if (Instance == null)
-				//	throw new System.ArgumentNullException("Instance cannot be null");
-				//System.Type instanceType = Instance.GetType();
-				//if (instanceType.IsArray())
-				//	instanceType = instanceType.GetArrayElementType();
-				//else if (instanceType.IsList())
-				//	instanceType = instanceType.GetListElementType();
-				//if (Type != instanceType)
-				//	throw new System.InvalidCastException("Expected [" + Type.FullName + "]");
-				//	// Name
-				//	ISerializeArray NameArray = Get<ISerializeArray>(Object, 1, null);
-				//	if (NameArray == null)
-				//		Test1.Name = null;
-				//	else
-				//	{
-				//		Test1.Name = (System.String[])System.Array.CreateInstance(typeof(System.String), NameArray.Count);
-				//		for (uint i = 0; i < NameArray.Count; ++i)
-				//		{
-				//			Test1.Name[(int)i] = NameArray.Get<System.String>(i);
-				//		}
-				//	}
-				//	// child
-				//	ISerializeObject childObject = Get<ISerializeObject>(Object, 3, null);
-				//	if (childObject != null)
-				//	{
-				//		ISerializeObject childObjectValue = Get<ISerializeObject>(Object, 3); 
-				//		Serializer childSerializer = GetSerializer(System.Type.GetType(Get<string>(childObjectValue, 0)));
-				//		Test1.child = (System.Random)childSerializer.CreateInstance();
-				//		childSerializer.Deserialize(Get<ISerializeObject>(childObjectValue, 1), Test1.child);
-				//	}
-				//	else
-				//		Test1.child = null;
+				if (Data == null || Instance == null)
+					throw new System.ArgumentNullException("Data and Instance cannot be null");
+				System.Type instanceType = Instance.GetType();
+				if (instanceType.IsArray())
+					instanceType = instanceType.GetArrayElementType();
+				else if (instanceType.IsList())
+					instanceType = instanceType.GetListElementType();
+				if (Type != instanceType)
+					throw new System.InvalidCastException("Expected [" + Type.FullName + "]");
+				instanceType = Instance.GetType();
+				if ((Data is ISerializeObject && instanceType.IsArrayOrList()) || (Data is ISerializeArray && !instanceType.IsArrayOrList()))
+					throw new System.ArgumentException("Data and Instance mismatch [" + Type.FullName + "]");
+				if (instanceType.IsArrayOrList())
+				{
+					System.Type elementType = (instanceType.IsArray() ? instanceType.GetArrayElementType() : instanceType.GetListElementType());
+					ISerializeArray Array = (ISerializeArray)Data; 
+					VisualScriptTool.Editor.Test1[] Test1Array = null;
+					if (instanceType.IsArray())
+						Test1Array = (VisualScriptTool.Editor.Test1[])Instance;
+					else
+						Test1Array = (VisualScriptTool.Editor.Test1[])System.Array.CreateInstance(instanceType, Array.Count);
+					for (uint i = 0; i < Array.Count; ++i)
+					{
+						if (Test1Array[i] == null)
+							Test1Array[i] = (VisualScriptTool.Editor.Test1)GetSerializer(elementType).CreateInstance();
+						Deserialize(Get<ISerializeObject>(Array, i), Test1Array[i]);
+					}
+				}
+				else
+				{
+					ISerializeObject Object = (ISerializeObject)Data; 
+					VisualScriptTool.Editor.Test1 Test1 = (VisualScriptTool.Editor.Test1)Instance;
+					// Name
+					ISerializeArray NameArray = Get<ISerializeArray>(Object, 1, null);
+					if (NameArray == null)
+						Test1.Name = null;
+					else
+					{
+						Test1.Name = (System.String[])System.Array.CreateInstance(typeof(System.String), NameArray.Count);
+						for (uint i = 0; i < NameArray.Count; ++i)
+						{
+							Test1.Name[(int)i] = NameArray.Get<System.String>(i);
+						}
+					}
+					// child
+					ISerializeObject childObject = Get<ISerializeObject>(Object, 3, null);
+					if (childObject != null)
+					{
+						ISerializeObject childObjectValue = Get<ISerializeObject>(Object, 3); 
+						Serializer childSerializer = GetSerializer(System.Type.GetType(Get<string>(childObjectValue, 0)));
+						Test1.child = (System.Random)childSerializer.CreateInstance();
+						childSerializer.Deserialize(Get<ISerializeObject>(childObjectValue, 1), Test1.child);
+					}
+					else
+						Test1.child = null;
+				}
 				}
 
 			}

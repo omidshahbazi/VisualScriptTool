@@ -35,7 +35,7 @@ namespace VisualScriptTool.Editor
 			//	}
 
 			compiler = new SerializerCompiler();
-			//File.WriteAllText(Application.StartupPath + "/../Test/Test_Serializer.cs", compiler.Compile(typeof(Test)));
+			File.WriteAllText(Application.StartupPath + "/../Test/Test_Serializer.cs", compiler.Compile(typeof(Test)));
 			File.WriteAllText(Application.StartupPath + "/../Test/Test1_Serializer.cs", compiler.Compile(typeof(Test1)));
 
 			//Serializer ser = new Serializer();
