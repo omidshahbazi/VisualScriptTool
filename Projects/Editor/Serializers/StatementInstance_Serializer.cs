@@ -46,7 +46,7 @@ namespace VisualScriptTool.Editor
 					{
 						ISerializeObject elementObject = AddObject(Array); 
 						System.Type elementType = element.GetType();
-						Set(elementObject, 0, elementType.FullName);
+						Set(elementObject, 0, elementType.AssemblyQualifiedName);
 						GetSerializer(elementType).Serialize(AddObject(elementObject, 1), element); 
 					}
 				}
@@ -58,17 +58,17 @@ namespace VisualScriptTool.Editor
 				// Position
 				ISerializeObject PositionObject = AddObject(Object, 0); 
 				System.Type PositionType = StatementInstance.Position.GetType();
-				Set(PositionObject, 0, PositionType.FullName);
+				Set(PositionObject, 0, PositionType.AssemblyQualifiedName);
 				GetSerializer(PositionType).Serialize(AddObject(PositionObject, 1), StatementInstance.Position);
 				// HeaderSize
 				ISerializeObject HeaderSizeObject = AddObject(Object, 1); 
 				System.Type HeaderSizeType = StatementInstance.HeaderSize.GetType();
-				Set(HeaderSizeObject, 0, HeaderSizeType.FullName);
+				Set(HeaderSizeObject, 0, HeaderSizeType.AssemblyQualifiedName);
 				GetSerializer(HeaderSizeType).Serialize(AddObject(HeaderSizeObject, 1), StatementInstance.HeaderSize);
 				// BodySize
 				ISerializeObject BodySizeObject = AddObject(Object, 2); 
 				System.Type BodySizeType = StatementInstance.BodySize.GetType();
-				Set(BodySizeObject, 0, BodySizeType.FullName);
+				Set(BodySizeObject, 0, BodySizeType.AssemblyQualifiedName);
 				GetSerializer(BodySizeType).Serialize(AddObject(BodySizeObject, 1), StatementInstance.BodySize);
 			}
 		}
@@ -95,7 +95,7 @@ namespace VisualScriptTool.Editor
 				if (instanceType.IsArray())
 					StatementInstanceArray = (VisualScriptTool.Editor.StatementInstance[])Instance;
 				else
-					StatementInstanceArray = (VisualScriptTool.Editor.StatementInstance[])System.Array.CreateInstance(instanceType, Array.Count);
+					StatementInstanceArray = (VisualScriptTool.Editor.StatementInstance[])System.Array.CreateInstance(elementType, Array.Count);
 				for (uint i = 0; i < Array.Count; ++i)
 				{
 					ISerializeObject arrayObj = Get<ISerializeObject>(Array, i);

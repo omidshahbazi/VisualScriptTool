@@ -12,8 +12,9 @@ namespace VisualScriptTool.Editor
 			private set;
 		}
 
-		public VariableStatementInstance(VariableStatement Statement, PointF Position) :
-			base(Statement, Position)
+		[Serialization.SerializableInstantiator((StatementInstance)null)]
+		public VariableStatementInstance(VariableStatement Statement) :
+			base(Statement)
 		{
 			Slot = AddSlot(Slot.Types.Getter, 0);
 		}

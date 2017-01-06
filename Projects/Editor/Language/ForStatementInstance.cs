@@ -7,8 +7,9 @@ namespace VisualScriptTool.Editor
 {
 	public class ForStatementInstance : ControlStatementInstance
 	{
-		public ForStatementInstance(ForStatement Statement, PointF Position) :
-			base(Statement, Position)
+		[Serialization.SerializableInstantiator((StatementInstance)null)]
+		public ForStatementInstance(ForStatement Statement) :
+			base(Statement)
 		{
 			AddSlot("Body", Slot.Types.Executer, 1, null, OnBodyAssigned);
 

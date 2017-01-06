@@ -1,5 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Serializers;
@@ -16,32 +17,27 @@ namespace VisualScriptTool.Editor
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm());
 
+			//ICompileStrategy defaultCompilerStrategy = new DefaultCompileStrategy();
+			//ICompileStrategy systemCompilerStrategy = new SystemCompilerStrategy();
+
+			//Dictionary<Type, ICompileStrategy> types = new Dictionary<Type, ICompileStrategy>();
+			//types[typeof(StatementInstance)] = defaultCompilerStrategy;
+			//types[typeof(IfStatementInstance)] = defaultCompilerStrategy;
+			//types[typeof(ForStatementInstance)] = defaultCompilerStrategy;
+			//types[typeof(VariableStatementInstance)] = defaultCompilerStrategy;
+			//types[typeof(System.Drawing.PointF)] = systemCompilerStrategy;
+			//types[typeof(System.Drawing.SizeF)] = systemCompilerStrategy;
+
+
 			//SerializerCompiler compiler = new SerializerCompiler();
-			//compiler.Strategy = new SystemCompilerStrategy();
 
-			//System.Reflection.Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+			//Dictionary<Type, ICompileStrategy>.Enumerator it = types.GetEnumerator();
+			//while (it.MoveNext())
+			//{
+			//	compiler.Strategy = it.Current.Value;
 
-			//for (int i = 0; i < assemblies.Length; ++i)
-			//	if (assemblies[i].FullName.Contains("System"))
-			//	{
-			//		Type[] types = assemblies[i].GetExportedTypes();
-
-			//		for (int j = 0; j < types.Length; ++j)
-			//		{
-			//			if (types[j].IsSealed)
-			//				continue;
-
-			//			File.WriteAllText(Application.StartupPath + "/../Test/System.Drawing/" + types[j].Name + "_Serializer.cs", compiler.Compile(types[j]));
-			//		}
-			//	}
-
-			Type[] types = new Type[] { typeof(StatementInstance), typeof(IfStatementInstance), typeof(ForStatementInstance), typeof(VariableStatementInstance), typeof(System.Drawing.PointF), typeof(System.Drawing.SizeF) };
-
-			SerializerCompiler compiler = new SerializerCompiler();
-			compiler.Strategy = new SystemCompilerStrategy();
-
-			for (int i = 0; i < types.Length; ++i)
-				File.WriteAllText(Application.StartupPath + "/../Editor/Serializers/" + types[i].Name + "_Serializer.cs", compiler.Compile(types[i]));
+			//	File.WriteAllText(Application.StartupPath + "/../Editor/Serializers/" + it.Current.Key.Name + "_Serializer.cs", compiler.Compile(it.Current.Key));
+			//}
 		}
 	}
 }

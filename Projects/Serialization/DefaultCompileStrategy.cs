@@ -135,9 +135,9 @@ namespace VisualScriptTool.Serialization
 			if (serializableInstantiator.DefaultParameters == null || serializableInstantiator.DefaultParameters.Length != parameters.Length - ConstantParameterCount)
 				return false;
 
-			for (uint j = 0; j < parameters.Length - ConstantParameterCount; ++j)
-				if (parameters[j + ConstantParameterCount].ParameterType != serializableInstantiator.DefaultParameters[j].GetType())
-					return false;
+			//for (uint j = 0; j < parameters.Length - ConstantParameterCount; ++j)
+			//	if (parameters[j + ConstantParameterCount].ParameterType != serializableInstantiator.DefaultParameters[j].GetType())
+			//		return false;
 
 			return true;
 		}

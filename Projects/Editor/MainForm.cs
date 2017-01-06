@@ -43,13 +43,13 @@ namespace VisualScriptTool.Editor
 			forStatement.MaximumValue = intVariable1;
 			forStatement.Statement = ifStatement1;
 
-			diagramTab.Statements.Add(new IfStatementInstance(ifStatement, new PointF(350, 220)));
-			diagramTab.Statements.Add(new IfStatementInstance(ifStatement1, new PointF(750, 520)));
-			diagramTab.Statements.Add(new ForStatementInstance(forStatement, new PointF(650, 220)));
+			diagramTab.Statements.Add(new IfStatementInstance(ifStatement));
+			diagramTab.Statements.Add(new IfStatementInstance(ifStatement1));
+			diagramTab.Statements.Add(new ForStatementInstance(forStatement));
 
-			diagramTab.Statements.Add(new VariableStatementInstance(intVariable1, new PointF(150, 220)));
-			diagramTab.Statements.Add(new VariableStatementInstance(intVariable, new PointF(50, 20)));
-			diagramTab.Statements.Add(new VariableStatementInstance(boolVariable, new PointF(150, 120)));
+			diagramTab.Statements.Add(new VariableStatementInstance(intVariable1));
+			diagramTab.Statements.Add(new VariableStatementInstance(intVariable));
+			diagramTab.Statements.Add(new VariableStatementInstance(boolVariable));
 
 			Serialization.Creator.AddSerializer(new PointF_Serializer());
 			Serialization.Creator.AddSerializer(new SizeF_Serializer());
@@ -58,7 +58,18 @@ namespace VisualScriptTool.Editor
 			Serialization.Creator.AddSerializer(new ForStatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new VariableStatementInstance_Serializer());
 
-			Serialization.Creator.GetSerializer(diagramTab.Statements.GetType()).Serialize(Serialization.Creator.Create<ISerializeArray>(), diagramTab.Statements);
+
+			ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>(System.IO.File.ReadAllText(Application.StartupPath + "/1.json"));
+
+			Serialization.Creator.GetSerializer(diagramTab.Statements.GetType()).Deserialize(dataArray, diagramTab.Statements);
+
+
+
+			//ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>();
+
+			//Serialization.Creator.GetSerializer(diagramTab.Statements.GetType()).Serialize(dataArray, diagramTab.Statements);
+
+			//System.IO.File.WriteAllText(Application.StartupPath + "/1.json", dataArray.Content);
 
 			tabControl1.TabPages.Add(diagramTab);
 

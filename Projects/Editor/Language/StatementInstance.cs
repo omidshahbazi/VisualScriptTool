@@ -49,11 +49,10 @@ namespace VisualScriptTool.Editor
 			get { return slots.ToArray(); }
 		}
 
-		public StatementInstance(Statement Statement, PointF Position)
+		public StatementInstance(Statement Statement)
 		{
 			bounds = new RectangleF();
 			this.Statement = Statement;
-			bounds.Location = Position;
 
 			slots = new SlotList();
         }

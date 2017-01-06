@@ -183,7 +183,7 @@ namespace VisualScriptTool.Serialization
 
 			serialize.AppendLine("ISerializeObject elementObject = AddObject(Array); ", indent);
 			serialize.AppendLine("System.Type elementType = element.GetType();", indent);
-			serialize.AppendLine("Set(elementObject, " + DATA_STRUCTURE_TYPE_ID + ", elementType.FullName);", indent);
+			serialize.AppendLine("Set(elementObject, " + DATA_STRUCTURE_TYPE_ID + ", elementType.AssemblyQualifiedName);", indent);
 			serialize.AppendLine("GetSerializer(elementType)." + SERIALIZE_METHOD_NAME + "(AddObject(elementObject, " + DATA_STRUCTURE_VALUE_ID + "), element); ", indent);
 
 			if (!Type.IsValueType)
@@ -219,7 +219,7 @@ namespace VisualScriptTool.Serialization
 			deserialize.AppendLine(typeArrayName + " = (" + Type.FullName + "[])Instance;", ++indent);
 			--indent;
 			deserialize.AppendLine("else", indent);
-			deserialize.AppendLine(typeArrayName + " = (" + Type.FullName + "[])System.Array.CreateInstance(instanceType, Array.Count);", ++indent);
+			deserialize.AppendLine(typeArrayName + " = (" + Type.FullName + "[])System.Array.CreateInstance(elementType, Array.Count);", ++indent);
 			--indent;
 
 			deserialize.AppendLine("for (uint i = 0; i < Array.Count; ++i)", indent);
@@ -378,7 +378,7 @@ namespace VisualScriptTool.Serialization
 				string arrayObjectName = Member.Name + "ArrayObject";
 				SerializeMethod.AppendLine("ISerializeObject " + arrayObjectName + " = AddObject(" + arrayName + "); ", indent);
 				SerializeMethod.AppendLine("System.Type elementType = element.GetType();", indent);
-				SerializeMethod.AppendLine("Set(" + arrayObjectName + ", " + DATA_STRUCTURE_TYPE_ID + ", elementType.FullName);", indent);
+				SerializeMethod.AppendLine("Set(" + arrayObjectName + ", " + DATA_STRUCTURE_TYPE_ID + ", elementType.AssemblyQualifiedName);", indent);
 				SerializeMethod.AppendLine("GetSerializer(elementType)." + SERIALIZE_METHOD_NAME + "(AddObject(" + arrayObjectName + ", " + DATA_STRUCTURE_VALUE_ID + "), element); ", indent);
 			}
 
@@ -447,7 +447,7 @@ namespace VisualScriptTool.Serialization
 
 			SerializeMethod.AppendLine("ISerializeObject " + objectName + " = AddObject(" + ObjectName + ", " + ID + "); ", indent);
 			SerializeMethod.AppendLine("System.Type " + Member.Name + "Type = " + MemberAccessName + ".GetType();", indent);
-			SerializeMethod.AppendLine("Set(" + objectName + ", " + DATA_STRUCTURE_TYPE_ID + ", " + Member.Name + "Type.FullName);", indent);
+			SerializeMethod.AppendLine("Set(" + objectName + ", " + DATA_STRUCTURE_TYPE_ID + ", " + Member.Name + "Type.AssemblyQualifiedName);", indent);
 			SerializeMethod.AppendLine("GetSerializer(" + Member.Name + "Type)." + SERIALIZE_METHOD_NAME + "(AddObject(" + objectName + ", " + DATA_STRUCTURE_VALUE_ID + "), " + MemberAccessName + ");", indent);
 
 			if (!MemberType.IsValueType)

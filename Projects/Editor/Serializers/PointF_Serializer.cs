@@ -42,7 +42,7 @@ namespace System.Drawing
 					System.Drawing.PointF element = PointFArray[i];
 					ISerializeObject elementObject = AddObject(Array); 
 					System.Type elementType = element.GetType();
-					Set(elementObject, 0, elementType.FullName);
+					Set(elementObject, 0, elementType.AssemblyQualifiedName);
 					GetSerializer(elementType).Serialize(AddObject(elementObject, 1), element); 
 				}
 			}
@@ -79,7 +79,7 @@ namespace System.Drawing
 				if (instanceType.IsArray())
 					PointFArray = (System.Drawing.PointF[])Instance;
 				else
-					PointFArray = (System.Drawing.PointF[])System.Array.CreateInstance(instanceType, Array.Count);
+					PointFArray = (System.Drawing.PointF[])System.Array.CreateInstance(elementType, Array.Count);
 				for (uint i = 0; i < Array.Count; ++i)
 				{
 					ISerializeObject arrayObj = Get<ISerializeObject>(Array, i);

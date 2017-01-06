@@ -7,8 +7,9 @@ namespace VisualScriptTool.Editor
 {
 	public class IfStatementInstance : ControlStatementInstance
 	{
-		public IfStatementInstance(IfStatement Statement, PointF Position) :
-			base(Statement, Position)
+		[Serialization.SerializableInstantiator((StatementInstance)null)]
+		public IfStatementInstance(IfStatement Statement) :
+			base(Statement)
 		{
 			AddSlot("Condition", Slot.Types.Argument, 1, CheckConditionAssignment, OnConditionAssigned);
 

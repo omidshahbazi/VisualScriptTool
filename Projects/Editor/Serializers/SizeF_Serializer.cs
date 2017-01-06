@@ -42,7 +42,7 @@ namespace System.Drawing
 					System.Drawing.SizeF element = SizeFArray[i];
 					ISerializeObject elementObject = AddObject(Array); 
 					System.Type elementType = element.GetType();
-					Set(elementObject, 0, elementType.FullName);
+					Set(elementObject, 0, elementType.AssemblyQualifiedName);
 					GetSerializer(elementType).Serialize(AddObject(elementObject, 1), element); 
 				}
 			}
@@ -79,7 +79,7 @@ namespace System.Drawing
 				if (instanceType.IsArray())
 					SizeFArray = (System.Drawing.SizeF[])Instance;
 				else
-					SizeFArray = (System.Drawing.SizeF[])System.Array.CreateInstance(instanceType, Array.Count);
+					SizeFArray = (System.Drawing.SizeF[])System.Array.CreateInstance(elementType, Array.Count);
 				for (uint i = 0; i < Array.Count; ++i)
 				{
 					ISerializeObject arrayObj = Get<ISerializeObject>(Array, i);

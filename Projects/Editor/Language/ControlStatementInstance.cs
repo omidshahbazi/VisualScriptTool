@@ -6,8 +6,8 @@ namespace VisualScriptTool.Editor
 {
 	public abstract class ControlStatementInstance : StatementInstance
 	{
-		public ControlStatementInstance(ControlStatement Statement, PointF Position) :
-			base(Statement, Position)
+		public ControlStatementInstance(ControlStatement Statement) :
+			base(Statement)
 		{
 			AddSlot(Slot.Types.EntryPoint, 0);
 			AddSlot(Slot.Types.Executer, 0, null, OnExecuterAssigned);
