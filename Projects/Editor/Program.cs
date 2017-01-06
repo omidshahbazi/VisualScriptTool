@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using VisualScriptTool.Editor.Serializers;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
@@ -34,11 +35,13 @@ namespace VisualScriptTool.Editor
 			//		}
 			//	}
 
+			Type[] types = new Type[] { typeof(StatementInstance), typeof(IfStatementInstance), typeof(ForStatementInstance), typeof(VariableStatementInstance), typeof(System.Drawing.PointF), typeof(System.Drawing.SizeF) };
+
 			SerializerCompiler compiler = new SerializerCompiler();
-			File.WriteAllText(Application.StartupPath + "/../Editor/StatementInstance_Serializer.cs", compiler.Compile(typeof(StatementInstance)));
-			File.WriteAllText(Application.StartupPath + "/../Editor/IfStatementInstance_Serializer.cs", compiler.Compile(typeof(IfStatementInstance)));
-			File.WriteAllText(Application.StartupPath + "/../Editor/ForStatementInstance_Serializer.cs", compiler.Compile(typeof(ForStatementInstance)));
-			File.WriteAllText(Application.StartupPath + "/../Editor/VariableStatementInstance_Serializer.cs", compiler.Compile(typeof(VariableStatementInstance)));
+			compiler.Strategy = new SystemCompilerStrategy();
+
+			for (int i = 0; i < types.Length; ++i)
+				File.WriteAllText(Application.StartupPath + "/../Editor/Serializers/" + types[i].Name + "_Serializer.cs", compiler.Compile(types[i]));
 		}
 	}
 }

@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using VisualScriptTool.Reflection;
 using VisualScriptTool.Serialization;
 
-namespace VisualScriptTool.Editor
+namespace VisualScriptTool.Editor.Serializers
 {
 	class SystemCompilerStrategy : ICompileStrategy
 	{

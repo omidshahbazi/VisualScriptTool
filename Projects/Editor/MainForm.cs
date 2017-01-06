@@ -51,6 +51,8 @@ namespace VisualScriptTool.Editor
 			diagramTab.Statements.Add(new VariableStatementInstance(intVariable, new PointF(50, 20)));
 			diagramTab.Statements.Add(new VariableStatementInstance(boolVariable, new PointF(150, 120)));
 
+			Serialization.Creator.AddSerializer(new PointF_Serializer());
+			Serialization.Creator.AddSerializer(new SizeF_Serializer());
 			Serialization.Creator.AddSerializer(new StatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new IfStatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new ForStatementInstance_Serializer());
