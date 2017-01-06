@@ -18,19 +18,21 @@ namespace VisualScriptTool.Editor
 			private set;
 		}
 
+		[SerializableElement(0)]
 		public PointF Position
 		{
 			get { return bounds.Location; }
 			set { bounds.Location = value; }
 		}
 
+		[SerializableElement(1)]
 		public SizeF HeaderSize
 		{
 			get;
 			set;
 		}
 
-		[SerializableElement(0)]
+		[SerializableElement(2)]
 		public SizeF BodySize
 		{
 			get;

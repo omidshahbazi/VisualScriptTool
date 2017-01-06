@@ -75,7 +75,15 @@ namespace VisualScriptTool.Reflection
 
 		public static Type GetListElementType(this Type Type)
 		{
-			return Type.GetGenericArguments()[0];
+			while (Type != null)
+			{
+				if (Type.GetGenericArguments().Length != 0)
+					return Type.GetGenericArguments()[0];
+
+				Type = Type.BaseType;
+			}
+
+			return null;
 		}
 
 		public static bool IsArray(this Type Type)

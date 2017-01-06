@@ -44,9 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ForStatementInstance_Serializer.cs" />
     <Compile Include="GridCanvas.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="IfStatementInstance_Serializer.cs" />
     <Compile Include="Language\ControlStatementInstance.cs" />
     <Compile Include="Language\Drawers\ForStatementDrawer.cs" />
     <Compile Include="Language\Drawers\IfStatementDrawer.cs" />
@@ -61,6 +63,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CubicSPLine.cs" />
+    <Compile Include="StatementInstance_Serializer.cs" />
     <Compile Include="SystemCompilerStrategy.cs" />
     <Compile Include="TypeHelper.cs" />
     <Compile Include="StatementDrawer.cs" />
@@ -77,6 +80,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VariableStatementInstance_Serializer.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

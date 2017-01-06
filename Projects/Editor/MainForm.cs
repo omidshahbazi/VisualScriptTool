@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Language.Statements.Declaration.Variables;
+using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
 {
@@ -49,6 +50,13 @@ namespace VisualScriptTool.Editor
 			diagramTab.Statements.Add(new VariableStatementInstance(intVariable1, new PointF(150, 220)));
 			diagramTab.Statements.Add(new VariableStatementInstance(intVariable, new PointF(50, 20)));
 			diagramTab.Statements.Add(new VariableStatementInstance(boolVariable, new PointF(150, 120)));
+
+			Serialization.Creator.AddSerializer(new StatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new IfStatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new ForStatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new VariableStatementInstance_Serializer());
+
+			Serialization.Creator.GetSerializer(diagramTab.Statements.GetType()).Serialize(Serialization.Creator.Create<ISerializeArray>(), diagramTab.Statements);
 
 			tabControl1.TabPages.Add(diagramTab);
 

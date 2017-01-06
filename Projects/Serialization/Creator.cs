@@ -8,11 +8,6 @@ namespace VisualScriptTool.Serialization
 	{
 		private static System.Collections.Generic.Dictionary<System.Type, Serializer> serializers = new System.Collections.Generic.Dictionary<System.Type, Serializer>();
 
-		public static ISerializeObject Create()
-		{
-			return new JSONSerializeObject(null);
-		}
-
 		public static T Create<T>() where T : ISerializeData
 		{
 			if (typeof(T) == typeof(ISerializeObject))

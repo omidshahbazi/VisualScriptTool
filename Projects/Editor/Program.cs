@@ -15,7 +15,7 @@ namespace VisualScriptTool.Editor
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm());
 
-			SerializerCompiler compiler = new SerializerCompiler();
+			//SerializerCompiler compiler = new SerializerCompiler();
 			//compiler.Strategy = new SystemCompilerStrategy();
 
 			//System.Reflection.Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -34,8 +34,11 @@ namespace VisualScriptTool.Editor
 			//		}
 			//	}
 
-			compiler = new SerializerCompiler();
-			File.WriteAllText(Application.StartupPath + "/../Test/IfStatementInstance_Serializer.cs", compiler.Compile(typeof(IfStatementInstance)));
+			SerializerCompiler compiler = new SerializerCompiler();
+			File.WriteAllText(Application.StartupPath + "/../Editor/StatementInstance_Serializer.cs", compiler.Compile(typeof(StatementInstance)));
+			File.WriteAllText(Application.StartupPath + "/../Editor/IfStatementInstance_Serializer.cs", compiler.Compile(typeof(IfStatementInstance)));
+			File.WriteAllText(Application.StartupPath + "/../Editor/ForStatementInstance_Serializer.cs", compiler.Compile(typeof(ForStatementInstance)));
+			File.WriteAllText(Application.StartupPath + "/../Editor/VariableStatementInstance_Serializer.cs", compiler.Compile(typeof(VariableStatementInstance)));
 		}
 	}
 }
