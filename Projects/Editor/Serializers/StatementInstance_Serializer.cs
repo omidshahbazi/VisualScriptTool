@@ -73,29 +73,15 @@ namespace VisualScriptTool.Editor
 			}
 		}
 
-		public override void Deserialize(ISerializeData Data, object Instance)
+		public override T Deserialize<T>(ISerializeData Data)
 		{
-			if (Data == null || Instance == null)
-				throw new System.ArgumentNullException("Data and Instance cannot be null");
-			System.Type instanceType = Instance.GetType();
-			if (instanceType.IsArray())
-				instanceType = instanceType.GetArrayElementType();
-			else if (instanceType.IsList())
-				instanceType = instanceType.GetListElementType();
-			if (Type != instanceType)
-				throw new System.InvalidCastException("Expected [" + Type.FullName + "]");
-			instanceType = Instance.GetType();
-			if ((Data is ISerializeObject && instanceType.IsArrayOrList()) || (Data is ISerializeArray && !instanceType.IsArrayOrList()))
-				throw new System.ArgumentException("Data and Instance mismatch [" + Type.FullName + "]");
-			if (instanceType.IsArrayOrList())
+			if (Data == null)
+				throw new System.ArgumentNullException("Data cannot be null");
+
+			if (Data is ISerializeArray)
 			{
-				System.Type elementType = (instanceType.IsArray() ? instanceType.GetArrayElementType() : instanceType.GetListElementType());
 				ISerializeArray Array = (ISerializeArray)Data; 
-				VisualScriptTool.Editor.StatementInstance[] StatementInstanceArray = null;
-				if (instanceType.IsArray())
-					StatementInstanceArray = (VisualScriptTool.Editor.StatementInstance[])Instance;
-				else
-					StatementInstanceArray = (VisualScriptTool.Editor.StatementInstance[])System.Array.CreateInstance(elementType, Array.Count);
+				VisualScriptTool.Editor.StatementInstance[] StatementInstanceArray = (VisualScriptTool.Editor.StatementInstance[])System.Array.CreateInstance(Type, Array.Count);
 				for (uint i = 0; i < Array.Count; ++i)
 				{
 					ISerializeObject arrayObj = Get<ISerializeObject>(Array, i);
@@ -107,21 +93,22 @@ namespace VisualScriptTool.Editor
 					}
 					if (StatementInstanceArray[i] == null)
 						StatementInstanceArray[i] = (VisualScriptTool.Editor.StatementInstance)GetSerializer(targetType).CreateInstance();
-					GetSerializer(targetType).Deserialize(Get<ISerializeObject>(arrayObj, 1), StatementInstanceArray[i]); 
+					StatementInstanceArray[i] = GetSerializer(targetType).Deserialize<VisualScriptTool.Editor.StatementInstance>(Get<ISerializeObject>(arrayObj, 1));
 				}
+
+				return (T)(object)StatementInstanceArray;
 			}
 			else
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
-				VisualScriptTool.Editor.StatementInstance StatementInstance = (VisualScriptTool.Editor.StatementInstance)Instance;
+				VisualScriptTool.Editor.StatementInstance StatementInstance = (VisualScriptTool.Editor.StatementInstance)CreateInstance();
 				// Position
 				ISerializeObject PositionObject = Get<ISerializeObject>(Object, 0, null);
 				if (PositionObject != null)
 				{
 					ISerializeObject PositionObjectValue = Get<ISerializeObject>(Object, 0); 
 					Serializer PositionSerializer = GetSerializer(System.Type.GetType(Get<string>(PositionObjectValue, 0)));
-					StatementInstance.Position = (System.Drawing.PointF)PositionSerializer.CreateInstance();
-					PositionSerializer.Deserialize(Get<ISerializeObject>(PositionObjectValue, 1), StatementInstance.Position);
+					StatementInstance.Position = PositionSerializer.Deserialize<System.Drawing.PointF>(Get<ISerializeObject>(PositionObjectValue, 1));
 				}
 				// HeaderSize
 				ISerializeObject HeaderSizeObject = Get<ISerializeObject>(Object, 1, null);
@@ -129,8 +116,7 @@ namespace VisualScriptTool.Editor
 				{
 					ISerializeObject HeaderSizeObjectValue = Get<ISerializeObject>(Object, 1); 
 					Serializer HeaderSizeSerializer = GetSerializer(System.Type.GetType(Get<string>(HeaderSizeObjectValue, 0)));
-					StatementInstance.HeaderSize = (System.Drawing.SizeF)HeaderSizeSerializer.CreateInstance();
-					HeaderSizeSerializer.Deserialize(Get<ISerializeObject>(HeaderSizeObjectValue, 1), StatementInstance.HeaderSize);
+					StatementInstance.HeaderSize = HeaderSizeSerializer.Deserialize<System.Drawing.SizeF>(Get<ISerializeObject>(HeaderSizeObjectValue, 1));
 				}
 				// BodySize
 				ISerializeObject BodySizeObject = Get<ISerializeObject>(Object, 2, null);
@@ -138,9 +124,10 @@ namespace VisualScriptTool.Editor
 				{
 					ISerializeObject BodySizeObjectValue = Get<ISerializeObject>(Object, 2); 
 					Serializer BodySizeSerializer = GetSerializer(System.Type.GetType(Get<string>(BodySizeObjectValue, 0)));
-					StatementInstance.BodySize = (System.Drawing.SizeF)BodySizeSerializer.CreateInstance();
-					BodySizeSerializer.Deserialize(Get<ISerializeObject>(BodySizeObjectValue, 1), StatementInstance.BodySize);
+					StatementInstance.BodySize = BodySizeSerializer.Deserialize<System.Drawing.SizeF>(Get<ISerializeObject>(BodySizeObjectValue, 1));
 				}
+
+				return (T)(object)StatementInstance;
 			}
 		}
 

@@ -1,7 +1,35 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 
+using System;
+
 namespace VisualScriptTool.Serialization
 {
+	class Test : Serializer
+	{
+		public override Type Type
+		{
+			get
+			{
+				throw new NotImplementedException();
+			}
+		}
+
+		public override object CreateInstance()
+		{
+			throw new NotImplementedException();
+		}
+
+		public override T Deserialize<T>(ISerializeData Data)
+		{
+			throw new NotImplementedException();
+		}
+
+		public override void Serialize(ISerializeData Data, object Instance)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
 	public abstract class Serializer
 	{
 		public abstract System.Type Type
@@ -11,7 +39,7 @@ namespace VisualScriptTool.Serialization
 
 		public abstract object CreateInstance();
 		public abstract void Serialize(ISerializeData Data, object Instance);
-		public abstract void Deserialize(ISerializeData Data, object Instance);
+		public abstract T Deserialize<T>(ISerializeData Data);
 
 		protected static Serializer GetSerializer(System.Type Type)
 		{

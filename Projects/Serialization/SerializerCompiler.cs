@@ -202,7 +202,7 @@ namespace VisualScriptTool.Serialization
 			--indent;
 			--indent;
 
-			deserialize.AppendLine("public override void " + DESERIALIZE_METHOD_NAME + "(ISerializeData Data, object Instance)", indent);
+			deserialize.AppendLine("public override T " + DESERIALIZE_METHOD_NAME + "<T>(ISerializeData Data)", indent);
 			deserialize.AppendLine("{", indent);
 			++indent;
 			AppendGaurd(Type, deserialize);
@@ -239,7 +239,7 @@ namespace VisualScriptTool.Serialization
 			}
 
 
-			deserialize.AppendLine("GetSerializer(targetType)." + DESERIALIZE_METHOD_NAME + "(Get<ISerializeObject>(arrayObj, " + DATA_STRUCTURE_VALUE_ID + "), " + typeArrayName + "[i]); ", indent);
+			deserialize.AppendLine(typeArrayName + "[i] = GetSerializer(targetType)." + DESERIALIZE_METHOD_NAME + "<" + Type.FullName + ">(Get<ISerializeObject>(arrayObj, " + DATA_STRUCTURE_VALUE_ID + ")); ", indent);
 
 			--indent;
 			deserialize.AppendLine("}", indent);
@@ -462,8 +462,8 @@ namespace VisualScriptTool.Serialization
 			objectName += "Value";
 			DeserializeMethod.AppendLine("ISerializeObject " + objectName + " = Get<ISerializeObject>(" + ObjectName + ", " + ID + "); ", ++indent);
 			DeserializeMethod.AppendLine("Serializer " + serializerName + " = GetSerializer(System.Type.GetType(Get<string>(" + objectName + ", " + DATA_STRUCTURE_TYPE_ID + ")));", indent);
-			DeserializeMethod.AppendLine(MemberAccessName + " = (" + MemberType.FullName + ")" + serializerName + "." + CREATE_INSTANCE_METHOD_NAME + "();", indent);
-			DeserializeMethod.AppendLine(serializerName + "." + DESERIALIZE_METHOD_NAME + "(Get<ISerializeObject>(" + objectName + ", " + DATA_STRUCTURE_VALUE_ID + "), " + MemberAccessName + ");", indent);
+			//DeserializeMethod.AppendLine(MemberAccessName + " = (" + MemberType.FullName + ")" + serializerName + "." + CREATE_INSTANCE_METHOD_NAME + "();", indent);
+			DeserializeMethod.AppendLine(MemberAccessName + " = " + serializerName + "." + DESERIALIZE_METHOD_NAME + "<" + MemberType.FullName + ">(Get<ISerializeObject>(" + objectName + ", " + DATA_STRUCTURE_VALUE_ID + "));", indent);
 
 			DeserializeMethod.AppendLine("}", --indent);
 			if (!MemberType.IsValueType)

@@ -51,17 +51,17 @@ namespace VisualScriptTool.Editor
 			diagramTab.Statements.Add(new VariableStatementInstance(intVariable));
 			diagramTab.Statements.Add(new VariableStatementInstance(boolVariable));
 
-			Serialization.Creator.AddSerializer(new PointF_Serializer());
-			Serialization.Creator.AddSerializer(new SizeF_Serializer());
-			Serialization.Creator.AddSerializer(new StatementInstance_Serializer());
-			Serialization.Creator.AddSerializer(new IfStatementInstance_Serializer());
-			Serialization.Creator.AddSerializer(new ForStatementInstance_Serializer());
-			Serialization.Creator.AddSerializer(new VariableStatementInstance_Serializer());
+			//Serialization.Creator.AddSerializer(new PointF_Serializer());
+			//Serialization.Creator.AddSerializer(new SizeF_Serializer());
+			//Serialization.Creator.AddSerializer(new StatementInstance_Serializer());
+			//Serialization.Creator.AddSerializer(new IfStatementInstance_Serializer());
+			//Serialization.Creator.AddSerializer(new ForStatementInstance_Serializer());
+			//Serialization.Creator.AddSerializer(new VariableStatementInstance_Serializer());
 
 
-			ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>(System.IO.File.ReadAllText(Application.StartupPath + "/1.json"));
+			//ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>(System.IO.File.ReadAllText(Application.StartupPath + "/1.json"));
 
-			Serialization.Creator.GetSerializer(diagramTab.Statements.GetType()).Deserialize(dataArray, diagramTab.Statements);
+			//Serialization.Creator.GetSerializer(diagramTab.Statements.GetType()).Deserialize(dataArray, diagramTab.Statements);
 
 
 
