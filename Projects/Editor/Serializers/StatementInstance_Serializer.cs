@@ -18,7 +18,7 @@ namespace VisualScriptTool.Editor
 		public override void Serialize(ISerializeData Data, object Instance)
 		{
 			if (Data == null || Instance == null)
-				throw new System.ArgumentNullException("Data and Instance cannot be null");
+				throw new System.ArgumentNullException("Data and/or Instance cannot be null");
 			System.Type instanceType = Instance.GetType();
 			if (instanceType.IsArray())
 				instanceType = instanceType.GetArrayElementType();
@@ -77,7 +77,6 @@ namespace VisualScriptTool.Editor
 		{
 			if (Data == null)
 				throw new System.ArgumentNullException("Data cannot be null");
-
 			if (Data is ISerializeArray)
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
@@ -91,11 +90,8 @@ namespace VisualScriptTool.Editor
 						StatementInstanceArray[i] = null;
 						continue;
 					}
-					if (StatementInstanceArray[i] == null)
-						StatementInstanceArray[i] = (VisualScriptTool.Editor.StatementInstance)GetSerializer(targetType).CreateInstance();
-					StatementInstanceArray[i] = GetSerializer(targetType).Deserialize<VisualScriptTool.Editor.StatementInstance>(Get<ISerializeObject>(arrayObj, 1));
+					StatementInstanceArray[i] = GetSerializer(targetType).Deserialize<VisualScriptTool.Editor.StatementInstance>(Get<ISerializeObject>(arrayObj, 1)); 
 				}
-
 				return (T)(object)StatementInstanceArray;
 			}
 			else
@@ -126,7 +122,6 @@ namespace VisualScriptTool.Editor
 					Serializer BodySizeSerializer = GetSerializer(System.Type.GetType(Get<string>(BodySizeObjectValue, 0)));
 					StatementInstance.BodySize = BodySizeSerializer.Deserialize<System.Drawing.SizeF>(Get<ISerializeObject>(BodySizeObjectValue, 1));
 				}
-
 				return (T)(object)StatementInstance;
 			}
 		}

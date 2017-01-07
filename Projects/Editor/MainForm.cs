@@ -14,6 +14,7 @@ namespace VisualScriptTool.Editor
 			InitializeComponent();
 
 			DiagramTab diagramTab = new DiagramTab("test");
+			tabControl1.TabPages.Add(diagramTab);
 
 
 			BooleanVariable boolVariable = new BooleanVariable();
@@ -43,35 +44,34 @@ namespace VisualScriptTool.Editor
 			forStatement.MaximumValue = intVariable1;
 			forStatement.Statement = ifStatement1;
 
-			diagramTab.Statements.Add(new IfStatementInstance(ifStatement));
-			diagramTab.Statements.Add(new IfStatementInstance(ifStatement1));
-			diagramTab.Statements.Add(new ForStatementInstance(forStatement));
+			Serialization.Creator.AddSerializer(new PointF_Serializer());
+			Serialization.Creator.AddSerializer(new SizeF_Serializer());
+			Serialization.Creator.AddSerializer(new StatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new IfStatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new ForStatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new VariableStatementInstance_Serializer());
 
-			diagramTab.Statements.Add(new VariableStatementInstance(intVariable1));
-			diagramTab.Statements.Add(new VariableStatementInstance(intVariable));
-			diagramTab.Statements.Add(new VariableStatementInstance(boolVariable));
+			Serializer serializer = Serialization.Creator.GetSerializer(diagramTab.Statements.GetType());
 
-			//Serialization.Creator.AddSerializer(new PointF_Serializer());
-			//Serialization.Creator.AddSerializer(new SizeF_Serializer());
-			//Serialization.Creator.AddSerializer(new StatementInstance_Serializer());
-			//Serialization.Creator.AddSerializer(new IfStatementInstance_Serializer());
-			//Serialization.Creator.AddSerializer(new ForStatementInstance_Serializer());
-			//Serialization.Creator.AddSerializer(new VariableStatementInstance_Serializer());
+			ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>(System.IO.File.ReadAllText(Application.StartupPath + "/1.json"));
+
+			diagramTab.Statements.AddRange(serializer.Deserialize<StatementInstance[]>(dataArray));
 
 
-			//ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>(System.IO.File.ReadAllText(Application.StartupPath + "/1.json"));
 
-			//Serialization.Creator.GetSerializer(diagramTab.Statements.GetType()).Deserialize(dataArray, diagramTab.Statements);
+			//diagramTab.Statements.Add(new IfStatementInstance(ifStatement));
+			//diagramTab.Statements.Add(new IfStatementInstance(ifStatement1));
+			//diagramTab.Statements.Add(new ForStatementInstance(forStatement));
 
-
+			//diagramTab.Statements.Add(new VariableStatementInstance(intVariable1));
+			//diagramTab.Statements.Add(new VariableStatementInstance(intVariable));
+			//diagramTab.Statements.Add(new VariableStatementInstance(boolVariable));
 
 			//ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>();
 
-			//Serialization.Creator.GetSerializer(diagramTab.Statements.GetType()).Serialize(dataArray, diagramTab.Statements);
+			//serializer.Serialize(dataArray, diagramTab.Statements);
 
 			//System.IO.File.WriteAllText(Application.StartupPath + "/1.json", dataArray.Content);
-
-			tabControl1.TabPages.Add(diagramTab);
 
 
 		}
