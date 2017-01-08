@@ -1,9 +1,7 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
-using System.Drawing;
 using System.Windows.Forms;
 using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Language.Statements.Declaration.Variables;
-using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
 {
@@ -43,29 +41,6 @@ namespace VisualScriptTool.Editor
 			forStatement.MinimumValue = intVariable;
 			forStatement.MaximumValue = intVariable1;
 			forStatement.Statement = ifStatement1;
-
-			Serializer serializer = Serialization.Creator.GetSerializer(diagramTab.Statements.GetType());
-
-
-			ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>(System.IO.File.ReadAllText(Application.StartupPath + "/1.json"));
-
-			diagramTab.Statements.AddRange(serializer.Deserialize<StatementInstance[]>(dataArray));
-
-
-
-			//diagramTab.Statements.Add(new IfStatementInstance(ifStatement));
-			//diagramTab.Statements.Add(new IfStatementInstance(ifStatement1));
-			//diagramTab.Statements.Add(new ForStatementInstance(forStatement));
-
-			//diagramTab.Statements.Add(new VariableStatementInstance(intVariable1));
-			//diagramTab.Statements.Add(new VariableStatementInstance(intVariable));
-			//diagramTab.Statements.Add(new VariableStatementInstance(boolVariable));
-
-			//ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>();
-
-			//serializer.Serialize(dataArray, diagramTab.Statements);
-
-			//System.IO.File.WriteAllText(Application.StartupPath + "/1.json", dataArray.Content);
 		}
 	}
 }
