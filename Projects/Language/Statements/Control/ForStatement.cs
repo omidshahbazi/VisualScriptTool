@@ -1,5 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using VisualScriptTool.Language.Statements.Declaration.Variables;
+using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Language.Statements.Control
 {
@@ -11,24 +12,28 @@ namespace VisualScriptTool.Language.Statements.Control
 			set { }
 		}
 
+		[SerializableElement(2)]
 		public IntegerVariable MinimumValue
 		{
 			get;
 			set;
 		}
 
+		[SerializableElement(3)]
 		public IntegerVariable MaximumValue
 		{
 			get;
 			set;
 		}
 
+		[SerializableElement(4)]
 		public IntegerVariable StepValue
 		{
 			get;
 			set;
 		}
 
+		[SerializableElement(5)]
 		public Statement Statement
 		{
 			get;

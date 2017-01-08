@@ -37,6 +37,14 @@ namespace VisualScriptTool.Serialization
 					return method;
 			}
 
+			for (int i = 0; i < ctors.Length; ++i)
+			{
+				ConstructorInfo ctor = ctors[i];
+
+				if (ctor.GetParameters().Length == 0)
+					return ctor;
+			}
+
 			return null;
 		}
 

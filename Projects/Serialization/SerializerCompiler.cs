@@ -36,7 +36,7 @@ namespace VisualScriptTool.Serialization
 			Strategy = new DefaultCompileStrategy();
 		}
 
-		public string Compile(Type Type, string Name = "")
+		public string Compile(Type Type, string Namespace = "", string ClassName = "")
 		{
 			CodeBuilder header = new CodeBuilder();
 			CodeBuilder footer = new CodeBuilder();
@@ -53,7 +53,7 @@ namespace VisualScriptTool.Serialization
 				header.Append("// Generaterd file");
 				header.AppendLine("using VisualScriptTool.Serialization;", indent);
 				header.AppendLine("using VisualScriptTool.Reflection;", indent);
-				header.AppendLine("namespace " + Type.Namespace, indent);
+				header.AppendLine("namespace " + (string.IsNullOrEmpty(Namespace) ? Type.Namespace : Namespace), indent);
 				header.AppendLine("{", indent);
 
 				++indent;
@@ -61,7 +61,7 @@ namespace VisualScriptTool.Serialization
 
 			header.AppendLine(indent);
 
-			header.Append("class " + (string.IsNullOrEmpty(Name) ? Type.Name + "_Serializer" : Name) + " : Serializer");
+			header.Append("class " + (string.IsNullOrEmpty(ClassName) ? Type.Name + "_Serializer" : ClassName) + " : Serializer");
 			header.AppendLine("{", indent);
 			++indent;
 
@@ -327,7 +327,14 @@ namespace VisualScriptTool.Serialization
 		{
 			SerializeMethod.AppendLine("Set(" + ObjectName + ", " + ID + ", " + MemberAccessName + ");", indent);
 
-			DeserializeMethod.AppendLine(MemberAccessName + " = Get<" + MemberType.FullName + ">(" + ObjectName + ", " + ID + ", " + Strategy.GetMemberDefaultValue(Member) + ");", indent);
+			string defaultValue = Strategy.GetMemberDefaultValue(Member);
+			if (string.IsNullOrEmpty(defaultValue))
+				defaultValue = MemberType.GetDefaultValue().ToString().ToLower();
+
+			if (MemberType == typeof(string))
+				defaultValue = "\"" + defaultValue + "\"";
+
+			DeserializeMethod.AppendLine(MemberAccessName + " = Get<" + MemberType.FullName + ">(" + ObjectName + ", " + ID + ", " + defaultValue + ");", indent);
 		}
 
 		private void AppendArray(MemberInfo Member, Type MemberType, int ID, string MemberAccessName, CodeBuilder SerializeMethod, CodeBuilder DeserializeMethod, string ObjectName, ValueType ValueType)

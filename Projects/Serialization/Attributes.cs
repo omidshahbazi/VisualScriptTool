@@ -32,14 +32,16 @@ namespace VisualScriptTool.Serialization
 		public string GetDefaultValueAsString()
 		{
 			if (DefaultValue == null)
-				return "null";
-
-			if (DefaultValue is bool)
-				return ((bool)DefaultValue ? "true" : "false");
-			else if (DefaultValue is string)
-				return "\"" + DefaultValue + "\"";
+				return string.Empty;
 
 			return DefaultValue.ToString();
+
+			//if (DefaultValue is bool)
+			//	return ((bool)DefaultValue ? "true" : "false");
+			//else if (DefaultValue is string)
+			//	return "\"" + DefaultValue + "\"";
+
+			//return DefaultValue.ToString();
 		}
 	}
 
@@ -60,7 +62,7 @@ namespace VisualScriptTool.Serialization
 		public string GetDefaultParameterAsString(uint Index)
 		{
 			object value = DefaultParameters[Index];
-			
+
 			if (value == null)
 				return "null";
 

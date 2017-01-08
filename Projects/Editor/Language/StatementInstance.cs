@@ -12,10 +12,11 @@ namespace VisualScriptTool.Editor
 
 		private SlotList slots = null;
 
+		[SerializableElement(3)]
 		public Statement Statement
 		{
 			get;
-			private set;
+			set;
 		}
 
 		[SerializableElement(0)]

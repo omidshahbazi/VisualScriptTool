@@ -1,7 +1,7 @@
 // Generaterd file
 using VisualScriptTool.Serialization;
 using VisualScriptTool.Reflection;
-namespace VisualScriptTool.Editor
+namespace VisualScriptTool.Editor.Serializers
 {
 	class StatementInstance_Serializer : Serializer
 	{
@@ -55,6 +55,16 @@ namespace VisualScriptTool.Editor
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
 				VisualScriptTool.Editor.StatementInstance StatementInstance = (VisualScriptTool.Editor.StatementInstance)Instance;
+				// Statement
+				if (StatementInstance.Statement == null)
+					Set(Object, 3, null);
+				else
+				{
+					ISerializeObject StatementObject = AddObject(Object, 3); 
+					System.Type StatementType = StatementInstance.Statement.GetType();
+					Set(StatementObject, 0, StatementType.AssemblyQualifiedName);
+					GetSerializer(StatementType).Serialize(AddObject(StatementObject, 1), StatementInstance.Statement);
+				}
 				// Position
 				ISerializeObject PositionObject = AddObject(Object, 0); 
 				System.Type PositionType = StatementInstance.Position.GetType();
@@ -98,6 +108,16 @@ namespace VisualScriptTool.Editor
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
 				VisualScriptTool.Editor.StatementInstance StatementInstance = (VisualScriptTool.Editor.StatementInstance)CreateInstance();
+				// Statement
+				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 3, null);
+				if (StatementObject != null)
+				{
+					ISerializeObject StatementObjectValue = Get<ISerializeObject>(Object, 3); 
+					Serializer StatementSerializer = GetSerializer(System.Type.GetType(Get<string>(StatementObjectValue, 0)));
+					StatementInstance.Statement = StatementSerializer.Deserialize<VisualScriptTool.Language.Statements.Statement>(Get<ISerializeObject>(StatementObjectValue, 1));
+				}
+				else
+					StatementInstance.Statement = null;
 				// Position
 				ISerializeObject PositionObject = Get<ISerializeObject>(Object, 0, null);
 				if (PositionObject != null)

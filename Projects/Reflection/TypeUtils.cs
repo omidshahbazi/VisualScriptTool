@@ -62,6 +62,15 @@ namespace VisualScriptTool.Reflection
 			if (Type == typeof(string))
 				return string.Empty;
 
+			if (Type == typeof(bool))
+				return false;
+
+			if (Type == typeof(int))
+				return 0;
+
+			if (Type == typeof(float))
+				return 0.0F;
+
 			if (Type.IsGenericType && Type.GetGenericTypeDefinition() == typeof(Nullable<>))
 				Type = Type.GetProperty("Value").PropertyType;
 

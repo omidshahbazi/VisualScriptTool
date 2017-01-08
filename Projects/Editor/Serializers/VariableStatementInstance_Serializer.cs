@@ -1,7 +1,7 @@
 // Generaterd file
 using VisualScriptTool.Serialization;
 using VisualScriptTool.Reflection;
-namespace VisualScriptTool.Editor
+namespace VisualScriptTool.Editor.Serializers
 {
 	class VariableStatementInstance_Serializer : Serializer
 	{
@@ -55,6 +55,16 @@ namespace VisualScriptTool.Editor
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
 				VisualScriptTool.Editor.VariableStatementInstance VariableStatementInstance = (VisualScriptTool.Editor.VariableStatementInstance)Instance;
+				// Statement
+				if (VariableStatementInstance.Statement == null)
+					Set(Object, 3, null);
+				else
+				{
+					ISerializeObject StatementObject = AddObject(Object, 3); 
+					System.Type StatementType = VariableStatementInstance.Statement.GetType();
+					Set(StatementObject, 0, StatementType.AssemblyQualifiedName);
+					GetSerializer(StatementType).Serialize(AddObject(StatementObject, 1), VariableStatementInstance.Statement);
+				}
 				// Position
 				ISerializeObject PositionObject = AddObject(Object, 0); 
 				System.Type PositionType = VariableStatementInstance.Position.GetType();
@@ -98,6 +108,16 @@ namespace VisualScriptTool.Editor
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
 				VisualScriptTool.Editor.VariableStatementInstance VariableStatementInstance = (VisualScriptTool.Editor.VariableStatementInstance)CreateInstance();
+				// Statement
+				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 3, null);
+				if (StatementObject != null)
+				{
+					ISerializeObject StatementObjectValue = Get<ISerializeObject>(Object, 3); 
+					Serializer StatementSerializer = GetSerializer(System.Type.GetType(Get<string>(StatementObjectValue, 0)));
+					VariableStatementInstance.Statement = StatementSerializer.Deserialize<VisualScriptTool.Language.Statements.Statement>(Get<ISerializeObject>(StatementObjectValue, 1));
+				}
+				else
+					VariableStatementInstance.Statement = null;
 				// Position
 				ISerializeObject PositionObject = Get<ISerializeObject>(Object, 0, null);
 				if (PositionObject != null)

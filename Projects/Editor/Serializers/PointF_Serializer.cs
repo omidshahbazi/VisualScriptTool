@@ -1,7 +1,7 @@
 // Generaterd file
 using VisualScriptTool.Serialization;
 using VisualScriptTool.Reflection;
-namespace System.Drawing
+namespace VisualScriptTool.Editor.Serializers
 {
 	class PointF_Serializer : Serializer
 	{

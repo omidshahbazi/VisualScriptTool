@@ -44,14 +44,8 @@ namespace VisualScriptTool.Editor
 			forStatement.MaximumValue = intVariable1;
 			forStatement.Statement = ifStatement1;
 
-			Serialization.Creator.AddSerializer(new PointF_Serializer());
-			Serialization.Creator.AddSerializer(new SizeF_Serializer());
-			Serialization.Creator.AddSerializer(new StatementInstance_Serializer());
-			Serialization.Creator.AddSerializer(new IfStatementInstance_Serializer());
-			Serialization.Creator.AddSerializer(new ForStatementInstance_Serializer());
-			Serialization.Creator.AddSerializer(new VariableStatementInstance_Serializer());
-
 			Serializer serializer = Serialization.Creator.GetSerializer(diagramTab.Statements.GetType());
+
 
 			ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>(System.IO.File.ReadAllText(Application.StartupPath + "/1.json"));
 
@@ -72,8 +66,6 @@ namespace VisualScriptTool.Editor
 			//serializer.Serialize(dataArray, diagramTab.Statements);
 
 			//System.IO.File.WriteAllText(Application.StartupPath + "/1.json", dataArray.Content);
-
-
 		}
 	}
 }
