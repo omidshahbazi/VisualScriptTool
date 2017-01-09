@@ -165,8 +165,16 @@ namespace VisualScriptTool.Serialization
 			deserialize.AppendLine("{", indent);
 			++indent;
 			AppendDeserializeGaurd(Type, deserialize);
-			deserialize.AppendLine("ReferenceTable references = new ReferenceTable();", indent);
-			deserialize.AppendLine("return " + DESERIALIZE_INTERNAL_METHOD_NAME + "<T>(Data, references);", indent);
+			deserialize.AppendLine("GUIDTable references = new GUIDTable();", indent);
+			deserialize.AppendLine("ResolverList resolverList = new ResolverList();", indent);
+			deserialize.AppendLine("T returnValue = " + DESERIALIZE_INTERNAL_METHOD_NAME + "<T>(Data, references, resolverList);", indent);
+
+			deserialize.AppendLine("for (int i = 0; i < resolverList.Count; ++i)", indent);
+			deserialize.AppendLine("resolverList[i].Reslve(references);", ++indent);
+			--indent;
+
+			deserialize.AppendLine("return returnValue;", indent);
+
 			deserialize.AppendLine("}", --indent);
 
 			serializeInternal.AppendLine("public override void " + SERIALIZE_INTERNAL_METHOD_NAME + "(ISerializeData Data, object Instance, System.Type InstanceType, ReferenceTable References)", indent);
@@ -221,10 +229,12 @@ namespace VisualScriptTool.Serialization
 			--indent;
 			--indent;
 
-			deserializeInternal.AppendLine("public override T " + DESERIALIZE_INTERNAL_METHOD_NAME + "<T>(ISerializeData Data, ReferenceTable References)", indent);
+			deserializeInternal.AppendLine("public override T " + DESERIALIZE_INTERNAL_METHOD_NAME + "<T>(ISerializeData Data, GUIDTable References, ResolverList ResolverList)", indent);
 			deserializeInternal.AppendLine("{", indent);
 
-			deserializeInternal.AppendLine("if (Data is ISerializeArray)", ++indent);
+			deserializeInternal.AppendLine("T returnValue = default(T);", ++indent);
+
+			deserializeInternal.AppendLine("if (Data is ISerializeArray)", indent);
 			deserializeInternal.AppendLine("{", indent);
 
 			deserializeInternal.AppendLine("ISerializeArray Array = (ISerializeArray)Data; ", ++indent);
@@ -247,12 +257,12 @@ namespace VisualScriptTool.Serialization
 			}
 
 
-			deserializeInternal.AppendLine(typeArrayName + "[i] = GetSerializer(targetType)." + DESERIALIZE_INTERNAL_METHOD_NAME + "<" + Type.FullName + ">(Get<ISerializeObject>(arrayObj, " + DATA_STRUCTURE_VALUE_ID + "), References); ", indent);
+			deserializeInternal.AppendLine(typeArrayName + "[i] = GetSerializer(targetType)." + DESERIALIZE_INTERNAL_METHOD_NAME + "<" + Type.FullName + ">(Get<ISerializeObject>(arrayObj, " + DATA_STRUCTURE_VALUE_ID + "), References, ResolverList); ", indent);
 
 			--indent;
 			deserializeInternal.AppendLine("}", indent);
 
-			deserializeInternal.AppendLine("return (T)(object)" + typeArrayName + ";", indent);
+			deserializeInternal.AppendLine("returnValue = (T)(object)" + typeArrayName + ";", indent);
 
 			--indent;
 
@@ -266,11 +276,13 @@ namespace VisualScriptTool.Serialization
 
 			CompileMembers(Type, serializeInternal, deserializeInternal);
 
-			deserializeInternal.AppendLine("return (T)(object)" + GetTypeVariableName(Type) + ";", indent);
+			deserializeInternal.AppendLine("returnValue = (T)(object)" + GetTypeVariableName(Type) + ";", indent);
 
 			--indent;
 			serializeInternal.AppendLine("}", indent);
 			deserializeInternal.AppendLine("}", indent);
+
+			deserializeInternal.AppendLine("return returnValue;", indent);
 
 			--indent;
 			serializeInternal.AppendLine("}", indent);
@@ -444,7 +456,7 @@ namespace VisualScriptTool.Serialization
 				else
 					DeserializeMethod.AppendLine("// " + MemberAccessName + ".Add(Allocated);", indent);
 
-				DeserializeMethod.AppendLine("GetSerializer(" + MemberAccessName + ".GetType())." + DESERIALIZE_INTERNAL_METHOD_NAME + "(Get<ISerializeObject>(" + arrayName + ", i), References);", indent);
+				DeserializeMethod.AppendLine("GetSerializer(" + MemberAccessName + ".GetType())." + DESERIALIZE_INTERNAL_METHOD_NAME + "(Get<ISerializeObject>(" + arrayName + ", i), References, ResolverList);", indent);
 			}
 
 			DeserializeMethod.AppendLine("}", --indent);
@@ -456,7 +468,6 @@ namespace VisualScriptTool.Serialization
 		{
 			string objectName = Member.Name + "Object";
 
-
 			if (!MemberType.IsValueType)
 			{
 				SerializeMethod.AppendLine("if (" + MemberAccessName + " == null)", indent);
@@ -467,6 +478,7 @@ namespace VisualScriptTool.Serialization
 			}
 
 			SerializeMethod.AppendLine("ISerializeObject " + objectName + " = AddObject(" + ObjectName + ", " + ID + "); ", indent);
+
 			if (!MemberType.IsValueType)
 			{
 				SerializeMethod.AppendLine("string guid = string.Empty;", indent);
@@ -495,10 +507,30 @@ namespace VisualScriptTool.Serialization
 
 			string serializerName = Member.Name + "Serializer";
 			objectName += "Value";
+
 			DeserializeMethod.AppendLine("ISerializeObject " + objectName + " = Get<ISerializeObject>(" + ObjectName + ", " + ID + "); ", ++indent);
+
+			if (!MemberType.IsValueType)
+			{
+				DeserializeMethod.AppendLine("string guid = Get<string>(" + objectName + ", " + DATA_STRUCTURE_GUID_ID + ");", indent);
+				DeserializeMethod.AppendLine("if (Contains(" + objectName + ", " + DATA_STRUCTURE_TYPE_ID + "))", indent);
+				DeserializeMethod.AppendLine("{", indent);
+				++indent;
+			}
+
 			DeserializeMethod.AppendLine("Serializer " + serializerName + " = GetSerializer(System.Type.GetType(Get<string>(" + objectName + ", " + DATA_STRUCTURE_TYPE_ID + ")));", indent);
 			//DeserializeMethod.AppendLine(MemberAccessName + " = (" + MemberType.FullName + ")" + serializerName + "." + CREATE_INSTANCE_METHOD_NAME + "();", indent);
-			DeserializeMethod.AppendLine(MemberAccessName + " = " + serializerName + "." + DESERIALIZE_INTERNAL_METHOD_NAME + "<" + MemberType.FullName + ">(Get<ISerializeObject>(" + objectName + ", " + DATA_STRUCTURE_VALUE_ID + "), References);", indent);
+			DeserializeMethod.AppendLine(MemberAccessName + " = " + serializerName + "." + DESERIALIZE_INTERNAL_METHOD_NAME + "<" + MemberType.FullName + ">(Get<ISerializeObject>(" + objectName + ", " + DATA_STRUCTURE_VALUE_ID + "), References, ResolverList);", indent);
+
+			if (!MemberType.IsValueType)
+			{
+				DeserializeMethod.AppendLine("References[guid] = " + MemberAccessName + ";", indent);
+				DeserializeMethod.AppendLine("}", --indent);
+				DeserializeMethod.AppendLine("else", indent);
+				string instanceName = GetTypeVariableName(Member.ReflectedType);
+				DeserializeMethod.AppendLine("ResolverList.Add(new ReferenceResolver(guid, " + instanceName + ", " + instanceName + ".GetType().Get" + (Member is PropertyInfo ? "Property" : "Field") + "(\"" + Member.Name + "\", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));", ++indent);
+				--indent;
+			}
 
 			DeserializeMethod.AppendLine("}", --indent);
 			if (!MemberType.IsValueType)

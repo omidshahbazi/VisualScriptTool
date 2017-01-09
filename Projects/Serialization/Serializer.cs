@@ -6,6 +6,40 @@ namespace VisualScriptTool.Serialization
 		public class ReferenceTable : System.Collections.Generic.Dictionary<object, string>
 		{ }
 
+		public class GUIDTable : System.Collections.Generic.Dictionary<string, object>
+		{ }
+
+		public class ReferenceResolver
+		{
+			public string guid;
+			object instance = null;
+			private System.Reflection.MemberInfo member = null;
+
+			public ReferenceResolver(string GUID, object Instance, System.Reflection.MemberInfo Member)
+			{
+				guid = GUID;
+				instance = Instance;
+				member = Member;
+			}
+
+			public void Reslve(GUIDTable References)
+			{
+				if (!References.ContainsKey(guid))
+					throw new System.ArgumentException("[" + guid + "] not found");
+
+				if (member is System.Reflection.FieldInfo)
+				{
+					((System.Reflection.FieldInfo)member).SetValue(instance, References[guid]);
+					return;
+				}
+
+				((System.Reflection.PropertyInfo)member).SetValue(instance, References[guid], null);
+			}
+		}
+
+		public class ResolverList : System.Collections.Generic.List<ReferenceResolver>
+		{ }
+
 		public abstract System.Type Type
 		{
 			get;
@@ -16,7 +50,7 @@ namespace VisualScriptTool.Serialization
 		public abstract T Deserialize<T>(ISerializeData Data);
 
 		public abstract void SerializeInternal(ISerializeData Data, object Instance, System.Type InstanceType, ReferenceTable References);
-		public abstract T DeserializeInternal<T>(ISerializeData Data, ReferenceTable References);
+		public abstract T DeserializeInternal<T>(ISerializeData Data, GUIDTable References, ResolverList ResolverList);
 
 		protected static Serializer GetSerializer(System.Type Type)
 		{
@@ -84,6 +118,11 @@ namespace VisualScriptTool.Serialization
 				return Object.Get<T>(ID.ToString());
 
 			return DefaultValue;
+		}
+
+		protected static bool Contains(ISerializeObject Object, int ID)
+		{
+			return Object.Contains(ID.ToString());
 		}
 
 		protected static void Add(ISerializeArray Array, object Item)

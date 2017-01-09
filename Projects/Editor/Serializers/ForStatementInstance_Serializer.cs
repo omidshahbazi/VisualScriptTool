@@ -3,16 +3,16 @@ using VisualScriptTool.Serialization;
 using VisualScriptTool.Reflection;
 namespace VisualScriptTool.Editor.Serializers
 {
-	class StatementInstance_Serializer : Serializer
+	class ForStatementInstance_Serializer : Serializer
 	{
 		public override System.Type Type
 		{
-			get { return typeof(VisualScriptTool.Editor.StatementInstance); }
+			get { return typeof(VisualScriptTool.Editor.ForStatementInstance); }
 		}
 
 		public override object CreateInstance()
 		{
-			return null;
+			return new VisualScriptTool.Editor.ForStatementInstance(null);
 		}
 
 		public override void Serialize(ISerializeData Data, object Instance)
@@ -50,14 +50,14 @@ namespace VisualScriptTool.Editor.Serializers
 			if (InstanceType.IsArrayOrList())
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
-				VisualScriptTool.Editor.StatementInstance[] StatementInstanceArray = null;
+				VisualScriptTool.Editor.ForStatementInstance[] ForStatementInstanceArray = null;
 				if (InstanceType.IsArray())
-					StatementInstanceArray = (VisualScriptTool.Editor.StatementInstance[])Instance;
+					ForStatementInstanceArray = (VisualScriptTool.Editor.ForStatementInstance[])Instance;
 				else
-					StatementInstanceArray = ((System.Collections.Generic.List<VisualScriptTool.Editor.StatementInstance>)Instance).ToArray();
-				for (int i = 0; i < StatementInstanceArray.Length; ++i)
+					ForStatementInstanceArray = ((System.Collections.Generic.List<VisualScriptTool.Editor.ForStatementInstance>)Instance).ToArray();
+				for (int i = 0; i < ForStatementInstanceArray.Length; ++i)
 				{
-					VisualScriptTool.Editor.StatementInstance element = StatementInstanceArray[i];
+					VisualScriptTool.Editor.ForStatementInstance element = ForStatementInstanceArray[i];
 					if (element == null)
 						Add(Array, null);
 					else
@@ -72,41 +72,41 @@ namespace VisualScriptTool.Editor.Serializers
 			else
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
-				VisualScriptTool.Editor.StatementInstance StatementInstance = (VisualScriptTool.Editor.StatementInstance)Instance;
+				VisualScriptTool.Editor.ForStatementInstance ForStatementInstance = (VisualScriptTool.Editor.ForStatementInstance)Instance;
 				// Statement
-				if (StatementInstance.Statement == null)
+				if (ForStatementInstance.Statement == null)
 					Set(Object, 3, null);
 				else
 				{
 					ISerializeObject StatementObject = AddObject(Object, 3); 
 					string guid = string.Empty;
-					if (References.ContainsKey(StatementInstance.Statement))
-						guid = References[StatementInstance.Statement];
+					if (References.ContainsKey(ForStatementInstance.Statement))
+						guid = References[ForStatementInstance.Statement];
 					else
 					{
 						guid = System.Guid.NewGuid().ToString();
-						References[StatementInstance.Statement] = guid;
-						System.Type StatementType = StatementInstance.Statement.GetType();
+						References[ForStatementInstance.Statement] = guid;
+						System.Type StatementType = ForStatementInstance.Statement.GetType();
 						Set(StatementObject, 1, StatementType.AssemblyQualifiedName);
-						GetSerializer(StatementType).SerializeInternal(AddObject(StatementObject, 2), StatementInstance.Statement, StatementType, References);
+						GetSerializer(StatementType).SerializeInternal(AddObject(StatementObject, 2), ForStatementInstance.Statement, StatementType, References);
 					}
 					Set(StatementObject, 0, guid);
 				}
 				// Position
 				ISerializeObject PositionObject = AddObject(Object, 0); 
-				System.Type PositionType = StatementInstance.Position.GetType();
+				System.Type PositionType = ForStatementInstance.Position.GetType();
 				Set(PositionObject, 1, PositionType.AssemblyQualifiedName);
-				GetSerializer(PositionType).SerializeInternal(AddObject(PositionObject, 2), StatementInstance.Position, PositionType, References);
+				GetSerializer(PositionType).SerializeInternal(AddObject(PositionObject, 2), ForStatementInstance.Position, PositionType, References);
 				// HeaderSize
 				ISerializeObject HeaderSizeObject = AddObject(Object, 1); 
-				System.Type HeaderSizeType = StatementInstance.HeaderSize.GetType();
+				System.Type HeaderSizeType = ForStatementInstance.HeaderSize.GetType();
 				Set(HeaderSizeObject, 1, HeaderSizeType.AssemblyQualifiedName);
-				GetSerializer(HeaderSizeType).SerializeInternal(AddObject(HeaderSizeObject, 2), StatementInstance.HeaderSize, HeaderSizeType, References);
+				GetSerializer(HeaderSizeType).SerializeInternal(AddObject(HeaderSizeObject, 2), ForStatementInstance.HeaderSize, HeaderSizeType, References);
 				// BodySize
 				ISerializeObject BodySizeObject = AddObject(Object, 2); 
-				System.Type BodySizeType = StatementInstance.BodySize.GetType();
+				System.Type BodySizeType = ForStatementInstance.BodySize.GetType();
 				Set(BodySizeObject, 1, BodySizeType.AssemblyQualifiedName);
-				GetSerializer(BodySizeType).SerializeInternal(AddObject(BodySizeObject, 2), StatementInstance.BodySize, BodySizeType, References);
+				GetSerializer(BodySizeType).SerializeInternal(AddObject(BodySizeObject, 2), ForStatementInstance.BodySize, BodySizeType, References);
 			}
 		}
 
@@ -116,24 +116,24 @@ namespace VisualScriptTool.Editor.Serializers
 			if (Data is ISerializeArray)
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
-				VisualScriptTool.Editor.StatementInstance[] StatementInstanceArray = (VisualScriptTool.Editor.StatementInstance[])System.Array.CreateInstance(Type, Array.Count);
+				VisualScriptTool.Editor.ForStatementInstance[] ForStatementInstanceArray = (VisualScriptTool.Editor.ForStatementInstance[])System.Array.CreateInstance(Type, Array.Count);
 				for (uint i = 0; i < Array.Count; ++i)
 				{
 					ISerializeObject arrayObj = Get<ISerializeObject>(Array, i);
 					System.Type targetType = System.Type.GetType(Get<string>(arrayObj, 1));
 					if (arrayObj == null)
 					{
-						StatementInstanceArray[i] = null;
+						ForStatementInstanceArray[i] = null;
 						continue;
 					}
-					StatementInstanceArray[i] = GetSerializer(targetType).DeserializeInternal<VisualScriptTool.Editor.StatementInstance>(Get<ISerializeObject>(arrayObj, 2), References, ResolverList); 
+					ForStatementInstanceArray[i] = GetSerializer(targetType).DeserializeInternal<VisualScriptTool.Editor.ForStatementInstance>(Get<ISerializeObject>(arrayObj, 2), References, ResolverList); 
 				}
-				returnValue = (T)(object)StatementInstanceArray;
+				returnValue = (T)(object)ForStatementInstanceArray;
 			}
 			else
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
-				VisualScriptTool.Editor.StatementInstance StatementInstance = (VisualScriptTool.Editor.StatementInstance)CreateInstance();
+				VisualScriptTool.Editor.ForStatementInstance ForStatementInstance = (VisualScriptTool.Editor.ForStatementInstance)CreateInstance();
 				// Statement
 				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 3, null);
 				if (StatementObject != null)
@@ -143,21 +143,21 @@ namespace VisualScriptTool.Editor.Serializers
 					if (Contains(StatementObjectValue, 1))
 					{
 						Serializer StatementSerializer = GetSerializer(System.Type.GetType(Get<string>(StatementObjectValue, 1)));
-						StatementInstance.Statement = StatementSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Statement>(Get<ISerializeObject>(StatementObjectValue, 2), References, ResolverList);
-						References[guid] = StatementInstance.Statement;
+						ForStatementInstance.Statement = StatementSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Statement>(Get<ISerializeObject>(StatementObjectValue, 2), References, ResolverList);
+						References[guid] = ForStatementInstance.Statement;
 					}
 					else
-						ResolverList.Add(new ReferenceResolver(guid, StatementInstance, StatementInstance.GetType().GetProperty("Statement", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
+						ResolverList.Add(new ReferenceResolver(guid, ForStatementInstance, ForStatementInstance.GetType().GetProperty("Statement", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
 				}
 				else
-					StatementInstance.Statement = null;
+					ForStatementInstance.Statement = null;
 				// Position
 				ISerializeObject PositionObject = Get<ISerializeObject>(Object, 0, null);
 				if (PositionObject != null)
 				{
 					ISerializeObject PositionObjectValue = Get<ISerializeObject>(Object, 0); 
 					Serializer PositionSerializer = GetSerializer(System.Type.GetType(Get<string>(PositionObjectValue, 1)));
-					StatementInstance.Position = PositionSerializer.DeserializeInternal<System.Drawing.PointF>(Get<ISerializeObject>(PositionObjectValue, 2), References, ResolverList);
+					ForStatementInstance.Position = PositionSerializer.DeserializeInternal<System.Drawing.PointF>(Get<ISerializeObject>(PositionObjectValue, 2), References, ResolverList);
 				}
 				// HeaderSize
 				ISerializeObject HeaderSizeObject = Get<ISerializeObject>(Object, 1, null);
@@ -165,7 +165,7 @@ namespace VisualScriptTool.Editor.Serializers
 				{
 					ISerializeObject HeaderSizeObjectValue = Get<ISerializeObject>(Object, 1); 
 					Serializer HeaderSizeSerializer = GetSerializer(System.Type.GetType(Get<string>(HeaderSizeObjectValue, 1)));
-					StatementInstance.HeaderSize = HeaderSizeSerializer.DeserializeInternal<System.Drawing.SizeF>(Get<ISerializeObject>(HeaderSizeObjectValue, 2), References, ResolverList);
+					ForStatementInstance.HeaderSize = HeaderSizeSerializer.DeserializeInternal<System.Drawing.SizeF>(Get<ISerializeObject>(HeaderSizeObjectValue, 2), References, ResolverList);
 				}
 				// BodySize
 				ISerializeObject BodySizeObject = Get<ISerializeObject>(Object, 2, null);
@@ -173,9 +173,9 @@ namespace VisualScriptTool.Editor.Serializers
 				{
 					ISerializeObject BodySizeObjectValue = Get<ISerializeObject>(Object, 2); 
 					Serializer BodySizeSerializer = GetSerializer(System.Type.GetType(Get<string>(BodySizeObjectValue, 1)));
-					StatementInstance.BodySize = BodySizeSerializer.DeserializeInternal<System.Drawing.SizeF>(Get<ISerializeObject>(BodySizeObjectValue, 2), References, ResolverList);
+					ForStatementInstance.BodySize = BodySizeSerializer.DeserializeInternal<System.Drawing.SizeF>(Get<ISerializeObject>(BodySizeObjectValue, 2), References, ResolverList);
 				}
-				returnValue = (T)(object)StatementInstance;
+				returnValue = (T)(object)ForStatementInstance;
 			}
 			return returnValue;
 		}

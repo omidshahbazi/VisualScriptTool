@@ -57,10 +57,22 @@
     <Compile Include="Language\IfStatementInstance.cs" />
     <Compile Include="Language\VariableStatementInstance.cs" />
     <Compile Include="PointFExtensions.cs" />
+    <Compile Include="Serializers\BooleanVariable_Serializer.cs" />
     <Compile Include="Serializers\Compiler.cs" />
+    <Compile Include="Serializers\FloatVariable_Serializer.cs" />
+    <Compile Include="Serializers\ForStatementInstance_Serializer.cs" />
+    <Compile Include="Serializers\ForStatement_Serializer.cs" />
+    <Compile Include="Serializers\IfStatementInstance_Serializer.cs" />
+    <Compile Include="Serializers\IfStatement_Serializer.cs" />
+    <Compile Include="Serializers\IntegerVariable_Serializer.cs" />
+    <Compile Include="Serializers\PointF_Serializer.cs" />
     <Compile Include="Serializers\SerializationSystem.cs" />
+    <Compile Include="Serializers\SizeF_Serializer.cs" />
     <Compile Include="Serializers\StatementInstance_Serializer.cs" />
+    <Compile Include="Serializers\Statement_Serializer.cs" />
+    <Compile Include="Serializers\StringVariable_Serializer.cs" />
     <Compile Include="Serializers\SystemCompilerStrategy.cs" />
+    <Compile Include="Serializers\VariableStatementInstance_Serializer.cs" />
     <Compile Include="StatementCanvas.cs">
       <SubType>UserControl</SubType>
     </Compile>

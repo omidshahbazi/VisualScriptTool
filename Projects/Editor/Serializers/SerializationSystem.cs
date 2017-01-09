@@ -5,7 +5,19 @@ namespace VisualScriptTool.Editor.Serializers
 	{
 		public static void Initialize()
 		{
-			//Serialization.Creator.AddSerializer(new StatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new Statement_Serializer());
+			Serialization.Creator.AddSerializer(new IfStatement_Serializer());
+			Serialization.Creator.AddSerializer(new ForStatement_Serializer());
+			Serialization.Creator.AddSerializer(new BooleanVariable_Serializer());
+			Serialization.Creator.AddSerializer(new IntegerVariable_Serializer());
+			Serialization.Creator.AddSerializer(new FloatVariable_Serializer());
+			Serialization.Creator.AddSerializer(new StringVariable_Serializer());
+			Serialization.Creator.AddSerializer(new StatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new IfStatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new ForStatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new VariableStatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new PointF_Serializer());
+			Serialization.Creator.AddSerializer(new SizeF_Serializer());
 		}
 	}
 }
