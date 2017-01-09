@@ -13,7 +13,7 @@ namespace VisualScriptTool.Editor
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			//Compiler.Compile();
+			Compiler.Compile();
 
 			SerializationSystem.Initialize();
 

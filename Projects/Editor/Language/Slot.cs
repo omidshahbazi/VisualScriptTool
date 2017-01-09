@@ -77,6 +77,7 @@ namespace VisualScriptTool.Editor
 			get { return !IsLeftAligned; }
 		}
 
+		[SerializableElement(0)]
 		public Slot ConnectedSlot
 		{
 			get;
