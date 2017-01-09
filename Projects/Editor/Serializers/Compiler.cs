@@ -20,21 +20,21 @@ namespace VisualScriptTool.Editor.Serializers
 			ICompileStrategy systemCompilerStrategy = new SystemCompilerStrategy();
 
 			Dictionary<Type, ICompileStrategy> types = new Dictionary<Type, ICompileStrategy>();
-			types[typeof(Statement)] = defaultCompilerStrategy;
-			types[typeof(IfStatement)] = defaultCompilerStrategy;
-			types[typeof(ForStatement)] = defaultCompilerStrategy;
-			types[typeof(BooleanVariable)] = defaultCompilerStrategy;
-			types[typeof(IntegerVariable)] = defaultCompilerStrategy;
-			types[typeof(FloatVariable)] = defaultCompilerStrategy;
-			types[typeof(StringVariable)] = defaultCompilerStrategy;
+			//types[typeof(Statement)] = defaultCompilerStrategy;
+			//types[typeof(IfStatement)] = defaultCompilerStrategy;
+			//types[typeof(ForStatement)] = defaultCompilerStrategy;
+			//types[typeof(BooleanVariable)] = defaultCompilerStrategy;
+			//types[typeof(IntegerVariable)] = defaultCompilerStrategy;
+			//types[typeof(FloatVariable)] = defaultCompilerStrategy;
+			//types[typeof(StringVariable)] = defaultCompilerStrategy;
 
 			types[typeof(StatementInstance)] = defaultCompilerStrategy;
-			types[typeof(IfStatementInstance)] = defaultCompilerStrategy;
-			types[typeof(ForStatementInstance)] = defaultCompilerStrategy;
-			types[typeof(VariableStatementInstance)] = defaultCompilerStrategy;
+			//types[typeof(IfStatementInstance)] = defaultCompilerStrategy;
+			//types[typeof(ForStatementInstance)] = defaultCompilerStrategy;
+			//types[typeof(VariableStatementInstance)] = defaultCompilerStrategy;
 
-			types[typeof(PointF)] = systemCompilerStrategy;
-			types[typeof(SizeF)] = systemCompilerStrategy;
+			//types[typeof(PointF)] = systemCompilerStrategy;
+			//types[typeof(SizeF)] = systemCompilerStrategy;
 
 
 			SerializerCompiler compiler = new SerializerCompiler();
@@ -62,7 +62,7 @@ namespace VisualScriptTool.Editor.Serializers
 			serializationCode.AppendLine("\t}");
 			serializationCode.AppendLine("}");
 
-			File.WriteAllText(Application.StartupPath + "/../Editor/Serializers/SerializationSystem.cs", serializationCode.ToString());
+			//File.WriteAllText(Application.StartupPath + "/../Editor/Serializers/SerializationSystem.cs", serializationCode.ToString());
 		}
 	}
 }

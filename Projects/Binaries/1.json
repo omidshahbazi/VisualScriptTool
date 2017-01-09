@@ -1,1 +1,315 @@
-[{"0":"VisualScriptTool.Editor.IfStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"3":{"0":"VisualScriptTool.Language.Statements.Control.IfStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":true}},"3":{"0":"VisualScriptTool.Language.Statements.Control.ForStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":0}},"3":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":0}},"4":null,"5":{"0":"VisualScriptTool.Language.Statements.Control.IfStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":true}},"3":null,"4":null,"1":null}},"1":null}},"4":null,"1":{"0":"VisualScriptTool.Language.Statements.Control.ForStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":0}},"3":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":0}},"4":null,"5":{"0":"VisualScriptTool.Language.Statements.Control.IfStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":true}},"3":null,"4":null,"1":null}},"1":null}}}},"0":{"0":"System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":670,"1":115}},"1":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":170,"1":17.98437}},"2":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":170,"1":90}}}},{"0":"VisualScriptTool.Editor.IfStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"3":{"0":"VisualScriptTool.Language.Statements.Control.IfStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":true}},"3":null,"4":null,"1":null}},"0":{"0":"System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":50,"1":328}},"1":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":170,"1":17.98437}},"2":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":170,"1":90}}}},{"0":"VisualScriptTool.Editor.ForStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"3":{"0":"VisualScriptTool.Language.Statements.Control.ForStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":0}},"3":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":0}},"4":null,"5":{"0":"VisualScriptTool.Language.Statements.Control.IfStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":true}},"3":null,"4":null,"1":null}},"1":null}},"0":{"0":"System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":606,"1":493}},"1":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":160,"1":17.98437}},"2":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":160,"1":120}}}},{"0":"VisualScriptTool.Editor.VariableStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"3":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":0}},"0":{"0":"System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":41,"1":106}},"1":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":100,"1":2}},"2":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":100,"1":30}}}},{"0":"VisualScriptTool.Editor.VariableStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"3":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":0}},"0":{"0":"System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":255,"1":85}},"1":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":100,"1":2}},"2":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":100,"1":30}}}},{"0":"VisualScriptTool.Editor.VariableStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"3":{"0":"VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null","1":{"2":true}},"0":{"0":"System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":174,"1":165}},"1":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":100,"1":2}},"2":{"0":"System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a","1":{"0":100,"1":30}}}}]
+[
+  {
+    "0": "VisualScriptTool.Editor.IfStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "1": {
+      "3": {
+        "0": "VisualScriptTool.Language.Statements.Control.IfStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "1": {
+          "2": {
+            "0": "VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "1": {
+              "2": true,
+              "0": ""
+            }
+          },
+          "3": {
+            "0": "VisualScriptTool.Language.Statements.Control.ForStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "1": {
+              "2": {
+                "0": "VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+                "1": {
+                  "2": 0,
+                  "0": "Test"
+                }
+              },
+              "3": {
+                "0": "VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+                "1": {
+                  "2": 0,
+                  "0": "Test"
+                }
+              },
+              "4": null,
+              "5": {
+                "0": "VisualScriptTool.Language.Statements.Control.IfStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+                "1": {
+                  "2": {
+                    "0": "VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+                    "1": {
+                      "2": true,
+                      "0": "Test"
+                    }
+                  },
+                  "3": null,
+                  "4": null,
+                  "1": null
+                }
+              },
+              "1": null
+            }
+          },
+          "4": null,
+          "1": {
+            "0": "VisualScriptTool.Language.Statements.Control.ForStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "1": {
+              "2": {
+                "0": "VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+                "1": {
+                  "2": 0,
+                  "0": "Test"
+                }
+              },
+              "3": {
+                "0": "VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+                "1": {
+                  "2": 0,
+                  "0": "Test"
+                }
+              },
+              "4": null,
+              "5": {
+                "0": "VisualScriptTool.Language.Statements.Control.IfStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+                "1": {
+                  "2": {
+                    "0": "VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+                    "1": {
+                      "2": true,
+                      "0": "Test"
+                    }
+                  },
+                  "3": null,
+                  "4": null,
+                  "1": null
+                }
+              },
+              "1": null
+            }
+          }
+        }
+      },
+      "0": {
+        "0": "System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 806,
+          "1": 79
+        }
+      },
+      "1": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 170,
+          "1": 17.98437
+        }
+      },
+      "2": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 170,
+          "1": 90
+        }
+      }
+    }
+  },
+  {
+    "0": "VisualScriptTool.Editor.IfStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "1": {
+      "3": {
+        "0": "VisualScriptTool.Language.Statements.Control.IfStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "1": {
+          "2": {
+            "0": "VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "1": {
+              "2": true,
+              "0": ""
+            }
+          },
+          "3": null,
+          "4": null,
+          "1": null
+        }
+      },
+      "0": {
+        "0": "System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 50,
+          "1": 328
+        }
+      },
+      "1": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 170,
+          "1": 17.98437
+        }
+      },
+      "2": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 170,
+          "1": 90
+        }
+      }
+    }
+  },
+  {
+    "0": "VisualScriptTool.Editor.ForStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "1": {
+      "3": {
+        "0": "VisualScriptTool.Language.Statements.Control.ForStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "1": {
+          "2": {
+            "0": "VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "1": {
+              "2": 0,
+              "0": "Test"
+            }
+          },
+          "3": {
+            "0": "VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "1": {
+              "2": 0,
+              "0": "Test"
+            }
+          },
+          "4": null,
+          "5": {
+            "0": "VisualScriptTool.Language.Statements.Control.IfStatement, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "1": {
+              "2": {
+                "0": "VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+                "1": {
+                  "2": true,
+                  "0": "Test"
+                }
+              },
+              "3": null,
+              "4": null,
+              "1": null
+            }
+          },
+          "1": null
+        }
+      },
+      "0": {
+        "0": "System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 606,
+          "1": 493
+        }
+      },
+      "1": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 160,
+          "1": 17.98437
+        }
+      },
+      "2": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 160,
+          "1": 120
+        }
+      }
+    }
+  },
+  {
+    "0": "VisualScriptTool.Editor.VariableStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "1": {
+      "3": {
+        "0": "VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "1": {
+          "2": 0,
+          "0": "Test"
+        }
+      },
+      "0": {
+        "0": "System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 87,
+          "1": 91
+        }
+      },
+      "1": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 100,
+          "1": 2
+        }
+      },
+      "2": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 100,
+          "1": 30
+        }
+      }
+    }
+  },
+  {
+    "0": "VisualScriptTool.Editor.VariableStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "1": {
+      "3": {
+        "0": "VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "1": {
+          "2": 0,
+          "0": "Test"
+        }
+      },
+      "0": {
+        "0": "System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 370,
+          "1": 57
+        }
+      },
+      "1": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 100,
+          "1": 2
+        }
+      },
+      "2": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 100,
+          "1": 30
+        }
+      }
+    }
+  },
+  {
+    "0": "VisualScriptTool.Editor.VariableStatementInstance, Editor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+    "1": {
+      "3": {
+        "0": "VisualScriptTool.Language.Statements.Declaration.Variables.BooleanVariable, Language, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null",
+        "1": {
+          "2": true,
+          "0": ""
+        }
+      },
+      "0": {
+        "0": "System.Drawing.PointF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 176,
+          "1": 203
+        }
+      },
+      "1": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 100,
+          "1": 2
+        }
+      },
+      "2": {
+        "0": "System.Drawing.SizeF, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+        "1": {
+          "0": 100,
+          "1": 30
+        }
+      }
+    }
+  }
+]

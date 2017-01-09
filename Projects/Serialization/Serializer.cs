@@ -3,6 +3,9 @@ namespace VisualScriptTool.Serialization
 {
 	public abstract class Serializer
 	{
+		public class ReferenceTable : System.Collections.Generic.Dictionary<object, string>
+		{ }
+
 		public abstract System.Type Type
 		{
 			get;
@@ -11,6 +14,9 @@ namespace VisualScriptTool.Serialization
 		public abstract object CreateInstance();
 		public abstract void Serialize(ISerializeData Data, object Instance);
 		public abstract T Deserialize<T>(ISerializeData Data);
+
+		public abstract void SerializeInternal(ISerializeData Data, object Instance, System.Type InstanceType, ReferenceTable References);
+		public abstract T DeserializeInternal<T>(ISerializeData Data, ReferenceTable References);
 
 		protected static Serializer GetSerializer(System.Type Type)
 		{
