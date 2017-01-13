@@ -75,8 +75,12 @@ namespace VisualScriptTool.Editor
 			return slot;
 		}
 
-		[SerializablePostDeserialize]
-		public virtual void OnPostDeserialize()
+		protected Slot GetSlot(uint Index)
+		{
+			return slots[(int)Index];
+		}
+
+		public virtual void ResolveSlotConnections(IStatementInspector Inspector)
 		{
 		}
 	}

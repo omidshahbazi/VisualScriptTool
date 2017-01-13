@@ -3,7 +3,7 @@ using System;
 
 namespace VisualScriptTool.Serialization
 {
-	[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
 	public class SerializableInstantiatorAttribute : Attribute
 	{
 		public object[] DefaultParameters
@@ -75,22 +75,22 @@ namespace VisualScriptTool.Serialization
 		}
 	}
 
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
 	public class SerializablePreSerializeAttribute : Attribute
 	{
 	}
 
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
 	public class SerializablePostSerializeAttribute : Attribute
 	{
 	}
 
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
 	public class SerializablePreDeserializeAttribute : Attribute
 	{
 	}
 
-	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
 	public class SerializablePostDeserializeAttribute : Attribute
 	{
 	}

@@ -1,8 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System.Drawing;
 using System.Windows.Forms;
-using VisualScriptTool.Language.Statements.Control;
-using VisualScriptTool.Language.Statements.Declaration.Variables;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
@@ -115,6 +113,9 @@ namespace VisualScriptTool.Editor
 			ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>(System.IO.File.ReadAllText(Application.StartupPath + "/1.json"));
 
 			Statements.AddRange(serializer.Deserialize<StatementInstance[]>(dataArray));
+
+			for (int i = 0; i < Statements.Count; ++i)
+				Statements[i].ResolveSlotConnections(canvas);
 		}
 
 		public void Save()

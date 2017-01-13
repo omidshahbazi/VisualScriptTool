@@ -1,11 +1,13 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Language.Drawers;
+using VisualScriptTool.Language.Statements;
 
 namespace VisualScriptTool.Editor
 {
-	public class StatementCanvas : GridCanvas
+	public class StatementCanvas : GridCanvas, IStatementInspector
 	{
 		private const float SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = 20.0F;
 		private const float HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT / 2.0F;
@@ -263,6 +265,17 @@ namespace VisualScriptTool.Editor
 			this.contextMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 
+		}
+
+		StatementInstance IStatementInspector.GetInstance(Statement Statement)
+		{
+			for (int i =0; i < Statements.Count; ++i)
+			{
+				if (Statements[i].Statement == Statement)
+					return Statements[i];
+			}
+
+			return null;
 		}
 	}
 }

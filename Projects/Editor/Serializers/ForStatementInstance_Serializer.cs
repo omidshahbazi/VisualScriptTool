@@ -176,7 +176,6 @@ namespace VisualScriptTool.Editor.Serializers
 					ForStatementInstance.BodySize = BodySizeSerializer.DeserializeInternal<System.Drawing.SizeF>(Get<ISerializeObject>(BodySizeObjectValue, 2), References, ResolverList);
 				}
 				returnValue = (T)(object)ForStatementInstance;
-				ForStatementInstance.OnPostDeserialize();
 			}
 			return returnValue;
 		}
