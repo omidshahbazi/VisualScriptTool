@@ -3,6 +3,36 @@ using System;
 
 namespace VisualScriptTool.Serialization
 {
+	[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	public class SerializableInstantiatorAttribute : Attribute
+	{
+		public object[] DefaultParameters
+		{
+			get;
+			private set;
+		}
+
+		public SerializableInstantiatorAttribute(params object[] DefaultParameters)
+		{
+			this.DefaultParameters = DefaultParameters;
+		}
+
+		public string GetDefaultParameterAsString(uint Index)
+		{
+			object value = DefaultParameters[Index];
+
+			if (value == null)
+				return "null";
+
+			if (value is bool)
+				return ((bool)value ? "true" : "false");
+			else if (value is string)
+				return "\"" + value + "\"";
+
+			return value.ToString();
+		}
+	}
+
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
 	public class SerializableElementAttribute : Attribute
 	{
@@ -45,33 +75,23 @@ namespace VisualScriptTool.Serialization
 		}
 	}
 
-	[AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-	public class SerializableInstantiatorAttribute : Attribute
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	public class SerializablePreSerializeAttribute : Attribute
 	{
-		public object[] DefaultParameters
-		{
-			get;
-			private set;
-		}
+	}
 
-		public SerializableInstantiatorAttribute(params object[] DefaultParameters)
-		{
-			this.DefaultParameters = DefaultParameters;
-		}
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	public class SerializablePostSerializeAttribute : Attribute
+	{
+	}
 
-		public string GetDefaultParameterAsString(uint Index)
-		{
-			object value = DefaultParameters[Index];
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	public class SerializablePreDeserializeAttribute : Attribute
+	{
+	}
 
-			if (value == null)
-				return "null";
-
-			if (value is bool)
-				return ((bool)value ? "true" : "false");
-			else if (value is string)
-				return "\"" + value + "\"";
-
-			return value.ToString();
-		}
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+	public class SerializablePostDeserializeAttribute : Attribute
+	{
 	}
 }

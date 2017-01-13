@@ -1,7 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System.Collections.Generic;
 using System.Drawing;
-using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
 {
@@ -77,7 +76,6 @@ namespace VisualScriptTool.Editor
 			get { return !IsLeftAligned; }
 		}
 
-		[SerializableElement(0)]
 		public Slot ConnectedSlot
 		{
 			get;

@@ -48,11 +48,31 @@ namespace VisualScriptTool.Serialization
 			return null;
 		}
 
+		MethodInfo ICompileStrategy.GetPreSerialize(Type Type)
+		{
+			return GetCallbackMethod<SerializablePreSerializeAttribute>(Type, BindingFlags.Instance | BindingFlags.Public);
+		}
+
+		MethodInfo ICompileStrategy.GetPostSerialize(Type Type)
+		{
+			return GetCallbackMethod<SerializablePostSerializeAttribute>(Type, BindingFlags.Instance | BindingFlags.Public);
+		}
+
+		MethodInfo ICompileStrategy.GetPreDeserialize(Type Type)
+		{
+			return GetCallbackMethod<SerializablePreDeserializeAttribute>(Type, BindingFlags.Instance | BindingFlags.Public);
+		}
+
+		MethodInfo ICompileStrategy.GetPostDeserialize(Type Type)
+		{
+			return GetCallbackMethod<SerializablePostDeserializeAttribute>(Type, BindingFlags.Instance | BindingFlags.Public);
+		}
+
 		MemberInfo[] ICompileStrategy.GetMembers(Type Type)
 		{
 			List<MemberInfo> list = new List<MemberInfo>();
 
-			PropertyInfo[] properties = Type.GetAllProperties();
+			PropertyInfo[] properties = Type.GetAllProperties(BindingFlags.Instance | BindingFlags.Public);
 			for (int i = 0; i < properties.Length; ++i)
 			{
 				PropertyInfo property = properties[i];
@@ -64,7 +84,7 @@ namespace VisualScriptTool.Serialization
 					list.Add(property);
 			}
 
-			FieldInfo[] fields = Type.GetAllFields();
+			FieldInfo[] fields = Type.GetAllFields(BindingFlags.Instance | BindingFlags.Public);
 			for (int i = 0; i < fields.Length; ++i)
 			{
 				FieldInfo field = fields[i];
@@ -99,7 +119,7 @@ namespace VisualScriptTool.Serialization
 		string ICompileStrategy.GetMemberDefaultValue(MemberInfo Member)
 		{
 			SerializableElementAttribute serializable = AttributeUtils.GetAttribute<SerializableElementAttribute>(Member);
-			
+
 			return serializable.GetDefaultValueAsString();
 		}
 
@@ -148,6 +168,27 @@ namespace VisualScriptTool.Serialization
 			//		return false;
 
 			return true;
+		}
+
+		private static MethodInfo GetCallbackMethod<T>(Type Type, BindingFlags BindingFlag) where T : Attribute
+		{
+			MethodInfo[] methods = Type.GetMethods(BindingFlag);
+			for (int i = 0; i < methods.Length; ++i)
+			{
+				MethodInfo method = methods[i];
+
+				if (method.ReturnType == null)
+					continue;
+
+				ParameterInfo[] parameters = method.GetParameters();
+				if (parameters.Length != 0)
+					continue;
+
+				if (AttributeUtils.GetAttribute<T>(method) != null)
+					return method;
+			}
+
+			return null;
 		}
 	}
 }

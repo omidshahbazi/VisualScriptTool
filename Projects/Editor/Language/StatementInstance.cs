@@ -10,8 +10,7 @@ namespace VisualScriptTool.Editor
 	{
 		private RectangleF bounds;
 
-		[SerializableElement(4)]
-		private SlotList slots = null;
+		public SlotList slots = null;
 
 		[SerializableElement(3)]
 		public Statement Statement
@@ -74,6 +73,11 @@ namespace VisualScriptTool.Editor
 			Slot slot = new Slot(this, Name, Type, Index, CheckAssignment, OnAssignment);
 			slots.Add(slot);
 			return slot;
+		}
+
+		[SerializablePostDeserialize]
+		public virtual void OnPostDeserialize()
+		{
 		}
 	}
 

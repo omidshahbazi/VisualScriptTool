@@ -226,6 +226,9 @@ namespace VisualScriptTool.Serialization
 
 			serializeInternal.AppendLine("ISerializeObject Object = (ISerializeObject)Data; ", ++indent);
 			serializeInternal.AppendLine(Type.FullName + " " + GetTypeVariableName(Type) + " = (" + Type.FullName + ")Instance;", indent);
+
+			AppendCallback(Strategy.GetPreSerialize(Type), serializeInternal);
+
 			--indent;
 			--indent;
 
@@ -270,6 +273,8 @@ namespace VisualScriptTool.Serialization
 			deserializeInternal.AppendLine("else", indent);
 			deserializeInternal.AppendLine("{", indent);
 
+			AppendCallback(Strategy.GetPreDeserialize(Type), deserializeInternal);
+
 			deserializeInternal.AppendLine("ISerializeObject Object = (ISerializeObject)Data; ", ++indent);
 			deserializeInternal.AppendLine(Type.FullName + " " + GetTypeVariableName(Type) + " = (" + Type.FullName + ")CreateInstance();", indent);
 			--indent;
@@ -277,6 +282,9 @@ namespace VisualScriptTool.Serialization
 			CompileMembers(Type, serializeInternal, deserializeInternal);
 
 			deserializeInternal.AppendLine("returnValue = (T)(object)" + GetTypeVariableName(Type) + ";", indent);
+
+			AppendCallback(Strategy.GetPostSerialize(Type), serializeInternal);
+			AppendCallback(Strategy.GetPostDeserialize(Type), deserializeInternal);
 
 			--indent;
 			serializeInternal.AppendLine("}", indent);
@@ -344,7 +352,7 @@ namespace VisualScriptTool.Serialization
 				AppendPrimitive(Member, memberType, ID, memberAccessName, SerializeMethod, DeserializeMethod, ObjectName);
 			else if (valueType == ValueType.Array)
 				AppendArray(Member, memberType, ID, memberAccessName, SerializeMethod, DeserializeMethod, ObjectName, valueType);
-			//else if (valueType == ValueType.Array || valueType == ValueType.List)
+			//else if (valueType == ValueType.List)
 			//	AppendArray(Member, memberType, ID, memberAccessName, SerializeMethod, DeserializeMethod, ObjectName, valueType);
 			//else if (valueType == ValueType.Map)
 			//{
@@ -539,6 +547,12 @@ namespace VisualScriptTool.Serialization
 				DeserializeMethod.AppendLine(MemberAccessName + " = null;", ++indent);
 				--indent;
 			}
+		}
+
+		private void AppendCallback(MethodInfo Method, CodeBuilder Builder)
+		{
+			if (Method != null)
+				Builder.AppendLine(GetTypeVariableName(Method.ReflectedType) + "." + Method.Name + "();", indent);
 		}
 
 		private void AppendSerializeGaurd(Type Type, CodeBuilder Builder)

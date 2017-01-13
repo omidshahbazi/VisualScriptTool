@@ -20,7 +20,6 @@ namespace VisualScriptTool.Editor.Serializers
 			ICompileStrategy systemCompilerStrategy = new SystemCompilerStrategy();
 
 			Dictionary<Type, ICompileStrategy> types = new Dictionary<Type, ICompileStrategy>();
-			types[typeof(Slot)] = defaultCompilerStrategy;
 			types[typeof(Statement)] = defaultCompilerStrategy;
 			types[typeof(IfStatement)] = defaultCompilerStrategy;
 			types[typeof(ForStatement)] = defaultCompilerStrategy;

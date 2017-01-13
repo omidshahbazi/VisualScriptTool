@@ -7,6 +7,11 @@ namespace VisualScriptTool.Serialization
 	public interface ICompileStrategy
 	{
 		MethodBase GetInstantiator(Type Type);
+		MethodInfo GetPreSerialize(Type Type);
+		MethodInfo GetPostSerialize(Type Type);
+		MethodInfo GetPreDeserialize(Type Type);
+		MethodInfo GetPostDeserialize(Type Type);
+
 		MemberInfo[] GetMembers(Type Type);
 
 		int GetMemberID(MemberInfo Member, int DefaultID);

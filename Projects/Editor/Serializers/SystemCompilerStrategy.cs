@@ -38,6 +38,26 @@ namespace VisualScriptTool.Editor.Serializers
 			return null;
 		}
 
+		MethodInfo ICompileStrategy.GetPreSerialize(Type Type)
+		{
+			return null;
+		}
+
+		MethodInfo ICompileStrategy.GetPostSerialize(Type Type)
+		{
+			return null;
+		}
+
+		MethodInfo ICompileStrategy.GetPreDeserialize(Type Type)
+		{
+			return null;
+		}
+
+		MethodInfo ICompileStrategy.GetPostDeserialize(Type Type)
+		{
+			return null;
+		}
+
 		MemberInfo[] ICompileStrategy.GetMembers(Type Type)
 		{
 			List<MemberInfo> list = new List<MemberInfo>();

@@ -37,19 +37,29 @@ namespace VisualScriptTool.Editor
 			canvas.MaximumZoom = 1.0F;
 			canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
-			Button button = new Button();
-			button.Click += Button_Click;
-			Controls.Add(button);
+			Button loadButton = new Button();
+			loadButton.Click += LoadButton_Click;
+			Controls.Add(loadButton);
+
+			Button savebutton = new Button();
+			savebutton.Click += SaveButton_Click;
+			savebutton.Location = new Point(200, 0);
+			Controls.Add(savebutton);
 
 			Controls.Add(canvas);
 
 			this.Name = Name;
 			Text = Name;
-
-			Load();
 		}
 
-		private void Button_Click(object sender, System.EventArgs e)
+		private void LoadButton_Click(object sender, System.EventArgs e)
+		{
+			Load();
+
+			canvas.Refresh();
+		}
+
+		private void SaveButton_Click(object sender, System.EventArgs e)
 		{
 			Save();
 		}
