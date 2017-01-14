@@ -35,90 +35,32 @@ namespace VisualScriptTool.Editor
 			canvas.MaximumZoom = 1.0F;
 			canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
-			Button loadButton = new Button();
-			loadButton.Click += LoadButton_Click;
-			Controls.Add(loadButton);
-
-			Button savebutton = new Button();
-			savebutton.Click += SaveButton_Click;
-			savebutton.Location = new Point(200, 0);
-			Controls.Add(savebutton);
-
 			Controls.Add(canvas);
 
 			this.Name = Name;
 			Text = Name;
 		}
 
-		private void LoadButton_Click(object sender, System.EventArgs e)
-		{
-			Load();
-
-			canvas.Refresh();
-		}
-
-		private void SaveButton_Click(object sender, System.EventArgs e)
-		{
-			Save();
-		}
-
 		public void New()
 		{
-
 			IsDirty = true;
-
-
 		}
 
-		public void Load()
+		public void Load(string FilePath)
 		{
-			//BooleanVariable boolVariable = new BooleanVariable();
-			//boolVariable.Name = "flag";
-			//boolVariable.Value = true;
+            Serializer serializer = Serialization.Creator.GetSerializer(Statements.GetType());
 
-
-			//IfStatement ifStatement = new IfStatement();
-			//ifStatement.Condition = boolVariable;
-
-			//ForStatement forStatement = new ForStatement();
-			//ifStatement.Statement = forStatement;
-			//ifStatement.CompleteStatement = forStatement;
-
-			//IntegerVariable intVariable = new IntegerVariable();
-			//intVariable.Name = "myVariable";
-			//intVariable.Value = 0;
-
-			//IntegerVariable intVariable1 = new IntegerVariable();
-			//intVariable1.Name = "secondVar";
-			//intVariable1.Value = 0;
-
-			//IfStatement ifStatement1 = new IfStatement();
-			//ifStatement1.Condition = boolVariable;
-
-			//forStatement.MinimumValue = intVariable;
-			//forStatement.MaximumValue = intVariable1;
-			//forStatement.Statement = ifStatement1;
-
-			//Statements.Add(new IfStatementInstance(ifStatement));
-			//Statements.Add(new IfStatementInstance(ifStatement1));
-			//Statements.Add(new ForStatementInstance(forStatement));
-
-			//Statements.Add(new VariableStatementInstance(intVariable1));
-			//Statements.Add(new VariableStatementInstance(intVariable));
-			//Statements.Add(new VariableStatementInstance(boolVariable));
-
-
-			Serializer serializer = Serialization.Creator.GetSerializer(Statements.GetType());
-
-			ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>(System.IO.File.ReadAllText(Application.StartupPath + "/1.json"));
+			ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>(System.IO.File.ReadAllText(FilePath));
 
 			Statements.AddRange(serializer.Deserialize<StatementInstance[]>(dataArray));
 
 			for (int i = 0; i < Statements.Count; ++i)
 				Statements[i].ResolveSlotConnections(canvas);
+
+			canvas.Refresh();
 		}
 
-		public void Save()
+		public void Save(string FilePath)
 		{
 			Serializer serializer = Serialization.Creator.GetSerializer(Statements.GetType());
 
@@ -126,7 +68,7 @@ namespace VisualScriptTool.Editor
 
 			serializer.Serialize(dataArray, Statements);
 
-			System.IO.File.WriteAllText(Application.StartupPath + "/1.json", dataArray.Content);
+			System.IO.File.WriteAllText(FilePath, dataArray.Content);
 		}
 
 		private void SomethingChanged(object sender, System.EventArgs e)

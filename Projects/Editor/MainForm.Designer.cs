@@ -28,33 +28,105 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.tabControl1 = new System.Windows.Forms.TabControl();
+			this.TabControl = new System.Windows.Forms.TabControl();
+			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.LoadMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.SaveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.SaveAllMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.NewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// tabControl1
+			// TabControl
 			// 
-			this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tabControl1.Location = new System.Drawing.Point(0, 0);
-			this.tabControl1.Name = "tabControl1";
-			this.tabControl1.SelectedIndex = 0;
-			this.tabControl1.Size = new System.Drawing.Size(757, 428);
-			this.tabControl1.TabIndex = 0;
+			this.TabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.TabControl.Location = new System.Drawing.Point(0, 24);
+			this.TabControl.Name = "TabControl";
+			this.TabControl.SelectedIndex = 0;
+			this.TabControl.Size = new System.Drawing.Size(757, 404);
+			this.TabControl.TabIndex = 0;
+			// 
+			// menuStrip1
+			// 
+			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem});
+			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+			this.menuStrip1.Name = "menuStrip1";
+			this.menuStrip1.Size = new System.Drawing.Size(757, 24);
+			this.menuStrip1.TabIndex = 1;
+			this.menuStrip1.Text = "menuStrip1";
+			// 
+			// fileToolStripMenuItem
+			// 
+			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.NewMenuItem,
+            this.LoadMenuItem,
+            this.SaveMenuItem,
+            this.SaveAllMenuItem});
+			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+			this.fileToolStripMenuItem.Text = "&File";
+			// 
+			// LoadMenuItem
+			// 
+			this.LoadMenuItem.Name = "LoadMenuItem";
+			this.LoadMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.L)));
+			this.LoadMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.LoadMenuItem.Text = "&Load";
+			this.LoadMenuItem.Click += new System.EventHandler(this.LoadMenuItem_Click);
+			// 
+			// SaveMenuItem
+			// 
+			this.SaveMenuItem.Name = "SaveMenuItem";
+			this.SaveMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+			this.SaveMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.SaveMenuItem.Text = "&Save";
+			this.SaveMenuItem.Click += new System.EventHandler(this.SaveMenuItem_Click);
+			// 
+			// SaveAllMenuItem
+			// 
+			this.SaveAllMenuItem.Name = "SaveAllMenuItem";
+			this.SaveAllMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.A)));
+			this.SaveAllMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.SaveAllMenuItem.Text = "Save &All";
+			this.SaveAllMenuItem.Click += new System.EventHandler(this.SaveAllMenuItem_Click);
+			// 
+			// NewMenuItem
+			// 
+			this.NewMenuItem.Name = "NewMenuItem";
+			this.NewMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+			this.NewMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.NewMenuItem.Text = "&New";
+			this.NewMenuItem.Click += new System.EventHandler(this.NewMenuItem_Click);
 			// 
 			// MainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(757, 428);
-			this.Controls.Add(this.tabControl1);
+			this.Controls.Add(this.TabControl);
+			this.Controls.Add(this.menuStrip1);
+			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "MainForm";
 			this.Text = "MainForm";
 			this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+			this.menuStrip1.ResumeLayout(false);
+			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
+			this.PerformLayout();
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.TabControl tabControl1;
+		private System.Windows.Forms.TabControl TabControl;
+		private System.Windows.Forms.MenuStrip menuStrip1;
+		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem LoadMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem SaveMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem SaveAllMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem NewMenuItem;
 	}
 }
