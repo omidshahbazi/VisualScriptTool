@@ -45,5 +45,16 @@ namespace VisualScriptTool.Editor
 			Self.ConnectedSlot = Other;
 			statement.ElseStatment = Other.StatementInstance.Statement;
 		}
+
+		public override void ResolveSlotConnections(IStatementInspector Inspector)
+		{
+			base.ResolveSlotConnections(Inspector);
+
+			IfStatement statement = (IfStatement)Statement;
+
+			UpdateConnectedSlot(Inspector, 2, statement.Condition);
+			UpdateConnectedSlot(Inspector, 3, statement.Statement);
+			UpdateConnectedSlot(Inspector, 4, statement.ElseStatment);
+		}
 	}
 }

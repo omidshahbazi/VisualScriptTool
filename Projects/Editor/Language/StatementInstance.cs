@@ -56,7 +56,7 @@ namespace VisualScriptTool.Editor
 			this.Statement = Statement;
 
 			slots = new SlotList();
-        }
+		}
 
 		public void UpdateBounds()
 		{
@@ -75,9 +75,20 @@ namespace VisualScriptTool.Editor
 			return slot;
 		}
 
-		protected Slot GetSlot(uint Index)
+		protected virtual void UpdateConnectedSlot(IStatementInspector Inspector, uint Index, Statement ConnectedStatement)
 		{
-			return slots[(int)Index];
+			if (ConnectedStatement == null)
+				return;
+
+			Slot slot = slots[(int)Index];
+
+			StatementInstance instance = Inspector.GetInstance(ConnectedStatement);
+
+			if (instance != null)
+				for (int i = 0; i < instance.slots.Count; ++i)
+					if (slot.IsAssignmentAllowed(instance.slots[i]))
+						slot.ConnectedSlot = instance.slots[i];
+						return;
 		}
 
 		public virtual void ResolveSlotConnections(IStatementInspector Inspector)

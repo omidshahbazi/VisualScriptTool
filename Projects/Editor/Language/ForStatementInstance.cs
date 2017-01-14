@@ -54,5 +54,17 @@ namespace VisualScriptTool.Editor
 			Self.ConnectedSlot = Other;
 			statement.StepValue = (IntegerVariable)Other.StatementInstance.Statement;
 		}
+
+		public override void ResolveSlotConnections(IStatementInspector Inspector)
+		{
+			base.ResolveSlotConnections(Inspector);
+
+			ForStatement statement = (ForStatement)Statement;
+
+			UpdateConnectedSlot(Inspector, 2, statement.Statement);
+			UpdateConnectedSlot(Inspector, 3, statement.MinimumValue);
+			UpdateConnectedSlot(Inspector, 4, statement.MaximumValue);
+			UpdateConnectedSlot(Inspector, 5, statement.StepValue);
+		}
 	}
 }
