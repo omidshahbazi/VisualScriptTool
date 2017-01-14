@@ -5,6 +5,8 @@ namespace VisualScriptTool.Editor
 {
 	public partial class MainForm : Form
 	{
+		private const string FILE_EXTENSIONS = "Graph Files|*.json";
+
 		private DiagramTab CurrentTab
 		{
 			get
@@ -19,20 +21,27 @@ namespace VisualScriptTool.Editor
 		public MainForm()
 		{
 			InitializeComponent();
+
+			AddTab().Load(Application.StartupPath + "/1.json");
 		}
 
 		private void NewMenuItem_Click(object sender, System.EventArgs e)
 		{
-			DiagramTab diagramTab = new DiagramTab("New Diagram");
-			diagramTab.New();
-			TabControl.TabPages.Add(diagramTab);
+			AddTab().New("New Diagram");
 		}
 
 		private void LoadMenuItem_Click(object sender, System.EventArgs e)
 		{
-			DiagramTab diagramTab = new DiagramTab("New Diagram");
-			diagramTab.Load(Application.StartupPath + "/1.json");
-			TabControl.TabPages.Add(diagramTab);
+			OpenFileDialog openFileDialog = new OpenFileDialog();
+			openFileDialog.Multiselect = true;
+			openFileDialog.InitialDirectory = Application.StartupPath;
+			openFileDialog.Filter = FILE_EXTENSIONS;
+
+			if (openFileDialog.ShowDialog() == DialogResult.Cancel)
+				return;
+
+			for (int i = 0; i < openFileDialog.FileNames.Length; ++i)
+				AddTab().Load(openFileDialog.FileNames[i]);
 		}
 
 		private void SaveMenuItem_Click(object sender, System.EventArgs e)
@@ -49,9 +58,29 @@ namespace VisualScriptTool.Editor
 				SaveDiagramTab((DiagramTab)TabControl.TabPages[i]);
 		}
 
+		private DiagramTab AddTab()
+		{
+			DiagramTab diagramTab = new DiagramTab();
+			TabControl.TabPages.Add(diagramTab);
+			TabControl.SelectedTab = diagramTab;
+			return diagramTab;
+		}
+
 		private void SaveDiagramTab(DiagramTab Tab)
 		{
-			Tab.Save(Application.StartupPath + "/1.json");
+			if (Tab.IsNew)
+			{
+				SaveFileDialog saveFileDialog = new SaveFileDialog();
+				saveFileDialog.InitialDirectory = Application.StartupPath;
+				saveFileDialog.Filter = FILE_EXTENSIONS;
+
+				if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
+					return;
+
+				Tab.Save(saveFileDialog.FileName);
+			}
+			else
+				Tab.Save();
 		}
 	}
 }

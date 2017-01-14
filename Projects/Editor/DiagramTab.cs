@@ -1,5 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using VisualScriptTool.Serialization;
 
@@ -8,8 +9,9 @@ namespace VisualScriptTool.Editor
 	public class DiagramTab : TabPage
 	{
 		private StatementCanvas canvas = null;
-		private bool isDirty = false;
 
+		private bool isDirty = false;
+		
 		public bool IsDirty
 		{
 			get { return isDirty; }
@@ -21,12 +23,24 @@ namespace VisualScriptTool.Editor
 			}
 		}
 
+		public bool IsNew
+		{
+			get;
+			private set;
+		}
+
+		public string FilePath
+		{
+			get;
+			private set;
+		}
+
 		public StatementInstanceList Statements
 		{
 			get { return canvas.Statements; }
 		}
 
-		public DiagramTab(string Name)
+		public DiagramTab()
 		{
 			canvas = new StatementCanvas();
 			canvas.BackColor = Color.DimGray;
@@ -36,21 +50,24 @@ namespace VisualScriptTool.Editor
 			canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
 			Controls.Add(canvas);
-
-			this.Name = Name;
-			Text = Name;
 		}
 
-		public void New()
+		public void New(string Name)
 		{
+			this.Name = Name;
+			IsNew = true;
 			IsDirty = true;
 		}
 
 		public void Load(string FilePath)
 		{
-            Serializer serializer = Serialization.Creator.GetSerializer(Statements.GetType());
+			IsNew = false;
+			this.FilePath = FilePath;
+			Name = Path.GetFileNameWithoutExtension(FilePath);
 
-			ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>(System.IO.File.ReadAllText(FilePath));
+            Serializer serializer = Creator.GetSerializer(Statements.GetType());
+
+			ISerializeArray dataArray = Creator.Create<ISerializeArray>(File.ReadAllText(FilePath));
 
 			Statements.AddRange(serializer.Deserialize<StatementInstance[]>(dataArray));
 
@@ -58,17 +75,43 @@ namespace VisualScriptTool.Editor
 				Statements[i].ResolveSlotConnections(canvas);
 
 			canvas.Refresh();
+
+			UpdateTabText();
+		}
+
+		public bool Save()
+		{
+			if (IsNew)
+				return false;
+
+			IsNew = false;
+			IsDirty = false;
+
+			Serializer serializer = Creator.GetSerializer(Statements.GetType());
+
+			ISerializeArray dataArray = Creator.Create<ISerializeArray>();
+
+			serializer.Serialize(dataArray, Statements);
+
+			File.WriteAllText(FilePath, dataArray.Content);
+
+			return true;
 		}
 
 		public void Save(string FilePath)
 		{
-			Serializer serializer = Serialization.Creator.GetSerializer(Statements.GetType());
+			this.FilePath = FilePath;
+			Name = Path.GetFileNameWithoutExtension(FilePath);
+			IsNew = false;
+			IsDirty = false;
 
-			ISerializeArray dataArray = Serialization.Creator.Create<ISerializeArray>();
+			Serializer serializer = Creator.GetSerializer(Statements.GetType());
+
+			ISerializeArray dataArray = Creator.Create<ISerializeArray>();
 
 			serializer.Serialize(dataArray, Statements);
 
-			System.IO.File.WriteAllText(FilePath, dataArray.Content);
+			File.WriteAllText(FilePath, dataArray.Content);
 		}
 
 		private void SomethingChanged(object sender, System.EventArgs e)
