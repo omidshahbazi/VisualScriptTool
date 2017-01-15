@@ -10,7 +10,7 @@ namespace VisualScriptTool.Editor
 	{
 		private RectangleF bounds;
 
-		public SlotList slots = null;
+		private SlotList slots = null;
 
 		[SerializableElement(3)]
 		public Statement Statement

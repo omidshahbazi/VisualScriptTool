@@ -306,7 +306,24 @@ namespace VisualScriptTool.Editor
 			object obj = Item.Instantiate(location);
 
 			if (obj is StatementInstance)
-				Statements.Add((StatementInstance)obj);
+			{
+				StatementInstance instance = (StatementInstance)obj;
+				Statements.Add(instance);
+
+				Slot[] slots = instance.Slots;
+				for (int i = 0; i < slots.Length; ++i)
+				{
+					Slot otherSlot = slots[i];
+
+					if (SelectedSlot.IsAssignmentAllowed(otherSlot))
+					{
+						if (!SelectedSlot.AssignConnection(otherSlot))
+							otherSlot.AssignConnection(SelectedSlot);
+
+						break;
+					}
+				}
+			}
 		}
 	}
 }

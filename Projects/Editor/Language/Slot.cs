@@ -92,10 +92,15 @@ namespace VisualScriptTool.Editor
 			onAssignment = OnAssignment;
 		}
 
-		public void AssignConnection(Slot Slot)
+		public bool AssignConnection(Slot Slot)
 		{
 			if (onAssignment != null && (checkAssignment == null || checkAssignment(Slot)))
+			{
 				onAssignment(this, Slot);
+				return true;
+			}
+
+			return false;
 		}
 
 		public bool IsAssignmentAllowed(Slot Slot)
