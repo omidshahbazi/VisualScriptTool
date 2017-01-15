@@ -8,8 +8,18 @@ namespace VisualScriptTool.Editor
 		public ControlStatementInstance(ControlStatement Statement) :
 			base(Statement)
 		{
-			AddSlot(Slot.Types.EntryPoint, 0);
-			AddSlot(Slot.Types.Executer, 0, null, OnExecuterAssigned);
+			AddSlot(Slot.Types.EntryPoint, 0, CheckEntryPointAssignment);
+			AddSlot(Slot.Types.Executer, 0, CheckExecuterAssignment, OnExecuterAssigned);
+		}
+
+		protected virtual bool CheckEntryPointAssignment(Slot Slot)
+		{
+			return !WillCauseCircularCall(Slot);
+		}
+
+		protected virtual bool CheckExecuterAssignment(Slot Slot)
+		{
+			return !WillCauseCircularCall(Slot);
 		}
 
 		private void OnExecuterAssigned(Slot Self, Slot Other)
@@ -27,6 +37,11 @@ namespace VisualScriptTool.Editor
 			ControlStatement statement = (ControlStatement)Statement;
 
 			UpdateConnectedSlot(Inspector, 1, statement.CompleteStatement);
+		}
+
+		protected bool WillCauseCircularCall(Slot Slot)
+		{
+			return false;
 		}
 	}
 }

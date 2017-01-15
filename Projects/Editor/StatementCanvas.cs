@@ -4,21 +4,55 @@ using System.Drawing;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Language.Drawers;
 using VisualScriptTool.Language.Statements;
+using VisualScriptTool.Language.Statements.Control;
 
 namespace VisualScriptTool.Editor
 {
 	public class StatementCanvas : GridCanvas, IStatementInspector
 	{
+		private class Item
+		{
+			private Func<PointF, object> instantiator = null;
+
+			public string Title
+			{
+				get;
+				private set;
+			}
+
+			public Item(string Title, Func<PointF, object> Instantiator)
+			{
+				this.Title = Title;
+				instantiator = Instantiator;
+			}
+
+			public object Instantiate(PointF Position)
+			{
+				return instantiator(Position);
+			}
+		}
+
 		private const float SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = 20.0F;
 		private const float HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT / 2.0F;
+		private static readonly Item[] ITEMS = new Item[] {
+			new Item("If", (Position)=>
+			{
+				IfStatementInstance statement = new IfStatementInstance(new IfStatement());
+				statement.Position = Position;
+				return statement;
+			}),
+			new Item("For", (Position) =>
+			{
+				ForStatementInstance statement = new ForStatementInstance(new ForStatement());
+				statement.Position = Position;
+				return statement;
+			}) };
 
+		private ContextMenuStrip contextMenu = null;
 		private StatementDrawer drawer = null;
 		private StatementInstanceList candidateToSelectStatements = new StatementInstanceList();
 		private PointF lastMousePosition;
 		private Pen selectedPen = null;
-		private ContextMenuStrip contextMenu;
-		private System.ComponentModel.IContainer components;
-		private ToolStripMenuItem sampleToolStripMenuItem;
 		private CubicSPLine newConnectionLine = new CubicSPLine();
 
 		public StatementInstanceList Statements
@@ -47,13 +81,20 @@ namespace VisualScriptTool.Editor
 
 		public StatementCanvas()
 		{
-			InitializeComponent();
+			contextMenu = new ContextMenuStrip();
+			contextMenu.Closed += new ToolStripDropDownClosedEventHandler(OnContextMenuClosed);
 
 			drawer = new StatementDrawer(this);
 			Statements = new StatementInstanceList();
 			SelectedStatements = new StatementInstanceList();
 
 			selectedPen = new Pen(Color.Orange, 1.5F);
+
+			for (int i = 0; i < ITEMS.Length; ++i)
+			{
+				Item item = ITEMS[i];
+				contextMenu.Items.Add(item.Title, null, (s, e) => { ItemClicked(item); });
+			}
 		}
 
 		protected override void OnDrawCanvas(Graphics Graphics)
@@ -130,10 +171,12 @@ namespace VisualScriptTool.Editor
 				{
 					MouseOverSlot.AssignConnection(SelectedSlot);
 					SelectedSlot.AssignConnection(MouseOverSlot);
-				}
 
-				newConnectionLine.Clear();
+					newConnectionLine.Clear();
+				}
 			}
+			else if (e.Button == MouseButtons.Right)
+				contextMenu.Show(this, e.Location);
 
 			if (candidateToSelectStatements.Count != 0)
 			{
@@ -238,44 +281,32 @@ namespace VisualScriptTool.Editor
 			return null;
 		}
 
-		private void InitializeComponent()
-		{
-			this.components = new System.ComponentModel.Container();
-			this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.sampleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.contextMenu.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// contextMenu
-			// 
-			this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.sampleToolStripMenuItem});
-			this.contextMenu.Name = "contextMenu";
-			this.contextMenu.Size = new System.Drawing.Size(153, 48);
-			// 
-			// sampleToolStripMenuItem
-			// 
-			this.sampleToolStripMenuItem.Name = "sampleToolStripMenuItem";
-			this.sampleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.sampleToolStripMenuItem.Text = "sample";
-			// 
-			// StatementCanvas
-			// 
-			this.Name = "StatementCanvas";
-			this.contextMenu.ResumeLayout(false);
-			this.ResumeLayout(false);
-
-		}
-
 		StatementInstance IStatementInspector.GetInstance(Statement Statement)
 		{
-			for (int i =0; i < Statements.Count; ++i)
+			for (int i = 0; i < Statements.Count; ++i)
 			{
 				if (Statements[i].Statement == Statement)
 					return Statements[i];
 			}
 
 			return null;
+		}
+
+		private void OnContextMenuClosed(object sender, ToolStripDropDownClosedEventArgs e)
+		{
+			newConnectionLine.Clear();
+
+			Refresh();
+		}
+
+		private void ItemClicked(Item Item)
+		{
+			PointF location = ScreenToCanvas(PointToClient(MousePosition));
+
+			object obj = Item.Instantiate(location);
+
+			if (obj is StatementInstance)
+				Statements.Add((StatementInstance)obj);
 		}
 	}
 }
