@@ -63,14 +63,14 @@ namespace VisualScriptTool.Editor
 			bounds.Size = new SizeF(HeaderSize.Width, HeaderSize.Height + BodySize.Height);
 		}
 
-		protected Slot AddSlot(Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null)
+		protected Slot AddSlot(Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
 		{
 			return AddSlot(string.Empty, Type, Index, CheckAssignment, OnAssignment);
 		}
 
-		protected Slot AddSlot(string Name, Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null)
+		protected Slot AddSlot(string Name, Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
 		{
-			Slot slot = new Slot(this, Name, Type, Index, CheckAssignment, OnAssignment);
+			Slot slot = new Slot(this, Name, Type, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 			slots.Add(slot);
 			return slot;
 		}

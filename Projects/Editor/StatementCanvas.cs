@@ -48,12 +48,18 @@ namespace VisualScriptTool.Editor
 				return statement;
 			}) };
 
-		private ContextMenuStrip contextMenu = null;
+		private ContextMenuStrip generalContextMenu = null;
+		private ContextMenuStrip slotContextMenu = null;
 		private StatementDrawer drawer = null;
 		private StatementInstanceList candidateToSelectStatements = new StatementInstanceList();
 		private PointF lastMousePosition;
 		private Pen selectedPen = null;
 		private CubicSPLine newConnectionLine = new CubicSPLine();
+
+		protected Point ClientMousePosition
+		{
+			get { return PointToClient(MousePosition); }
+		}
 
 		public StatementInstanceList Statements
 		{
@@ -81,20 +87,21 @@ namespace VisualScriptTool.Editor
 
 		public StatementCanvas()
 		{
-			contextMenu = new ContextMenuStrip();
-			contextMenu.Closed += new ToolStripDropDownClosedEventHandler(OnContextMenuClosed);
+			generalContextMenu = new ContextMenuStrip();
+			generalContextMenu.Closed += new ToolStripDropDownClosedEventHandler(OnContextMenuClosed);
+			for (int i = 0; i < ITEMS.Length; ++i)
+			{
+				Item item = ITEMS[i];
+				generalContextMenu.Items.Add(item.Title, null, (s, e) => { OnItemClicked(item); });
+			}
+
+			slotContextMenu = new ContextMenuStrip();
 
 			drawer = new StatementDrawer(this);
 			Statements = new StatementInstanceList();
 			SelectedStatements = new StatementInstanceList();
 
 			selectedPen = new Pen(Color.Orange, 1.5F);
-
-			for (int i = 0; i < ITEMS.Length; ++i)
-			{
-				Item item = ITEMS[i];
-				contextMenu.Items.Add(item.Title, null, (s, e) => { ItemClicked(item); });
-			}
 		}
 
 		protected override void OnDrawCanvas(Graphics Graphics)
@@ -162,21 +169,26 @@ namespace VisualScriptTool.Editor
 
 			if (SelectedSlot != null)
 			{
-				if (MouseOverSlot == null)
-				{
-					if (GetSlotAtLocation(ScreenToCanvas(e.Location)) == null)
-						contextMenu.Show(this, e.Location);
-				}
+				if (e.Button == MouseButtons.Right)
+					ShowSlotMenu();
 				else
 				{
-					MouseOverSlot.AssignConnection(SelectedSlot);
-					SelectedSlot.AssignConnection(MouseOverSlot);
+					if (MouseOverSlot == null)
+					{
+						if (GetSlotAtLocation(ScreenToCanvas(e.Location)) == null)
+							ShowGeneralMenu();
+					}
+					else
+					{
+						MouseOverSlot.AssignConnection(SelectedSlot);
+						SelectedSlot.AssignConnection(MouseOverSlot);
 
-					newConnectionLine.Clear();
+						newConnectionLine.Clear();
+					}
 				}
 			}
 			else if (e.Button == MouseButtons.Right)
-				contextMenu.Show(this, e.Location);
+				ShowGeneralMenu();
 
 			if (candidateToSelectStatements.Count != 0)
 			{
@@ -258,6 +270,23 @@ namespace VisualScriptTool.Editor
 			}
 		}
 
+		private void ShowGeneralMenu()
+		{
+			generalContextMenu.Show(this, ClientMousePosition);
+		}
+
+		private void ShowSlotMenu()
+		{
+			slotContextMenu.Items.Clear();
+
+			if (SelectedSlot.Type == Slot.Types.Argument || SelectedSlot.Type == Slot.Types.Executer || SelectedSlot.Type == Slot.Types.Setter)
+				slotContextMenu.Items.Add("Remove Connection", null, (s, e) => { OnRemoveConnection(SelectedSlot); });
+			else
+				slotContextMenu.Items.Add("Remove All Connections", null, (s, e) => { OnRemoveAllConnections(SelectedSlot); });
+
+			slotContextMenu.Show(this, ClientMousePosition);
+		}
+
 		private Slot GetSlotAtLocation(PointF Location)
 		{
 			for (int i = Statements.Count - 1; i >= 0; --i)
@@ -281,17 +310,6 @@ namespace VisualScriptTool.Editor
 			return null;
 		}
 
-		StatementInstance IStatementInspector.GetInstance(Statement Statement)
-		{
-			for (int i = 0; i < Statements.Count; ++i)
-			{
-				if (Statements[i].Statement == Statement)
-					return Statements[i];
-			}
-
-			return null;
-		}
-
 		private void OnContextMenuClosed(object sender, ToolStripDropDownClosedEventArgs e)
 		{
 			newConnectionLine.Clear();
@@ -299,7 +317,7 @@ namespace VisualScriptTool.Editor
 			Refresh();
 		}
 
-		private void ItemClicked(Item Item)
+		private void OnItemClicked(Item Item)
 		{
 			PointF location = ScreenToCanvas(PointToClient(MousePosition));
 
@@ -324,6 +342,27 @@ namespace VisualScriptTool.Editor
 					}
 				}
 			}
+		}
+
+		private void OnRemoveConnection(Slot Slot)
+		{
+		Slot.AssignConnection
+		}
+
+		private void OnRemoveAllConnections(Slot Slot)
+		{
+
+		}
+
+		StatementInstance IStatementInspector.GetInstance(Statement Statement)
+		{
+			for (int i = 0; i < Statements.Count; ++i)
+			{
+				if (Statements[i].Statement == Statement)
+					return Statements[i];
+			}
+
+			return null;
 		}
 	}
 }
