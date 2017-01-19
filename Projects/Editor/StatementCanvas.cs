@@ -175,8 +175,11 @@ namespace VisualScriptTool.Editor
 				{
 					if (MouseOverSlot == null)
 					{
-						if (GetSlotAtLocation(ScreenToCanvas(e.Location)) == null)
+						Slot mouseHoverSlot = GetSlotAtLocation(ScreenToCanvas(e.Location));
+						if (mouseHoverSlot == null || mouseHoverSlot == SelectedSlot)
 							ShowGeneralMenu();
+						else
+							newConnectionLine.Clear();
 					}
 					else
 					{
@@ -328,17 +331,20 @@ namespace VisualScriptTool.Editor
 				StatementInstance instance = (StatementInstance)obj;
 				Statements.Add(instance);
 
-				Slot[] slots = instance.Slots;
-				for (int i = 0; i < slots.Length; ++i)
+				if (SelectedSlot != null)
 				{
-					Slot otherSlot = slots[i];
-
-					if (SelectedSlot.IsAssignmentAllowed(otherSlot))
+					Slot[] slots = instance.Slots;
+					for (int i = 0; i < slots.Length; ++i)
 					{
-						if (!SelectedSlot.AssignConnection(otherSlot))
-							otherSlot.AssignConnection(SelectedSlot);
+						Slot otherSlot = slots[i];
 
-						break;
+						if (SelectedSlot.IsAssignmentAllowed(otherSlot))
+						{
+							if (!SelectedSlot.AssignConnection(otherSlot))
+								otherSlot.AssignConnection(SelectedSlot);
+
+							break;
+						}
 					}
 				}
 			}
@@ -346,12 +352,17 @@ namespace VisualScriptTool.Editor
 
 		private void OnRemoveConnection(Slot Slot)
 		{
-		Slot.AssignConnection
+			Slot.RemoveConnection();
+
+			Refresh();
 		}
 
 		private void OnRemoveAllConnections(Slot Slot)
 		{
+			for (int i = 0; i < Slot.RelatedSlots.Count; ++i)
+				Slot.RelatedSlots[i].RemoveConnection();
 
+			Refresh();
 		}
 
 		StatementInstance IStatementInspector.GetInstance(Statement Statement)

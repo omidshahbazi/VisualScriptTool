@@ -65,7 +65,7 @@ namespace VisualScriptTool.Editor
 
 		protected Slot AddSlot(Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
 		{
-			return AddSlot(string.Empty, Type, Index, CheckAssignment, OnAssignment);
+			return AddSlot(string.Empty, Type, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
 		protected Slot AddSlot(string Name, Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
@@ -86,9 +86,22 @@ namespace VisualScriptTool.Editor
 
 			if (instance != null)
 				for (int i = 0; i < instance.slots.Count; ++i)
-					if (slot.IsAssignmentAllowed(instance.slots[i]))
-						slot.ConnectedSlot = instance.slots[i];
+				{
+					Slot otherSlot = instance.slots[i];
+
+					if (slot.IsAssignmentAllowed(otherSlot))
+					{
+						SetConnection(slot, otherSlot);
 						return;
+					}
+				}
+		}
+
+		protected void SetConnection(Slot From, Slot To)
+		{
+			From.ConnectedSlot = To;
+
+			To.RelatedSlots.Add(From);
 		}
 
 		public virtual void ResolveSlotConnections(IStatementInspector Inspector)

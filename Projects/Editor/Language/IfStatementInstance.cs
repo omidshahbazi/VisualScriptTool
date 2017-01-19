@@ -26,7 +26,8 @@ namespace VisualScriptTool.Editor
 		{
 			IfStatement statement = (IfStatement)Statement;
 
-			Self.ConnectedSlot = Other;
+			SetConnection(Self, Other);
+
 			statement.Condition = (BooleanVariable)Other.StatementInstance.Statement;
 		}
 
@@ -34,7 +35,8 @@ namespace VisualScriptTool.Editor
 		{
 			IfStatement statement = (IfStatement)Statement;
 
-			Self.ConnectedSlot = Other;
+			SetConnection(Self, Other);
+
 			statement.Statement = Other.StatementInstance.Statement;
 		}
 
@@ -42,7 +44,8 @@ namespace VisualScriptTool.Editor
 		{
 			IfStatement statement = (IfStatement)Statement;
 
-			Self.ConnectedSlot = Other;
+			SetConnection(Self, Other);
+
 			statement.ElseStatment = Other.StatementInstance.Statement;
 		}
 

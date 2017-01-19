@@ -83,8 +83,16 @@ namespace VisualScriptTool.Editor
 			set;
 		}
 
+		public SlotList RelatedSlots
+		{
+			get;
+			private set;
+		}
+
 		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, System.Func<Slot, bool> CheckAssignment, System.Action<Slot, Slot> OnAssignment, System.Action<Slot> OnRemoveConnection)
 		{
+			RelatedSlots = new SlotList();
+
 			this.StatementInstance = StatementInstance;
 			this.Name = Name;
 			this.Type = Type;
