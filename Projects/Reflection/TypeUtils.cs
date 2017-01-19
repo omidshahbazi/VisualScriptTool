@@ -8,6 +8,28 @@ namespace VisualScriptTool.Reflection
 {
 	public static class TypeUtils
 	{
+		public static Type[] GetDrievedTypesOf<T>() where T : class
+		{
+			Type baseClassType = typeof(T);
+
+			List<Type> retTypes = new List<Type>();
+
+			Type[] types = Assembly.GetCallingAssembly().GetTypes();
+
+			for (int i = 0; i < types.Length; ++i)
+			{
+				Type type = types[i];
+
+				if (type.IsSubclassOf(baseClassType))
+					retTypes.Add(type);
+			}
+
+			if (retTypes.Count == 0)
+				return null;
+
+			return retTypes.ToArray();
+		}
+
 		public static PropertyInfo[] GetAllProperties(this Type Type)
 		{
 			return GetAllProperties(Type, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
