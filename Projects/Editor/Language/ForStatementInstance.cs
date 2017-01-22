@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Drawing;
 using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Language.Statements.Declaration.Variables;
@@ -11,7 +12,7 @@ namespace VisualScriptTool.Editor
 		public ForStatementInstance(ForStatement Statement) :
 			base(Statement)
 		{
-			AddSlot("Body", Slot.Types.Executer, 1, null, OnBodyAssigned);
+			AddSlot("Body", Slot.Types.Executer, 1, null, OnBodyAssigned, OnRemoveBodyConnection);
 
 			AddSlot("Minimum", Slot.Types.Argument, 1, CheckVariableAssignment, OnMinimumAssigned);
 			AddSlot("Maximum", Slot.Types.Argument, 2, CheckVariableAssignment, OnMaximumAssigned);
@@ -21,9 +22,11 @@ namespace VisualScriptTool.Editor
 		private void OnBodyAssigned(Slot Self, Slot Other)
 		{
 			ForStatement statement = (ForStatement)Statement;
-
-			Self.ConnectedSlot = Other;
+			
 			statement.Statement = Other.StatementInstance.Statement;
+
+			SetConnection(Self, Other);
+
 		}
 
 		private bool CheckVariableAssignment(Slot Other)
@@ -53,6 +56,17 @@ namespace VisualScriptTool.Editor
 
 			Self.ConnectedSlot = Other;
 			statement.StepValue = (IntegerVariable)Other.StatementInstance.Statement;
+		}
+
+		private void OnRemoveBodyConnection(Slot Self)
+		{
+			if (Self.ConnectedSlot != null)
+				Self.ConnectedSlot.RelatedSlots.Remove(Self);
+
+			ForStatement statement = (ForStatement)Statement;
+
+			Self.ConnectedSlot = null;
+			statement.CompleteStatement = null;
 		}
 
 		public override void ResolveSlotConnections(IStatementInspector Inspector)

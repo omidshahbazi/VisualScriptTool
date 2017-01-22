@@ -1,5 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
-using System.Drawing;
+using System;
 using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Language.Statements.Declaration.Variables;
 
@@ -13,7 +13,7 @@ namespace VisualScriptTool.Editor
 		{
 			AddSlot("Condition", Slot.Types.Argument, 1, CheckConditionAssignment, OnConditionAssigned);
 
-			AddSlot("True", Slot.Types.Executer, 1, null, OnTrueAssigned);
+			AddSlot("True", Slot.Types.Executer, 1, null, OnTrueAssigned, OnRemoveTrueConnection);
 			AddSlot("False", Slot.Types.Executer, 2, null, OnFalseAssigned);
 		}
 
@@ -47,6 +47,17 @@ namespace VisualScriptTool.Editor
 			SetConnection(Self, Other);
 
 			statement.ElseStatment = Other.StatementInstance.Statement;
+		}
+
+		private void OnRemoveTrueConnection(Slot Self)
+		{
+			if (Self.ConnectedSlot != null)
+				Self.ConnectedSlot.RelatedSlots.Remove(Self);
+
+			IfStatement statement = (IfStatement)Statement;
+
+			Self.ConnectedSlot = null;
+			statement.Statement = null;
 		}
 
 		public override void ResolveSlotConnections(IStatementInspector Inspector)

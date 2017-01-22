@@ -24,7 +24,7 @@ namespace VisualScriptTool.Editor
 
 		private void OnEntryPointAssigned(Slot Self, Slot Other)
 		{
-			Self.RelatedSlots.Add(Other);
+			//Self.RelatedSlots.Add(Other);
 		}
 
 		private void OnExecuterAssigned(Slot Self, Slot Other)

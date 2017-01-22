@@ -359,8 +359,10 @@ namespace VisualScriptTool.Editor
 
 		private void OnRemoveAllConnections(Slot Slot)
 		{
-			for (int i = 0; i < Slot.RelatedSlots.Count; ++i)
-				Slot.RelatedSlots[i].RemoveConnection();
+			Slot[] relatedSlots = Slot.RelatedSlots.ToArray();
+
+			for (int i = 0; i < relatedSlots.Length; ++i)
+				relatedSlots[i].RemoveConnection();
 
 			Refresh();
 		}
