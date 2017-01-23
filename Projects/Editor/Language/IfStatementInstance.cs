@@ -14,7 +14,7 @@ namespace VisualScriptTool.Editor
 			AddSlot("Condition", Slot.Types.Argument, 1, CheckConditionAssignment, OnConditionAssigned);
 
 			AddSlot("True", Slot.Types.Executer, 1, null, OnTrueAssigned, OnRemoveTrueConnection);
-			AddSlot("False", Slot.Types.Executer, 2, null, OnFalseAssigned);
+			AddSlot("False", Slot.Types.Executer, 2, null, OnFalseAssigned, OnRemoveFalseConnection);
 		}
 
 		private bool CheckConditionAssignment(Slot Other)
@@ -58,6 +58,17 @@ namespace VisualScriptTool.Editor
 
 			Self.ConnectedSlot = null;
 			statement.Statement = null;
+		}
+
+		private void OnRemoveFalseConnection(Slot Self)
+		{
+			if (Self.ConnectedSlot != null)
+				Self.ConnectedSlot.RelatedSlots.Remove(Self);
+
+			IfStatement statement = (IfStatement)Statement;
+
+			Self.ConnectedSlot = null;
+			statement.ElseStatment = null;
 		}
 
 		public override void ResolveSlotConnections(IStatementInspector Inspector)

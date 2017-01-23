@@ -66,7 +66,7 @@ namespace VisualScriptTool.Editor
 			ForStatement statement = (ForStatement)Statement;
 
 			Self.ConnectedSlot = null;
-			statement.CompleteStatement = null;
+			statement.Statement = null;
 		}
 
 		public override void ResolveSlotConnections(IStatementInspector Inspector)
