@@ -50,10 +50,12 @@
     <Compile Include="IStatementInspector.cs" />
     <Compile Include="Language\ControlStatementInstance.cs" />
     <Compile Include="Language\Drawers\ForStatementDrawer.cs" />
+    <Compile Include="Language\Drawers\WhileStatementDrawer.cs" />
     <Compile Include="Language\Drawers\IfStatementDrawer.cs" />
     <Compile Include="Language\Drawers\ControlStatementDrawer.cs" />
     <Compile Include="Language\Drawers\VariableDrawer.cs" />
     <Compile Include="Language\ForStatementInstance.cs" />
+    <Compile Include="Language\WhileStatementInstance.cs" />
     <Compile Include="Language\Slot.cs" />
     <Compile Include="Language\IfStatementInstance.cs" />
     <Compile Include="Language\VariableStatementInstance.cs" />
@@ -74,6 +76,8 @@
     <Compile Include="Serializers\StringVariable_Serializer.cs" />
     <Compile Include="Serializers\SystemCompilerStrategy.cs" />
     <Compile Include="Serializers\VariableStatementInstance_Serializer.cs" />
+    <Compile Include="Serializers\WhileStatementInstance_Serializer.cs" />
+    <Compile Include="Serializers\WhileStatement_Serializer.cs" />
     <Compile Include="StatementCanvas.cs">
       <SubType>UserControl</SubType>
     </Compile>

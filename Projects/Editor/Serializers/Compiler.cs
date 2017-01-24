@@ -22,6 +22,7 @@ namespace VisualScriptTool.Editor.Serializers
 			Dictionary<Type, ICompileStrategy> types = new Dictionary<Type, ICompileStrategy>();
 			types[typeof(Statement)] = defaultCompilerStrategy;
 			types[typeof(IfStatement)] = defaultCompilerStrategy;
+			types[typeof(WhileStatement)] = defaultCompilerStrategy;
 			types[typeof(ForStatement)] = defaultCompilerStrategy;
 			types[typeof(BooleanVariable)] = defaultCompilerStrategy;
 			types[typeof(IntegerVariable)] = defaultCompilerStrategy;
@@ -30,6 +31,7 @@ namespace VisualScriptTool.Editor.Serializers
 
 			types[typeof(StatementInstance)] = defaultCompilerStrategy;
 			types[typeof(IfStatementInstance)] = defaultCompilerStrategy;
+			types[typeof(WhileStatementInstance)] = defaultCompilerStrategy;
 			types[typeof(ForStatementInstance)] = defaultCompilerStrategy;
 			types[typeof(VariableStatementInstance)] = defaultCompilerStrategy;
 

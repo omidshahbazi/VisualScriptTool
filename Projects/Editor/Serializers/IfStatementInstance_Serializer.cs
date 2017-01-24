@@ -12,7 +12,7 @@ namespace VisualScriptTool.Editor.Serializers
 
 		public override object CreateInstance()
 		{
-			return new VisualScriptTool.Editor.IfStatementInstance(null);
+			return new VisualScriptTool.Editor.IfStatementInstance();
 		}
 
 		public override void Serialize(ISerializeData Data, object Instance)

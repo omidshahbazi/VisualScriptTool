@@ -8,15 +8,15 @@ namespace VisualScriptTool.Editor
 {
 	public class ForStatementInstance : ControlStatementInstance
 	{
-		[Serialization.SerializableInstantiator((StatementInstance)null)]
-		public ForStatementInstance(ForStatement Statement) :
-			base(Statement)
+		[Serialization.SerializableInstantiator]
+		public ForStatementInstance() :
+			base(new ForStatement())
 		{
 			AddSlot("Body", Slot.Types.Executer, 1, null, OnBodyAssigned, OnRemoveBodyConnection);
 
-			AddSlot("Minimum", Slot.Types.Argument, 1, CheckVariableAssignment, OnMinimumAssigned);
-			AddSlot("Maximum", Slot.Types.Argument, 2, CheckVariableAssignment, OnMaximumAssigned);
-			AddSlot("Step", Slot.Types.Argument, 3, CheckVariableAssignment, OnStepAssigned);
+			AddSlot("Minimum", Slot.Types.Argument, 1, CheckVariableAssignment, OnMinimumAssigned, OnRemoveMinimumConnection);
+			AddSlot("Maximum", Slot.Types.Argument, 2, CheckVariableAssignment, OnMaximumAssigned, OnRemoveMaximumConnection);
+			AddSlot("Step", Slot.Types.Argument, 3, CheckVariableAssignment, OnStepAssigned, OnRemoveStepConnection);
 		}
 
 		private void OnBodyAssigned(Slot Self, Slot Other)
@@ -58,14 +58,35 @@ namespace VisualScriptTool.Editor
 			statement.StepValue = (IntegerVariable)Other.StatementInstance.Statement;
 		}
 
-		private void OnRemoveBodyConnection(Slot Self)
+		private void OnRemoveMinimumConnection(Slot Self)
 		{
-			if (Self.ConnectedSlot != null)
-				Self.ConnectedSlot.RelatedSlots.Remove(Self);
+			UnsetConnection(Self);
 
 			ForStatement statement = (ForStatement)Statement;
+			statement.MinimumValue = null;
+		}
 
-			Self.ConnectedSlot = null;
+		private void OnRemoveMaximumConnection(Slot Self)
+		{
+			UnsetConnection(Self);
+
+			ForStatement statement = (ForStatement)Statement;
+			statement.MaximumValue = null;
+		}
+
+		private void OnRemoveStepConnection(Slot Self)
+		{
+			UnsetConnection(Self);
+
+			ForStatement statement = (ForStatement)Statement;
+			statement.StepValue = null;
+		}
+
+		private void OnRemoveBodyConnection(Slot Self)
+		{
+			UnsetConnection(Self);
+
+			ForStatement statement = (ForStatement)Statement;
 			statement.Statement = null;
 		}
 

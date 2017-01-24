@@ -37,12 +37,9 @@ namespace VisualScriptTool.Editor
 
 		private void OnExecuterRemoveConnection(Slot Self)
 		{
-			if (Self.ConnectedSlot != null)
-				Self.ConnectedSlot.RelatedSlots.Remove(Self);
+			UnsetConnection(Self);
 
 			ControlStatement statement = (ControlStatement)Statement;
-
-			Self.ConnectedSlot = null;
 			statement.CompleteStatement = null;
 		}
 

@@ -28,12 +28,5 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		{
 			backBrush = new SolidBrush(Color.Black);
 		}
-
-		public override void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
-		{
-			base.DrawConections(Graphics, StatementInstance);
-
-			ForStatement statement = (ForStatement)StatementInstance.Statement;
-		}
 	}
 }

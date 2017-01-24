@@ -37,13 +37,19 @@ namespace VisualScriptTool.Editor
 		private static readonly Item[] ITEMS = new Item[] {
 			new Item("If", (Position)=>
 			{
-				IfStatementInstance statement = new IfStatementInstance(new IfStatement());
+				IfStatementInstance statement = new IfStatementInstance();
 				statement.Position = Position;
 				return statement;
 			}),
 			new Item("For", (Position) =>
 			{
-				ForStatementInstance statement = new ForStatementInstance(new ForStatement());
+				ForStatementInstance statement = new ForStatementInstance();
+				statement.Position = Position;
+				return statement;
+			}),
+			new Item("While", (Position) =>
+			{
+				WhileStatementInstance statement = new WhileStatementInstance();
 				statement.Position = Position;
 				return statement;
 			}) };

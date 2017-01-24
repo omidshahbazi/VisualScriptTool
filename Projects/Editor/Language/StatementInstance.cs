@@ -104,6 +104,14 @@ namespace VisualScriptTool.Editor
 			To.RelatedSlots.Add(From);
 		}
 
+		protected void UnsetConnection(Slot Slot)
+		{
+			if (Slot.ConnectedSlot != null)
+				Slot.ConnectedSlot.RelatedSlots.Remove(Slot);
+
+			Slot.ConnectedSlot = null;
+		}
+
 		public virtual void ResolveSlotConnections(IStatementInspector Inspector)
 		{
 		}

@@ -5,7 +5,7 @@ using VisualScriptTool.Language.Statements.Control;
 
 namespace VisualScriptTool.Editor.Language.Drawers
 {
-	public class IfStatementDrawer : ControlStatementDrawer
+	public class WhileStatementDrawer : ControlStatementDrawer
 	{
 		private CubicSPLine spline = new CubicSPLine();
 
@@ -21,10 +21,10 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		public override Type[] StatementTypes
 		{
-			get { return new Type[] { typeof(IfStatement) }; }
+			get { return new Type[] { typeof(WhileStatement) }; }
 		}
 
-		public IfStatementDrawer()
+		public WhileStatementDrawer()
 		{
 		}
 	}
