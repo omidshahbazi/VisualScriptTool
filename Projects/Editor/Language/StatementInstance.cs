@@ -10,7 +10,7 @@ namespace VisualScriptTool.Editor
 	{
 		private RectangleF bounds;
 
-		public SlotList slots = null;
+		private SlotList slots = null;
 
 		[SerializableElement(3)]
 		public Statement Statement
@@ -63,14 +63,14 @@ namespace VisualScriptTool.Editor
 			bounds.Size = new SizeF(HeaderSize.Width, HeaderSize.Height + BodySize.Height);
 		}
 
-		protected Slot AddSlot(Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null)
+		protected Slot AddSlot(Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
 		{
-			return AddSlot(string.Empty, Type, Index, CheckAssignment, OnAssignment);
+			return AddSlot(string.Empty, Type, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
-		protected Slot AddSlot(string Name, Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null)
+		protected Slot AddSlot(string Name, Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
 		{
-			Slot slot = new Slot(this, Name, Type, Index, CheckAssignment, OnAssignment);
+			Slot slot = new Slot(this, Name, Type, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 			slots.Add(slot);
 			return slot;
 		}
@@ -86,9 +86,30 @@ namespace VisualScriptTool.Editor
 
 			if (instance != null)
 				for (int i = 0; i < instance.slots.Count; ++i)
-					if (slot.IsAssignmentAllowed(instance.slots[i]))
-						slot.ConnectedSlot = instance.slots[i];
+				{
+					Slot otherSlot = instance.slots[i];
+
+					if (slot.IsAssignmentAllowed(otherSlot))
+					{
+						SetConnection(slot, otherSlot);
 						return;
+					}
+				}
+		}
+
+		protected void SetConnection(Slot From, Slot To)
+		{
+			From.ConnectedSlot = To;
+
+			To.RelatedSlots.Add(From);
+		}
+
+		protected void UnsetConnection(Slot Slot)
+		{
+			if (Slot.ConnectedSlot != null)
+				Slot.ConnectedSlot.RelatedSlots.Remove(Slot);
+
+			Slot.ConnectedSlot = null;
 		}
 
 		public virtual void ResolveSlotConnections(IStatementInspector Inspector)

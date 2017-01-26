@@ -4,22 +4,68 @@ using System.Drawing;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Language.Drawers;
 using VisualScriptTool.Language.Statements;
+using VisualScriptTool.Language.Statements.Control;
 
 namespace VisualScriptTool.Editor
 {
 	public class StatementCanvas : GridCanvas, IStatementInspector
 	{
+		private class Item
+		{
+			private Func<PointF, object> instantiator = null;
+
+			public string Title
+			{
+				get;
+				private set;
+			}
+
+			public Item(string Title, Func<PointF, object> Instantiator)
+			{
+				this.Title = Title;
+				instantiator = Instantiator;
+			}
+
+			public object Instantiate(PointF Position)
+			{
+				return instantiator(Position);
+			}
+		}
+
 		private const float SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = 20.0F;
 		private const float HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT / 2.0F;
+		private static readonly Item[] ITEMS = new Item[] {
+			new Item("If", (Position)=>
+			{
+				IfStatementInstance statement = new IfStatementInstance();
+				statement.Position = Position;
+				return statement;
+			}),
+			new Item("For", (Position) =>
+			{
+				ForStatementInstance statement = new ForStatementInstance();
+				statement.Position = Position;
+				return statement;
+			}),
+			new Item("While", (Position) =>
+			{
+				WhileStatementInstance statement = new WhileStatementInstance();
+				statement.Position = Position;
+				return statement;
+			}) };
 
+		private ContextMenuStrip generalContextMenu = null;
+		private ContextMenuStrip slotContextMenu = null;
 		private StatementDrawer drawer = null;
 		private StatementInstanceList candidateToSelectStatements = new StatementInstanceList();
 		private PointF lastMousePosition;
 		private Pen selectedPen = null;
-		private ContextMenuStrip contextMenu;
-		private System.ComponentModel.IContainer components;
-		private ToolStripMenuItem sampleToolStripMenuItem;
 		private CubicSPLine newConnectionLine = new CubicSPLine();
+
+		protected Point ClientMousePosition
+		{
+			get { return PointToClient(MousePosition); }
+		}
 
 		public StatementInstanceList Statements
 		{
@@ -47,7 +93,15 @@ namespace VisualScriptTool.Editor
 
 		public StatementCanvas()
 		{
-			InitializeComponent();
+			generalContextMenu = new ContextMenuStrip();
+			generalContextMenu.Closed += new ToolStripDropDownClosedEventHandler(OnContextMenuClosed);
+			for (int i = 0; i < ITEMS.Length; ++i)
+			{
+				Item item = ITEMS[i];
+				generalContextMenu.Items.Add(item.Title, null, (s, e) => { OnItemClicked(item); });
+			}
+
+			slotContextMenu = new ContextMenuStrip();
 
 			drawer = new StatementDrawer(this);
 			Statements = new StatementInstanceList();
@@ -121,19 +175,29 @@ namespace VisualScriptTool.Editor
 
 			if (SelectedSlot != null)
 			{
-				if (MouseOverSlot == null)
-				{
-					if (GetSlotAtLocation(ScreenToCanvas(e.Location)) == null)
-						contextMenu.Show(this, e.Location);
-				}
+				if (e.Button == MouseButtons.Right)
+					ShowSlotMenu();
 				else
 				{
-					MouseOverSlot.AssignConnection(SelectedSlot);
-					SelectedSlot.AssignConnection(MouseOverSlot);
-				}
+					if (MouseOverSlot == null)
+					{
+						Slot mouseHoverSlot = GetSlotAtLocation(ScreenToCanvas(e.Location));
+						if (mouseHoverSlot == null || mouseHoverSlot == SelectedSlot)
+							ShowGeneralMenu();
+						else
+							newConnectionLine.Clear();
+					}
+					else
+					{
+						MouseOverSlot.AssignConnection(SelectedSlot);
+						SelectedSlot.AssignConnection(MouseOverSlot);
 
-				newConnectionLine.Clear();
+						newConnectionLine.Clear();
+					}
+				}
 			}
+			else if (e.Button == MouseButtons.Right)
+				ShowGeneralMenu();
 
 			if (candidateToSelectStatements.Count != 0)
 			{
@@ -215,6 +279,23 @@ namespace VisualScriptTool.Editor
 			}
 		}
 
+		private void ShowGeneralMenu()
+		{
+			generalContextMenu.Show(this, ClientMousePosition);
+		}
+
+		private void ShowSlotMenu()
+		{
+			slotContextMenu.Items.Clear();
+
+			if (SelectedSlot.Type == Slot.Types.Argument || SelectedSlot.Type == Slot.Types.Executer || SelectedSlot.Type == Slot.Types.Setter)
+				slotContextMenu.Items.Add("Remove Connection", null, (s, e) => { OnRemoveConnection(SelectedSlot); });
+			else
+				slotContextMenu.Items.Add("Remove All Connections", null, (s, e) => { OnRemoveAllConnections(SelectedSlot); });
+
+			slotContextMenu.Show(this, ClientMousePosition);
+		}
+
 		private Slot GetSlotAtLocation(PointF Location)
 		{
 			for (int i = Statements.Count - 1; i >= 0; --i)
@@ -238,38 +319,63 @@ namespace VisualScriptTool.Editor
 			return null;
 		}
 
-		private void InitializeComponent()
+		private void OnContextMenuClosed(object sender, ToolStripDropDownClosedEventArgs e)
 		{
-			this.components = new System.ComponentModel.Container();
-			this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-			this.sampleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.contextMenu.SuspendLayout();
-			this.SuspendLayout();
-			// 
-			// contextMenu
-			// 
-			this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-			this.sampleToolStripMenuItem});
-			this.contextMenu.Name = "contextMenu";
-			this.contextMenu.Size = new System.Drawing.Size(153, 48);
-			// 
-			// sampleToolStripMenuItem
-			// 
-			this.sampleToolStripMenuItem.Name = "sampleToolStripMenuItem";
-			this.sampleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.sampleToolStripMenuItem.Text = "sample";
-			// 
-			// StatementCanvas
-			// 
-			this.Name = "StatementCanvas";
-			this.contextMenu.ResumeLayout(false);
-			this.ResumeLayout(false);
+			newConnectionLine.Clear();
 
+			Refresh();
+		}
+
+		private void OnItemClicked(Item Item)
+		{
+			PointF location = ScreenToCanvas(PointToClient(MousePosition));
+
+			object obj = Item.Instantiate(location);
+
+			if (obj is StatementInstance)
+			{
+				StatementInstance instance = (StatementInstance)obj;
+				Statements.Add(instance);
+
+				if (SelectedSlot != null)
+				{
+					Slot[] slots = instance.Slots;
+					for (int i = 0; i < slots.Length; ++i)
+					{
+						Slot otherSlot = slots[i];
+
+						if (SelectedSlot.IsAssignmentAllowed(otherSlot))
+						{
+							if (!SelectedSlot.AssignConnection(otherSlot))
+								otherSlot.AssignConnection(SelectedSlot);
+
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		private void OnRemoveConnection(Slot Slot)
+		{
+			Slot.RemoveConnection();
+
+			Refresh();
+		}
+
+		private void OnRemoveAllConnections(Slot Slot)
+		{
+			Slot[] relatedSlots = Slot.RelatedSlots.ToArray();
+
+			for (int i = 0; i < relatedSlots.Length; ++i)
+				relatedSlots[i].RemoveConnection();
+
+			Refresh();
 		}
 
 		StatementInstance IStatementInspector.GetInstance(Statement Statement)
 		{
-			for (int i =0; i < Statements.Count; ++i)
+			for (int i = 0; i < Statements.Count; ++i)
 			{
 				if (Statements[i].Statement == Statement)
 					return Statements[i];

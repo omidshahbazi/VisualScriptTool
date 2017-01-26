@@ -18,6 +18,7 @@ namespace VisualScriptTool.Editor
 		private RectangleF bounds;
 		private System.Func<Slot, bool> checkAssignment = null;
 		private System.Action<Slot, Slot> onAssignment = null;
+		private System.Action<Slot> onRemoveConnection = null;
 
 		public StatementInstance StatementInstance
 		{
@@ -82,25 +83,45 @@ namespace VisualScriptTool.Editor
 			set;
 		}
 
-		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, System.Func<Slot, bool> CheckAssignment, System.Action<Slot, Slot> OnAssignment)
+		public SlotList RelatedSlots
 		{
+			get;
+			private set;
+		}
+
+		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, System.Func<Slot, bool> CheckAssignment, System.Action<Slot, Slot> OnAssignment, System.Action<Slot> OnRemoveConnection)
+		{
+			RelatedSlots = new SlotList();
+
 			this.StatementInstance = StatementInstance;
 			this.Name = Name;
 			this.Type = Type;
 			this.Index = Index;
 			checkAssignment = CheckAssignment;
 			onAssignment = OnAssignment;
+			onRemoveConnection = OnRemoveConnection;
 		}
 
-		public void AssignConnection(Slot Slot)
+		public bool AssignConnection(Slot Slot)
 		{
 			if (onAssignment != null && (checkAssignment == null || checkAssignment(Slot)))
+			{
 				onAssignment(this, Slot);
+				return true;
+			}
+
+			return false;
+		}
+
+		public void RemoveConnection()
+		{
+			if (onRemoveConnection != null)
+				onRemoveConnection(this);
 		}
 
 		public bool IsAssignmentAllowed(Slot Slot)
 		{
-			if (CombinitionTypeAllowedCheck(this, Slot, Types.EntryPoint,Types.Executer))
+			if (CombinitionTypeAllowedCheck(this, Slot, Types.EntryPoint, Types.Executer))
 				return true;
 
 			if (CombinitionTypeAllowedCheck(this, Slot, Types.Argument, Types.Getter))

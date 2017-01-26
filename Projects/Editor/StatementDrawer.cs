@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using VisualScriptTool.Editor.Language.Drawers;
+using VisualScriptTool.Reflection;
 
 namespace VisualScriptTool.Editor
 {
@@ -20,7 +21,7 @@ namespace VisualScriptTool.Editor
 		{
 			this.Canvas = Canvas;
 
-			Type[] types = TypeHelper.GetDrievedTypesOf<Drawer>();
+			Type[] types = TypeUtils.GetDrievedTypesOf<Drawer>();
 
 			if (types == null)
 				return;
