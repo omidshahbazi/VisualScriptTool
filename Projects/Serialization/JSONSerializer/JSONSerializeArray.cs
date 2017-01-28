@@ -1,6 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
-using SimpleJson;
 using System.Collections.Generic;
+using System.Text;
 
 namespace VisualScriptTool.Serialization.JSONSerializer
 {
@@ -28,11 +28,32 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 		{
 			get
 			{
-				JsonArray array = new JsonArray();
+				StringBuilder str = new StringBuilder();
+				str.Append('[');
+				for (int i = 0; i < items.Count;++i)
+				{
+					if (i != 0)
+						str.Append(',');
 
-				JSONSerializeObject.GetContent(array, this);
+					object item = items[i];
 
-				return array.ToString();
+					if (item == null)
+						str.Append("null");
+					else if (item is ISerializeData)
+						str.Append(((ISerializeData)item).Content);
+					else if (item is string)
+					{
+						str.Append('"');
+						str.Append(item.ToString());
+						str.Append('"');
+					}
+					else if (item is bool)
+						str.Append(item.ToString().ToLower());
+					else
+						str.Append(item.ToString());
+				}
+				str.Append(']');
+				return str.ToString();
 			}
 		}
 

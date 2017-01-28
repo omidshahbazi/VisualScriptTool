@@ -1,12 +1,14 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
-using SimpleJson;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace VisualScriptTool.Serialization.JSONSerializer
 {
 	class JSONSerializeObject : ISerializeObject
 	{
+		private static readonly JSONParser parser = new JSONParser();
+
 		private class Map : Dictionary<string, object>
 		{ }
 
@@ -32,11 +34,41 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 		{
 			get
 			{
-				JsonObject obj = new JsonObject();
+				StringBuilder str = new StringBuilder();
+				str.Append('{');
 
-				GetContent(obj, map);
+				Map.Enumerator it = map.GetEnumerator();
+				bool isFirstOne = true;
+				while (it.MoveNext())
+				{
+					if (isFirstOne)
+						isFirstOne = false;
+					else
+						str.Append(',');
 
-				return obj.ToString();
+					object value = it.Current.Value;
+
+					str.Append('"');
+					str.Append(it.Current.Key);
+					str.Append("\":");
+
+					if (value == null)
+						str.Append("null");
+					else if (value is ISerializeData)
+						str.Append(((ISerializeData)value).Content);
+					else if (value is string)
+					{
+						str.Append('"');
+						str.Append(value.ToString());
+						str.Append('"');
+					}
+					else if (value is bool)
+						str.Append(value.ToString().ToLower());
+					else
+						str.Append(value.ToString());
+				}
+				str.Append('}');
+				return str.ToString();
 			}
 		}
 
@@ -129,124 +161,7 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 
 		public static T Deserialize<T>(string JSON) where T : ISerializeData
 		{
-			object jsonData = SimpleJson.SimpleJson.DeserializeObject(JSON);
-
-			if (jsonData is JsonObject)
-			{
-				JSONSerializeObject data = new JSONSerializeObject(null);
-
-				SetContent(data, (JsonObject)jsonData);
-
-				return (T)(ISerializeData)data;
-			}
-			else if (jsonData is JsonArray)
-			{
-				JSONSerializeArray data = new JSONSerializeArray(null);
-
-				SetContent(data, (JsonArray)jsonData);
-
-				return (T)(ISerializeData)data;
-			}
-
-			return default(T);
-		}
-
-		private static void GetContent(JsonObject Object, Map Map)
-		{
-			Map.Enumerator it = Map.GetEnumerator();
-			while (it.MoveNext())
-			{
-				string key = it.Current.Key;
-				object value = it.Current.Value;
-
-				if (value is ISerializeObject)
-				{
-					JsonObject jsonObj = new JsonObject();
-					Object[key] = jsonObj;
-					GetContent(jsonObj, ((JSONSerializeObject)value).map);
-				}
-				else if (value is ISerializeArray)
-				{
-					JsonArray jsonArray = new JsonArray();
-					Object[key] = jsonArray;
-					GetContent(jsonArray, (ISerializeArray)value);
-				}
-				else
-					Object[key] = value;
-			}
-		}
-
-		public static void GetContent(JsonArray Array, ISerializeArray SerializeArray)
-		{
-			for (uint i = 0; i < SerializeArray.Count; ++i)
-			{
-				object value = SerializeArray[i];
-
-				if (value is ISerializeObject)
-				{
-					JsonObject jsonObj = new JsonObject();
-					Array.Add(jsonObj);
-					GetContent(jsonObj, ((JSONSerializeObject)value).map);
-				}
-				else if (value is ISerializeArray)
-				{
-					JsonArray jsonArray = new JsonArray();
-					Array.Add(jsonArray);
-					GetContent(jsonArray, (ISerializeArray)value);
-				}
-				else
-					Array.Add(value);
-			}
-		}
-
-		private static void SetContent(JSONSerializeObject Object, JsonObject JsonObject)
-		{
-			Map map = Object.map;
-
-			IEnumerator<KeyValuePair<string, object>> it = JsonObject.GetEnumerator();
-			while (it.MoveNext())
-			{
-				string key = it.Current.Key;
-				object value = it.Current.Value;
-
-				if (value is JsonObject)
-				{
-					JSONSerializeObject jsonObj = new JSONSerializeObject(Object);
-					map[key] = jsonObj;
-					SetContent(jsonObj, (JsonObject)value);
-				}
-				else if (value is JsonArray)
-				{
-					JSONSerializeArray jsonArray = new JSONSerializeArray(Object);
-					map[key] = jsonArray;
-					SetContent(jsonArray, (JsonArray)value);
-				}
-				else
-					map[key] = value;
-			}
-		}
-
-		private static void SetContent(ISerializeArray Array, JsonArray JsonArray)
-		{
-			for (int i = 0; i < JsonArray.Count; ++i)
-			{
-				object value = JsonArray[i];
-
-				if (value is JsonObject)
-				{
-					JSONSerializeObject jsonObj = new JSONSerializeObject(Array);
-					Array.Add(jsonObj);
-					SetContent(jsonObj, (JsonObject)value);
-				}
-				else if (value is JsonArray)
-				{
-					JSONSerializeArray jsonArray = new JSONSerializeArray(Array);
-					Array.Add(jsonArray);
-					SetContent(jsonArray, (JsonArray)value);
-				}
-				else
-					Array.Add(value);
-			}
+			return parser.Deserialize<T>(ref JSON);
 		}
 	}
 }

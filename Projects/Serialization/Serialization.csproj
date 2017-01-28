@@ -46,6 +46,7 @@
     <Compile Include="ISerializeArray.cs" />
     <Compile Include="ISerializeData.cs" />
     <Compile Include="ISerializeObject.cs" />
+    <Compile Include="JSONSerializer\JSONParser.cs" />
     <Compile Include="JSONSerializer\JSONSerializeArray.cs" />
     <Compile Include="JSONSerializer\JSONSerializeObject.cs" />
     <Compile Include="JSONSerializer\SimpleJSON.cs" />
