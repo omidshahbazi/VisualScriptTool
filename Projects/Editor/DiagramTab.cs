@@ -92,7 +92,7 @@ namespace VisualScriptTool.Editor
 
 			CSharpCodeGenerator codeGenerator = new CSharpCodeGenerator();
 
-			File.WriteAllText(Application.StartupPath + "/1.cs", codeGenerator.Generate(statements)[0]);
+			File.WriteAllText(Application.StartupPath + "/" + Name + ".cs", codeGenerator.Generate(statements)[0]);
 		}
 
 		public bool Save()
