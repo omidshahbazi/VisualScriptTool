@@ -1,10 +1,8 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
-using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using VisualScriptTool.CodeGeneration;
-using VisualScriptTool.Editor;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor

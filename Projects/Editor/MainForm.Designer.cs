@@ -31,10 +31,10 @@
 			this.TabControl = new System.Windows.Forms.TabControl();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.NewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.LoadMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.SaveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.SaveAllMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.NewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -69,6 +69,14 @@
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
 			this.fileToolStripMenuItem.Text = "&File";
 			// 
+			// NewMenuItem
+			// 
+			this.NewMenuItem.Name = "NewMenuItem";
+			this.NewMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+			this.NewMenuItem.Size = new System.Drawing.Size(189, 22);
+			this.NewMenuItem.Text = "&New";
+			this.NewMenuItem.Click += new System.EventHandler(this.NewMenuItem_Click);
+			// 
 			// LoadMenuItem
 			// 
 			this.LoadMenuItem.Name = "LoadMenuItem";
@@ -93,14 +101,6 @@
 			this.SaveAllMenuItem.Size = new System.Drawing.Size(189, 22);
 			this.SaveAllMenuItem.Text = "Save &All";
 			this.SaveAllMenuItem.Click += new System.EventHandler(this.SaveAllMenuItem_Click);
-			// 
-			// NewMenuItem
-			// 
-			this.NewMenuItem.Name = "NewMenuItem";
-			this.NewMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-			this.NewMenuItem.Size = new System.Drawing.Size(189, 22);
-			this.NewMenuItem.Text = "&New";
-			this.NewMenuItem.Click += new System.EventHandler(this.NewMenuItem_Click);
 			// 
 			// MainForm
 			// 
