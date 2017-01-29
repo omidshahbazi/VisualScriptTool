@@ -8,12 +8,12 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 		private const char NULL_CHAR = '\0';
 
 		private int index = 0;
-		private string contents = null;
+		private char[] contents = null;
 
-		public ISerializeData Deserialize(ref string Contents)
+		public ISerializeData Parse(ref string Contents)
 		{
 			index = 0;
-			contents = Contents;
+			contents = Contents.ToCharArray();
 
 			if (GetChar() == '{')
 				return ParseObject(null);
@@ -152,6 +152,10 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			MoveNext();
 
 			c = GetChar();
+
+			if (c == '"')
+				return string.Empty;
+
 			str.Append(c);
 
 			char prevChar = NULL_CHAR;

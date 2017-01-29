@@ -61,6 +61,7 @@ namespace VisualScriptTool.Editor
 		private PointF lastMousePosition;
 		private Pen selectedPen = null;
 		private CubicSPLine newConnectionLine = new CubicSPLine();
+		private bool candidateToShowGeneralMenu = false;
 
 		protected Point ClientMousePosition
 		{
@@ -137,6 +138,9 @@ namespace VisualScriptTool.Editor
 
 			PointF location = ScreenToCanvas(e.Location);
 
+			if (e.Button == MouseButtons.Right)
+				candidateToShowGeneralMenu = true;
+
 			if (e.Button == MouseButtons.Middle)
 				return;
 
@@ -198,7 +202,7 @@ namespace VisualScriptTool.Editor
 					}
 				}
 			}
-			else if (e.Button == MouseButtons.Right)
+			else if (e.Button == MouseButtons.Right && candidateToShowGeneralMenu)
 				ShowGeneralMenu();
 
 			if (candidateToSelectStatements.Count != 0)
@@ -214,6 +218,8 @@ namespace VisualScriptTool.Editor
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
 			base.OnMouseMove(e);
+
+			candidateToShowGeneralMenu = !IsPanning;
 
 			PointF location = ScreenToCanvas(e.Location);
 
