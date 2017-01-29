@@ -8,7 +8,12 @@ namespace VisualScriptTool.Editor
 	public class GridCanvas : Canvas
 	{
 		private Point lastMousePosition;
-		private bool panning = false;
+
+		protected bool IsPanning
+		{
+			get;
+			set;
+		}
 
 		protected override void OnDrawCanvas(Graphics Graphics)
 		{
@@ -35,7 +40,7 @@ namespace VisualScriptTool.Editor
 			base.OnMouseDown(e);
 
 			if (e.Button == MouseButtons.Right)
-				panning = true;
+				IsPanning = true;
 		}
 
 		protected override void OnMouseUp(MouseEventArgs e)
@@ -43,14 +48,14 @@ namespace VisualScriptTool.Editor
 			base.OnMouseUp(e);
 
 			if (e.Button == MouseButtons.Right)
-				panning = false;
+				IsPanning = false;
 		}
 
 		protected override void OnMouseMove(MouseEventArgs e)
 		{
 			base.OnMouseMove(e);
 
-			if (panning)
+			if (IsPanning)
 			{
 				Pan = new PointF(Pan.X + (e.X - lastMousePosition.X), Pan.Y + (e.Y - lastMousePosition.Y));
 				Refresh();

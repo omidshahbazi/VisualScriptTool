@@ -10,27 +10,67 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 		private int index = 0;
 		private string contents = null;
 
-		public T Deserialize<T>(ref string Contents) where T : ISerializeData
+		public ISerializeData Deserialize(ref string Contents)
 		{
 			index = 0;
 			contents = Contents;
 
-			if (IsWhitespace())
-				return default(T);
-
 			if (GetChar() == '{')
-				return (T)ParseObject(null);
+				return ParseObject(null);
 			else if (GetChar() == '[')
-				return (T)ParseArray(null);
+				return ParseArray(null);
 
-			return default(T);
+			return null;
 		}
 
 		private ISerializeObject ParseObject(ISerializeData Parent)
 		{
 			ISerializeObject obj = new JSONSerializeObject(Parent);
 
+			while (true)
+			{
+				char c = GetChar();
+				if (c == '}')
+					break;
 
+				MoveToNextChar();
+
+				c = GetChar();
+				if (c != '"')
+					break;
+
+				string key = ReadLiteral();
+
+				MoveToNextChar();
+
+				c = GetChar();
+				if (c != ':')
+					break;
+
+				MoveToNextChar();
+
+				c = GetChar();
+
+				if (c == '{')
+					obj.Set(key, ParseObject(obj));
+				else if (c == '[')
+					obj.Set(key, ParseArray(obj));
+				else
+				{
+					bool isString = (c == '"');
+
+					if (isString)
+						obj.Set(key, ReadLiteral());
+					else
+						obj.Set(key, CastItem(ReadItem()));
+				}
+
+				MoveToNextChar();
+
+				c = GetChar();
+				if (c != ',')
+					break;
+			}
 
 			return obj;
 		}
@@ -51,30 +91,24 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 				c = GetChar();
 
 				if (c == '{')
-				{
-					ISerializeObject obj = ParseObject(array);
-					array.Add(obj);
-				}
+					array.Add(ParseObject(array));
 				else if (c == '[')
-				{
-					ISerializeArray obj = ParseArray(array);
-					array.Add(obj);
-				}
+					array.Add(ParseArray(array));
 				else
 				{
 					bool isString = (c == '"');
 
 					if (isString)
-					{
-						MoveNext();
-
 						array.Add(ReadLiteral());
-
-						MoveNext();
-					}
 					else
 						array.Add(CastItem(ReadItem()));
 				}
+
+				MoveToNextChar();
+
+				c = GetChar();
+				if (c != ',')
+					break;
 			}
 
 			return array;
@@ -93,8 +127,12 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 
 				c = GetChar();
 
-				if (c == ',' || c == ':' || c == '"' || c == '"' || c == '{' || c == '}' || c == '[' || c == ']')
+				if (IsWhitespace() || c == ',' || c == ':' || c == '"' || c == '{' || c == '}' || c == '[' || c == ']')
+				{
+					MoveBack();
+
 					break;
+				}
 
 				str.Append(c);
 			}
@@ -107,19 +145,32 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			StringBuilder str = new StringBuilder();
 
 			char c = GetChar();
+
+			if (c != '"')
+				return string.Empty;
+
+			MoveNext();
+
+			c = GetChar();
 			str.Append(c);
 
-			while (!IsWhitespace())
+			char prevChar = NULL_CHAR;
+
+			while (true)
 			{
 				MoveNext();
 
 				c = GetChar();
 
-				if (c == ',' || c == ':' || c == '"' || c == '"' || c == '{' || c == '}' || c == '[' || c == ']')
+				if (prevChar != '\\' && c == '"')
 					break;
 
 				str.Append(c);
+
+				prevChar = c;
 			}
+
+			//MoveNext();
 
 			return str.ToString();
 		}
@@ -134,6 +185,11 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 		private void MoveNext()
 		{
 			++index;
+		}
+
+		private void MoveBack()
+		{
+			--index;
 		}
 
 		private bool IsWhitespace()

@@ -161,7 +161,7 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 
 		public static T Deserialize<T>(string JSON) where T : ISerializeData
 		{
-			return parser.Deserialize<T>(ref JSON);
+			return (T)parser.Deserialize(ref JSON);
 		}
 	}
 }

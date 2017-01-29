@@ -176,7 +176,9 @@ namespace VisualScriptTool.Editor
 			if (SelectedSlot != null)
 			{
 				if (e.Button == MouseButtons.Right)
+				{
 					ShowSlotMenu();
+				}
 				else
 				{
 					if (MouseOverSlot == null)
