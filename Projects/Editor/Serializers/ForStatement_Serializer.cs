@@ -92,6 +92,8 @@ namespace VisualScriptTool.Editor.Serializers
 					}
 					Set(MinimumValueObject, 0, guid);
 				}
+				// MinimumDefaultValue
+				Set(Object, 6, ForStatement.MinimumDefaultValue);
 				// MaximumValue
 				if (ForStatement.MaximumValue == null)
 					Set(Object, 3, null);
@@ -111,6 +113,8 @@ namespace VisualScriptTool.Editor.Serializers
 					}
 					Set(MaximumValueObject, 0, guid);
 				}
+				// MaximumDefaultValue
+				Set(Object, 7, ForStatement.MaximumDefaultValue);
 				// StepValue
 				if (ForStatement.StepValue == null)
 					Set(Object, 4, null);
@@ -130,6 +134,8 @@ namespace VisualScriptTool.Editor.Serializers
 					}
 					Set(StepValueObject, 0, guid);
 				}
+				// StepDefaultValue
+				Set(Object, 8, ForStatement.StepDefaultValue);
 				// Statement
 				if (ForStatement.Statement == null)
 					Set(Object, 5, null);
@@ -212,6 +218,8 @@ namespace VisualScriptTool.Editor.Serializers
 				}
 				else
 					ForStatement.MinimumValue = null;
+				// MinimumDefaultValue
+				ForStatement.MinimumDefaultValue = Get<System.Int32>(Object, 6, 0);
 				// MaximumValue
 				ISerializeObject MaximumValueObject = Get<ISerializeObject>(Object, 3, null);
 				if (MaximumValueObject != null)
@@ -229,6 +237,8 @@ namespace VisualScriptTool.Editor.Serializers
 				}
 				else
 					ForStatement.MaximumValue = null;
+				// MaximumDefaultValue
+				ForStatement.MaximumDefaultValue = Get<System.Int32>(Object, 7, 0);
 				// StepValue
 				ISerializeObject StepValueObject = Get<ISerializeObject>(Object, 4, null);
 				if (StepValueObject != null)
@@ -246,6 +256,8 @@ namespace VisualScriptTool.Editor.Serializers
 				}
 				else
 					ForStatement.StepValue = null;
+				// StepDefaultValue
+				ForStatement.StepDefaultValue = Get<System.Int32>(Object, 8, 0);
 				// Statement
 				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 5, null);
 				if (StatementObject != null)

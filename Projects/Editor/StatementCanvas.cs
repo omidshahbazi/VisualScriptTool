@@ -34,6 +34,12 @@ namespace VisualScriptTool.Editor
 		private const float SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = 20.0F;
 		private const float HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT / 2.0F;
 		private static readonly Item[] ITEMS = new Item[] {
+			new Item("Execter", (Position)=>
+			{
+				ExecuterStatementInstance statement = new ExecuterStatementInstance();
+				statement.Position = Position;
+				return statement;
+			}),
 			new Item("If", (Position)=>
 			{
 				IfStatementInstance statement = new IfStatementInstance();

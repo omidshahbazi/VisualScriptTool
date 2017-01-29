@@ -92,6 +92,8 @@ namespace VisualScriptTool.Editor.Serializers
 					}
 					Set(ConditionObject, 0, guid);
 				}
+				// ConditionDefaultValue
+				Set(Object, 5, IfStatement.ConditionDefaultValue);
 				// Statement
 				if (IfStatement.Statement == null)
 					Set(Object, 3, null);
@@ -193,6 +195,8 @@ namespace VisualScriptTool.Editor.Serializers
 				}
 				else
 					IfStatement.Condition = null;
+				// ConditionDefaultValue
+				IfStatement.ConditionDefaultValue = Get<System.Boolean>(Object, 5, false);
 				// Statement
 				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 3, null);
 				if (StatementObject != null)

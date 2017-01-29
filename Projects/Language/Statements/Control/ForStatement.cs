@@ -19,6 +19,13 @@ namespace VisualScriptTool.Language.Statements.Control
 			set;
 		}
 
+		[SerializableElement(6)]
+		public int MinimumDefaultValue
+		{
+			get;
+			set;
+		}
+
 		[SerializableElement(3)]
 		public IntegerVariable MaximumValue
 		{
@@ -26,8 +33,22 @@ namespace VisualScriptTool.Language.Statements.Control
 			set;
 		}
 
+		[SerializableElement(7)]
+		public int MaximumDefaultValue
+		{
+			get;
+			set;
+		}
+
 		[SerializableElement(4)]
 		public IntegerVariable StepValue
+		{
+			get;
+			set;
+		}
+
+		[SerializableElement(8)]
+		public int StepDefaultValue
 		{
 			get;
 			set;

@@ -5,6 +5,6 @@ namespace VisualScriptTool.CodeGeneration
 {
 	public abstract class CodeGeneratorBase
     {
-		public abstract string[] Generate(Statement[] Statements);
+		public abstract string[] Generate(ExecuterStatement Statements);
     }
 }

@@ -92,6 +92,8 @@ namespace VisualScriptTool.Editor.Serializers
 					}
 					Set(ConditionObject, 0, guid);
 				}
+				// ConditionDefaultValue
+				Set(Object, 4, WhileStatement.ConditionDefaultValue);
 				// Statement
 				if (WhileStatement.Statement == null)
 					Set(Object, 3, null);
@@ -174,6 +176,8 @@ namespace VisualScriptTool.Editor.Serializers
 				}
 				else
 					WhileStatement.Condition = null;
+				// ConditionDefaultValue
+				WhileStatement.ConditionDefaultValue = Get<System.Boolean>(Object, 4, false);
 				// Statement
 				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 3, null);
 				if (StatementObject != null)

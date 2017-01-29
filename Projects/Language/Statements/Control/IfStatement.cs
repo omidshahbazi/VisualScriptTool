@@ -19,6 +19,13 @@ namespace VisualScriptTool.Language.Statements.Control
 			set;
 		}
 
+		[SerializableElement(5)]
+		public bool ConditionDefaultValue
+		{
+			get;
+			set;
+		}
+
 		[SerializableElement(3)]
 		public Statement Statement
 		{

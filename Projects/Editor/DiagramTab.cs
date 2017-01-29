@@ -14,7 +14,7 @@ namespace VisualScriptTool.Editor
 		private StatementCanvas canvas = null;
 
 		private bool isDirty = false;
-		
+
 		public bool IsDirty
 		{
 			get { return isDirty; }
@@ -68,7 +68,7 @@ namespace VisualScriptTool.Editor
 			this.FilePath = FilePath;
 			Name = Path.GetFileNameWithoutExtension(FilePath);
 
-            Serializer serializer = Creator.GetSerializer(Statements.GetType());
+			Serializer serializer = Creator.GetSerializer(Statements.GetType());
 
 			ISerializeArray dataArray = Creator.Create<ISerializeArray>(File.ReadAllText(FilePath));
 
@@ -86,12 +86,11 @@ namespace VisualScriptTool.Editor
 
 		private void GenerateCode()
 		{
-			VisualScriptTool.Language.Statements.Statement[] statements = new VisualScriptTool.Language.Statements.Statement[Statements.Count];
-			for (int i = 0; i < Statements.Count; ++i)
-				statements[i] = Statements[i].Statement;
-
 			CSharpCodeGenerator codeGenerator = new CSharpCodeGenerator();
-			codeGenerator.Generate(statements);
+
+			for (int i = 0; i < Statements.Count; ++i)
+				if (Statements[i] is ExecuterStatementInstance)
+					File.WriteAllText(Application.StartupPath + "/1.cs", codeGenerator.Generate((VisualScriptTool.Language.Statements.ExecuterStatement)Statements[i].Statement)[0]);
 		}
 
 		public bool Save()

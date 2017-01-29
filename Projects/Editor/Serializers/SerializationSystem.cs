@@ -6,6 +6,7 @@ namespace VisualScriptTool.Editor.Serializers
 		public static void Initialize()
 		{
 			Serialization.Creator.AddSerializer(new Statement_Serializer());
+			Serialization.Creator.AddSerializer(new ExecuterStatement_Serializer());
 			Serialization.Creator.AddSerializer(new IfStatement_Serializer());
 			Serialization.Creator.AddSerializer(new WhileStatement_Serializer());
 			Serialization.Creator.AddSerializer(new ForStatement_Serializer());
@@ -13,6 +14,7 @@ namespace VisualScriptTool.Editor.Serializers
 			Serialization.Creator.AddSerializer(new IntegerVariable_Serializer());
 			Serialization.Creator.AddSerializer(new FloatVariable_Serializer());
 			Serialization.Creator.AddSerializer(new StringVariable_Serializer());
+			Serialization.Creator.AddSerializer(new ExecuterStatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new StatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new IfStatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new WhileStatementInstance_Serializer());

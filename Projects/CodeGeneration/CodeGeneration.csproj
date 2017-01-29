@@ -38,6 +38,9 @@
   <ItemGroup>
     <Compile Include="CodeGeneratorBase.cs" />
     <Compile Include="CSharpCodeGenerator.cs" />
+    <Compile Include="Language\CSharp\ControlStatementCodeGenerator.cs" />
+    <Compile Include="Language\CSharp\WhileCodeGenerator.cs" />
+    <Compile Include="Language\CSharp\ForCodeGenerator.cs" />
     <Compile Include="Language\CSharp\IfCodeGenerator.cs" />
     <Compile Include="Language\StatementCodeGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -47,6 +50,10 @@
     <ProjectReference Include="..\Language\Language.csproj">
       <Project>{c5a2fbe8-a0e9-4ad3-9895-7f39c079ae59}</Project>
       <Name>Language</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Reflection\Reflection.csproj">
+      <Project>{39f79a2c-581f-4d5d-afdc-501e9de6b343}</Project>
+      <Name>Reflection</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -13,7 +13,7 @@ namespace VisualScriptTool.CodeGeneration.Language.CSharp
 			get { return new Type[] { typeof(BooleanVariable), typeof(IntegerVariable), typeof(FloatVariable), typeof(StringVariable) }; }
 		}
 
-		public override string Generate(Statement Statement)
+		public override void Generate(StringBuilder Builder, Statement Statement)
 		{
 			Type variableType = null;
 			if (Statement is BooleanVariable)
@@ -25,14 +25,10 @@ namespace VisualScriptTool.CodeGeneration.Language.CSharp
 			else if (Statement is StringVariable)
 				variableType = typeof(string);
 
-			StringBuilder builder = new StringBuilder();
-
-			builder.Append(variableType.FullName);
-			builder.Append(' ');
-			builder.Append(Statement.Name);
-			builder.Append(';');
-
-			return builder.ToString();
+			Builder.Append(variableType.FullName);
+			Builder.Append(' ');
+			Builder.Append(Statement.Name);
+			Builder.Append(';');
 		}
 	}
 }

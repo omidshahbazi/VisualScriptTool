@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Statements\Control\WhileStatement.cs" />
+    <Compile Include="Statements\ExecuterStatement.cs" />
     <Compile Include="Statements\Variables\BooleanVariable.cs" />
     <Compile Include="Statements\Variables\FloatVariable.cs" />
     <Compile Include="Statements\Variables\StringVariable.cs" />

@@ -50,11 +50,13 @@
     <Compile Include="IStatementInspector.cs" />
     <Compile Include="Language\ControlStatementInstance.cs" />
     <Compile Include="Language\Drawers\ForStatementDrawer.cs" />
+    <Compile Include="Language\Drawers\ExecuterStatementDrawer.cs" />
     <Compile Include="Language\Drawers\WhileStatementDrawer.cs" />
     <Compile Include="Language\Drawers\IfStatementDrawer.cs" />
     <Compile Include="Language\Drawers\ControlStatementDrawer.cs" />
     <Compile Include="Language\Drawers\VariableDrawer.cs" />
     <Compile Include="Language\ForStatementInstance.cs" />
+    <Compile Include="Language\ExecuterStatementInstance.cs" />
     <Compile Include="Language\WhileStatementInstance.cs" />
     <Compile Include="Language\Slot.cs" />
     <Compile Include="Language\IfStatementInstance.cs" />
@@ -62,6 +64,8 @@
     <Compile Include="PointFExtensions.cs" />
     <Compile Include="Serializers\BooleanVariable_Serializer.cs" />
     <Compile Include="Serializers\Compiler.cs" />
+    <Compile Include="Serializers\ExecuterStatementInstance_Serializer.cs" />
+    <Compile Include="Serializers\ExecuterStatement_Serializer.cs" />
     <Compile Include="Serializers\FloatVariable_Serializer.cs" />
     <Compile Include="Serializers\ForStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\ForStatement_Serializer.cs" />
