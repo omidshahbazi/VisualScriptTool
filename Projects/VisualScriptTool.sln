@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serialization", "Serializat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reflection", "Reflection\Reflection.csproj", "{39F79A2C-581F-4D5D-AFDC-501E9DE6B343}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGeneration", "CodeGeneration\CodeGeneration.csproj", "{6C291BBC-893C-4D4F-8F1C-7D7BED038EFA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{39F79A2C-581F-4D5D-AFDC-501E9DE6B343}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39F79A2C-581F-4D5D-AFDC-501E9DE6B343}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39F79A2C-581F-4D5D-AFDC-501E9DE6B343}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C291BBC-893C-4D4F-8F1C-7D7BED038EFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C291BBC-893C-4D4F-8F1C-7D7BED038EFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C291BBC-893C-4D4F-8F1C-7D7BED038EFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C291BBC-893C-4D4F-8F1C-7D7BED038EFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

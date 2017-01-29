@@ -120,6 +120,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CodeGeneration\CodeGeneration.csproj">
+      <Project>{6C291BBC-893C-4D4F-8F1C-7D7BED038EFA}</Project>
+      <Name>CodeGeneration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Language\Language.csproj">
       <Project>{c5a2fbe8-a0e9-4ad3-9895-7f39c079ae59}</Project>
       <Name>Language</Name>

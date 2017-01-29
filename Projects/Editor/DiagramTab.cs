@@ -1,7 +1,10 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using VisualScriptTool.CodeGeneration;
+using VisualScriptTool.Editor;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
@@ -77,6 +80,18 @@ namespace VisualScriptTool.Editor
 			canvas.Refresh();
 
 			UpdateTabText();
+
+			GenerateCode();
+		}
+
+		private void GenerateCode()
+		{
+			VisualScriptTool.Language.Statements.Statement[] statements = new VisualScriptTool.Language.Statements.Statement[Statements.Count];
+			for (int i = 0; i < Statements.Count; ++i)
+				statements[i] = Statements[i].Statement;
+
+			CSharpCodeGenerator codeGenerator = new CSharpCodeGenerator();
+			codeGenerator.Generate(statements);
 		}
 
 		public bool Save()

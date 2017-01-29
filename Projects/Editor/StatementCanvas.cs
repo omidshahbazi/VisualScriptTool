@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Language.Drawers;
 using VisualScriptTool.Language.Statements;
-using VisualScriptTool.Language.Statements.Control;
 
 namespace VisualScriptTool.Editor
 {
@@ -203,7 +202,10 @@ namespace VisualScriptTool.Editor
 				}
 			}
 			else if (e.Button == MouseButtons.Right && candidateToShowGeneralMenu)
+			{
+				IsPanning = false;
 				ShowGeneralMenu();
+			}
 
 			if (candidateToSelectStatements.Count != 0)
 			{
