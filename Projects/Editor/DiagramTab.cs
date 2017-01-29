@@ -86,11 +86,13 @@ namespace VisualScriptTool.Editor
 
 		private void GenerateCode()
 		{
+			VisualScriptTool.Language.Statements.Statement[] statements = new VisualScriptTool.Language.Statements.Statement[Statements.Count];
+			for (int i = 0; i < Statements.Count; ++i)
+				statements[i] = Statements[i].Statement;
+
 			CSharpCodeGenerator codeGenerator = new CSharpCodeGenerator();
 
-			for (int i = 0; i < Statements.Count; ++i)
-				if (Statements[i] is ExecuterStatementInstance)
-					File.WriteAllText(Application.StartupPath + "/1.cs", codeGenerator.Generate((VisualScriptTool.Language.Statements.ExecuterStatement)Statements[i].Statement)[0]);
+			File.WriteAllText(Application.StartupPath + "/1.cs", codeGenerator.Generate(statements)[0]);
 		}
 
 		public bool Save()

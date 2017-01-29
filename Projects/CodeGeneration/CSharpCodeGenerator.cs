@@ -2,16 +2,14 @@
 using System.Text;
 using VisualScriptTool.CodeGeneration.Language;
 using VisualScriptTool.Language.Statements;
+using VisualScriptTool.Language.Statements.Declaration.Variables;
 
 namespace VisualScriptTool.CodeGeneration
 {
 	public class CSharpCodeGenerator : CodeGeneratorBase
 	{
-		public override string[] Generate(ExecuterStatement Statement)
+		public override string[] Generate(Statement[] Statements)
 		{
-			if (Statement.Statement == null)
-				return null;
-
 			StringBuilder builder = new StringBuilder();
 
 			builder.AppendLine("class x");
@@ -19,14 +17,30 @@ namespace VisualScriptTool.CodeGeneration
 			builder.AppendLine("void doIt()");
 			builder.AppendLine("{");
 
-			StatementCodeGenerator codeGen = StatementCodeGenerator.Get(Statement.Statement.GetType());
+			for (int i = 0; i < Statements.Length; ++i)
+			{
+				Statement statement = Statements[i];
 
-			codeGen.Generate(builder, Statement.Statement);
+				if (statement is VariableStatement)
+					StatementCodeGenerator.Get(statement.GetType()).Generate(builder, statement);
+			}
+
+			for (int i = 0; i < Statements.Length; ++i)
+			{
+				if (Statements[i] is ExecuterStatement)
+				{
+					ExecuterStatement statement = (ExecuterStatement)Statements[i];
+
+					StatementCodeGenerator.Get(statement.Statement.GetType()).Generate(builder, statement.Statement);
+				}
+			}
 
 			builder.AppendLine("}");
 			builder.AppendLine("}");
 
 			return new string[] { builder.ToString() };
 		}
+
+
 	}
 }
