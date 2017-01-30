@@ -115,6 +115,11 @@ namespace VisualScriptTool.Editor
 		public virtual void ResolveSlotConnections(IStatementInspector Inspector)
 		{
 		}
+
+		public virtual void OnMouseDown(PointF Location)
+		{
+
+		}
 	}
 
 	public class StatementInstanceList : List<StatementInstance>

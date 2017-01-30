@@ -169,6 +169,7 @@ namespace VisualScriptTool.Editor
 				if (statement.Bounds.Contains(location))
 				{
 					candidateToSelectStatements.Add(statement);
+					statement.OnMouseDown(location);
 					break;
 				}
 			}
