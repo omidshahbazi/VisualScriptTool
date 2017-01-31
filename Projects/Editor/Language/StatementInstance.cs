@@ -10,14 +10,20 @@ namespace VisualScriptTool.Editor.Language
 {
 	public abstract class StatementInstance : IMouseIntractible
 	{
+		public delegate void StatementInstanceSelectedHanlder(StatementInstance Instance);
+		public delegate void SlotSelectedHandler(Slot Slot);
+		public delegate void SlotOverHandler(Slot Slot);
+
 		private const float SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = 20.0F;
 		private const float HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT / 2.0F;
 
 		private RectangleF bounds;
 
 		private SlotList slots = null;
-		private Slot selectedSlot = null;
-		private Slot mouseOverSlot = null;
+
+		public event StatementInstanceSelectedHanlder StatementInstanceSelected = null;
+		public event SlotSelectedHandler SlotSelected = null;
+		public event SlotOverHandler SlotOver = null;
 
 		[SerializableElement(3)]
 		public Statement Statement
@@ -57,16 +63,8 @@ namespace VisualScriptTool.Editor.Language
 			get { return slots.ToArray(); }
 		}
 
-		public CubicSPLine NewConnectionLine
-		{
-			get;
-			private set;
-		}
-
 		public StatementInstance(Statement Statement)
 		{
-			NewConnectionLine = new CubicSPLine();
-
 			bounds = new RectangleF();
 			this.Statement = Statement;
 
@@ -133,15 +131,11 @@ namespace VisualScriptTool.Editor.Language
 
 		public virtual void OnMouseDown(MouseButtons Button, PointF Location)
 		{
-			if ((selectedSlot = GetSlotAtLocation(Location)) != null)
-			{
-				//SelectedStatements.Add(selectedSlot.StatementInstance);
-				return;
-			}
-			else
-			{
+			OnStatementInstanceSelectedd(this);
 
-			}
+			Slot underMouse = GetSlotAtLocation(Location);
+			if (underMouse != null)
+				OnSlotSelected(underMouse);
 		}
 
 		public virtual void OnMouseUp(MouseButtons Button, PointF Location)
@@ -150,7 +144,9 @@ namespace VisualScriptTool.Editor.Language
 
 		public virtual void OnMouseMove(MouseButtons Button, PointF Location)
 		{
-
+			Slot underMouse = GetSlotAtLocation(Location);
+			if (underMouse != null)
+				OnSlotOver(underMouse);
 		}
 
 		private Slot GetSlotAtLocation(PointF Location)
@@ -169,6 +165,24 @@ namespace VisualScriptTool.Editor.Language
 			}
 
 			return null;
+		}
+
+		protected virtual void OnStatementInstanceSelectedd(StatementInstance Statement)
+		{
+			if (StatementInstanceSelected != null)
+				StatementInstanceSelected(Statement);
+		}
+
+		protected virtual void OnSlotSelected(Slot Slot)
+		{
+			if (SlotSelected != null)
+				SlotSelected(Slot);
+		}
+
+		protected virtual void OnSlotOver(Slot Slot)
+		{
+			if (SlotOver != null)
+				SlotOver(Slot);
 		}
 	}
 

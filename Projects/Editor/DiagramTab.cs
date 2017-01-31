@@ -37,7 +37,7 @@ namespace VisualScriptTool.Editor
 			private set;
 		}
 
-		public StatementInstanceList Statements
+		public StatementInstance[] Statements
 		{
 			get { return canvas.Statements; }
 		}
@@ -71,9 +71,9 @@ namespace VisualScriptTool.Editor
 
 			ISerializeArray dataArray = Creator.Create<ISerializeArray>(File.ReadAllText(FilePath));
 
-			Statements.AddRange(serializer.Deserialize<StatementInstance[]>(dataArray));
+			canvas.AddStatementInstance(serializer.Deserialize<StatementInstance[]>(dataArray));
 
-			for (int i = 0; i < Statements.Count; ++i)
+			for (int i = 0; i < Statements.Length; ++i)
 				Statements[i].ResolveSlotConnections(canvas);
 
 			canvas.Refresh();
@@ -87,8 +87,8 @@ namespace VisualScriptTool.Editor
 
 		private void GenerateCode()
 		{
-			VisualScriptTool.Language.Statements.Statement[] statements = new VisualScriptTool.Language.Statements.Statement[Statements.Count];
-			for (int i = 0; i < Statements.Count; ++i)
+			VisualScriptTool.Language.Statements.Statement[] statements = new VisualScriptTool.Language.Statements.Statement[Statements.Length];
+			for (int i = 0; i < Statements.Length; ++i)
 				statements[i] = Statements[i].Statement;
 
 			CSharpCodeGenerator codeGenerator = new CSharpCodeGenerator();
