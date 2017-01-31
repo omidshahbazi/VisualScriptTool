@@ -4,7 +4,7 @@ using System.Drawing;
 using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Language.Statements.Declaration.Variables;
 
-namespace VisualScriptTool.Editor
+namespace VisualScriptTool.Editor.Language
 {
 	public class ForStatementInstance : ControlStatementInstance
 	{

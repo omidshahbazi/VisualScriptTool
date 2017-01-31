@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace VisualScriptTool.Editor
+namespace VisualScriptTool.Editor.Language
 {
 	public class Slot
 	{

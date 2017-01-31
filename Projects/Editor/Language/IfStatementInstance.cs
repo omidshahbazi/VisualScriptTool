@@ -3,7 +3,7 @@ using System;
 using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Language.Statements.Declaration.Variables;
 
-namespace VisualScriptTool.Editor
+namespace VisualScriptTool.Editor.Language
 {
 	public class IfStatementInstance : ControlStatementInstance
 	{

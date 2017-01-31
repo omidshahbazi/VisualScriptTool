@@ -7,12 +7,12 @@ namespace VisualScriptTool.Editor.Serializers
 	{
 		public override System.Type Type
 		{
-			get { return typeof(VisualScriptTool.Editor.WhileStatementInstance); }
+			get { return typeof(VisualScriptTool.Editor.Language.WhileStatementInstance); }
 		}
 
 		public override object CreateInstance()
 		{
-			return new VisualScriptTool.Editor.WhileStatementInstance();
+			return new VisualScriptTool.Editor.Language.WhileStatementInstance();
 		}
 
 		public override void Serialize(ISerializeData Data, object Instance)
@@ -50,14 +50,14 @@ namespace VisualScriptTool.Editor.Serializers
 			if (InstanceType.IsArrayOrList())
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
-				VisualScriptTool.Editor.WhileStatementInstance[] WhileStatementInstanceArray = null;
+				VisualScriptTool.Editor.Language.WhileStatementInstance[] WhileStatementInstanceArray = null;
 				if (InstanceType.IsArray())
-					WhileStatementInstanceArray = (VisualScriptTool.Editor.WhileStatementInstance[])Instance;
+					WhileStatementInstanceArray = (VisualScriptTool.Editor.Language.WhileStatementInstance[])Instance;
 				else
-					WhileStatementInstanceArray = ((System.Collections.Generic.List<VisualScriptTool.Editor.WhileStatementInstance>)Instance).ToArray();
+					WhileStatementInstanceArray = ((System.Collections.Generic.List<VisualScriptTool.Editor.Language.WhileStatementInstance>)Instance).ToArray();
 				for (int i = 0; i < WhileStatementInstanceArray.Length; ++i)
 				{
-					VisualScriptTool.Editor.WhileStatementInstance element = WhileStatementInstanceArray[i];
+					VisualScriptTool.Editor.Language.WhileStatementInstance element = WhileStatementInstanceArray[i];
 					if (element == null)
 						Add(Array, null);
 					else
@@ -72,7 +72,7 @@ namespace VisualScriptTool.Editor.Serializers
 			else
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
-				VisualScriptTool.Editor.WhileStatementInstance WhileStatementInstance = (VisualScriptTool.Editor.WhileStatementInstance)Instance;
+				VisualScriptTool.Editor.Language.WhileStatementInstance WhileStatementInstance = (VisualScriptTool.Editor.Language.WhileStatementInstance)Instance;
 				// Statement
 				if (WhileStatementInstance.Statement == null)
 					Set(Object, 3, null);
@@ -116,7 +116,7 @@ namespace VisualScriptTool.Editor.Serializers
 			if (Data is ISerializeArray)
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
-				VisualScriptTool.Editor.WhileStatementInstance[] WhileStatementInstanceArray = (VisualScriptTool.Editor.WhileStatementInstance[])System.Array.CreateInstance(Type, Array.Count);
+				VisualScriptTool.Editor.Language.WhileStatementInstance[] WhileStatementInstanceArray = (VisualScriptTool.Editor.Language.WhileStatementInstance[])System.Array.CreateInstance(Type, Array.Count);
 				for (uint i = 0; i < Array.Count; ++i)
 				{
 					ISerializeObject arrayObj = Get<ISerializeObject>(Array, i);
@@ -126,14 +126,14 @@ namespace VisualScriptTool.Editor.Serializers
 						WhileStatementInstanceArray[i] = null;
 						continue;
 					}
-					WhileStatementInstanceArray[i] = GetSerializer(targetType).DeserializeInternal<VisualScriptTool.Editor.WhileStatementInstance>(Get<ISerializeObject>(arrayObj, 2), References, ResolverList); 
+					WhileStatementInstanceArray[i] = GetSerializer(targetType).DeserializeInternal<VisualScriptTool.Editor.Language.WhileStatementInstance>(Get<ISerializeObject>(arrayObj, 2), References, ResolverList); 
 				}
 				returnValue = (T)(object)WhileStatementInstanceArray;
 			}
 			else
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
-				VisualScriptTool.Editor.WhileStatementInstance WhileStatementInstance = (VisualScriptTool.Editor.WhileStatementInstance)CreateInstance();
+				VisualScriptTool.Editor.Language.WhileStatementInstance WhileStatementInstance = (VisualScriptTool.Editor.Language.WhileStatementInstance)CreateInstance();
 				// Statement
 				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 3, null);
 				if (StatementObject != null)

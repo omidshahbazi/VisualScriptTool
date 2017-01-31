@@ -3,6 +3,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using VisualScriptTool.CodeGeneration;
+using VisualScriptTool.Editor.Language;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor

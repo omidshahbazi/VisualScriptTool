@@ -7,12 +7,12 @@ namespace VisualScriptTool.Editor.Serializers
 	{
 		public override System.Type Type
 		{
-			get { return typeof(VisualScriptTool.Editor.ForStatementInstance); }
+			get { return typeof(VisualScriptTool.Editor.Language.ForStatementInstance); }
 		}
 
 		public override object CreateInstance()
 		{
-			return new VisualScriptTool.Editor.ForStatementInstance();
+			return new VisualScriptTool.Editor.Language.ForStatementInstance();
 		}
 
 		public override void Serialize(ISerializeData Data, object Instance)
@@ -50,14 +50,14 @@ namespace VisualScriptTool.Editor.Serializers
 			if (InstanceType.IsArrayOrList())
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
-				VisualScriptTool.Editor.ForStatementInstance[] ForStatementInstanceArray = null;
+				VisualScriptTool.Editor.Language.ForStatementInstance[] ForStatementInstanceArray = null;
 				if (InstanceType.IsArray())
-					ForStatementInstanceArray = (VisualScriptTool.Editor.ForStatementInstance[])Instance;
+					ForStatementInstanceArray = (VisualScriptTool.Editor.Language.ForStatementInstance[])Instance;
 				else
-					ForStatementInstanceArray = ((System.Collections.Generic.List<VisualScriptTool.Editor.ForStatementInstance>)Instance).ToArray();
+					ForStatementInstanceArray = ((System.Collections.Generic.List<VisualScriptTool.Editor.Language.ForStatementInstance>)Instance).ToArray();
 				for (int i = 0; i < ForStatementInstanceArray.Length; ++i)
 				{
-					VisualScriptTool.Editor.ForStatementInstance element = ForStatementInstanceArray[i];
+					VisualScriptTool.Editor.Language.ForStatementInstance element = ForStatementInstanceArray[i];
 					if (element == null)
 						Add(Array, null);
 					else
@@ -72,7 +72,7 @@ namespace VisualScriptTool.Editor.Serializers
 			else
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
-				VisualScriptTool.Editor.ForStatementInstance ForStatementInstance = (VisualScriptTool.Editor.ForStatementInstance)Instance;
+				VisualScriptTool.Editor.Language.ForStatementInstance ForStatementInstance = (VisualScriptTool.Editor.Language.ForStatementInstance)Instance;
 				// Statement
 				if (ForStatementInstance.Statement == null)
 					Set(Object, 3, null);
@@ -116,7 +116,7 @@ namespace VisualScriptTool.Editor.Serializers
 			if (Data is ISerializeArray)
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
-				VisualScriptTool.Editor.ForStatementInstance[] ForStatementInstanceArray = (VisualScriptTool.Editor.ForStatementInstance[])System.Array.CreateInstance(Type, Array.Count);
+				VisualScriptTool.Editor.Language.ForStatementInstance[] ForStatementInstanceArray = (VisualScriptTool.Editor.Language.ForStatementInstance[])System.Array.CreateInstance(Type, Array.Count);
 				for (uint i = 0; i < Array.Count; ++i)
 				{
 					ISerializeObject arrayObj = Get<ISerializeObject>(Array, i);
@@ -126,14 +126,14 @@ namespace VisualScriptTool.Editor.Serializers
 						ForStatementInstanceArray[i] = null;
 						continue;
 					}
-					ForStatementInstanceArray[i] = GetSerializer(targetType).DeserializeInternal<VisualScriptTool.Editor.ForStatementInstance>(Get<ISerializeObject>(arrayObj, 2), References, ResolverList); 
+					ForStatementInstanceArray[i] = GetSerializer(targetType).DeserializeInternal<VisualScriptTool.Editor.Language.ForStatementInstance>(Get<ISerializeObject>(arrayObj, 2), References, ResolverList); 
 				}
 				returnValue = (T)(object)ForStatementInstanceArray;
 			}
 			else
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
-				VisualScriptTool.Editor.ForStatementInstance ForStatementInstance = (VisualScriptTool.Editor.ForStatementInstance)CreateInstance();
+				VisualScriptTool.Editor.Language.ForStatementInstance ForStatementInstance = (VisualScriptTool.Editor.Language.ForStatementInstance)CreateInstance();
 				// Statement
 				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 3, null);
 				if (StatementObject != null)

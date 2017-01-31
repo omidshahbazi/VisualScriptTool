@@ -15,9 +15,12 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			index = 0;
 			contents = Contents.ToCharArray();
 
-			if (GetChar() == '{')
+			char c = GetChar();
+			MoveToNextChar();
+
+			if (c == '{')
 				return ParseObject(null);
-			else if (GetChar() == '[')
+			else if (c == '[')
 				return ParseArray(null);
 
 			return null;

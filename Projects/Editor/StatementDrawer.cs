@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using VisualScriptTool.Editor.Language;
 using VisualScriptTool.Editor.Language.Drawers;
 using VisualScriptTool.Reflection;
 

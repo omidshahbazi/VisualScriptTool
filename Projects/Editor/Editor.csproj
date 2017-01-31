@@ -47,6 +47,7 @@
     <Compile Include="GridCanvas.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="IMouseIntractible.cs" />
     <Compile Include="IStatementInspector.cs" />
     <Compile Include="Language\ControlStatementInstance.cs" />
     <Compile Include="Language\Drawers\ForStatementDrawer.cs" />

@@ -1,7 +1,7 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using VisualScriptTool.Language.Statements;
 
-namespace VisualScriptTool.Editor
+namespace VisualScriptTool.Editor.Language
 {
 	public class ExecuterStatementInstance : StatementInstance
 	{

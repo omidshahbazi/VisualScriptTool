@@ -17,14 +17,13 @@ namespace VisualScriptTool.Editor
 
 			SerializationSystem.Initialize();
 
-			//Application.Run(new MainForm());
+			Application.Run(new MainForm());
 
+			//byte[] encoded = RunLenghtEncoder.Encode2(System.IO.File.ReadAllBytes(Application.StartupPath + "/Reflection.pdb"));
 
-			byte[] encoded = RunLenghtEncoder.Encode2(System.IO.File.ReadAllBytes(Application.StartupPath + "/Reflection.pdb"));
+			// encoded = RunLenghtEncoder.Encode2(encoded);
 
-			 encoded = RunLenghtEncoder.Encode2(encoded);
-
-			System.IO.File.WriteAllBytes(Application.StartupPath + "/1.bin", encoded);
+			//System.IO.File.WriteAllBytes(Application.StartupPath + "/1.bin", encoded);
 		}
 
 

@@ -1,16 +1,23 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Serialization;
 
-namespace VisualScriptTool.Editor
+namespace VisualScriptTool.Editor.Language
 {
-	public abstract class StatementInstance
+	public abstract class StatementInstance : IMouseIntractible
 	{
+		private const float SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = 20.0F;
+		private const float HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT / 2.0F;
+
 		private RectangleF bounds;
 
 		private SlotList slots = null;
+		private Slot selectedSlot = null;
+		private Slot mouseOverSlot = null;
 
 		[SerializableElement(3)]
 		public Statement Statement
@@ -50,8 +57,16 @@ namespace VisualScriptTool.Editor
 			get { return slots.ToArray(); }
 		}
 
+		public CubicSPLine NewConnectionLine
+		{
+			get;
+			private set;
+		}
+
 		public StatementInstance(Statement Statement)
 		{
+			NewConnectionLine = new CubicSPLine();
+
 			bounds = new RectangleF();
 			this.Statement = Statement;
 
@@ -116,9 +131,44 @@ namespace VisualScriptTool.Editor
 		{
 		}
 
-		public virtual void OnMouseDown(PointF Location)
+		public virtual void OnMouseDown(MouseButtons Button, PointF Location)
+		{
+			if ((selectedSlot = GetSlotAtLocation(Location)) != null)
+			{
+				//SelectedStatements.Add(selectedSlot.StatementInstance);
+				return;
+			}
+			else
+			{
+
+			}
+		}
+
+		public virtual void OnMouseUp(MouseButtons Button, PointF Location)
+		{
+		}
+
+		public virtual void OnMouseMove(MouseButtons Button, PointF Location)
 		{
 
+		}
+
+		private Slot GetSlotAtLocation(PointF Location)
+		{
+			for (uint j = 0; j < Slots.Length; ++j)
+			{
+				Slot slot = Slots[j];
+
+				RectangleF bounds = slot.Bounds;
+
+				bounds.Location.Add(new PointF(-HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT, -HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT));
+				bounds.Inflate(SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT, SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT);
+
+				if (bounds.Contains(Location))
+					return slot;
+			}
+
+			return null;
 		}
 	}
 

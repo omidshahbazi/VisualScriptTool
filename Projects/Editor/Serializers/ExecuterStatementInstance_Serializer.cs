@@ -7,12 +7,12 @@ namespace VisualScriptTool.Editor.Serializers
 	{
 		public override System.Type Type
 		{
-			get { return typeof(VisualScriptTool.Editor.ExecuterStatementInstance); }
+			get { return typeof(VisualScriptTool.Editor.Language.ExecuterStatementInstance); }
 		}
 
 		public override object CreateInstance()
 		{
-			return new VisualScriptTool.Editor.ExecuterStatementInstance();
+			return new VisualScriptTool.Editor.Language.ExecuterStatementInstance();
 		}
 
 		public override void Serialize(ISerializeData Data, object Instance)
@@ -50,14 +50,14 @@ namespace VisualScriptTool.Editor.Serializers
 			if (InstanceType.IsArrayOrList())
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
-				VisualScriptTool.Editor.ExecuterStatementInstance[] ExecuterStatementInstanceArray = null;
+				VisualScriptTool.Editor.Language.ExecuterStatementInstance[] ExecuterStatementInstanceArray = null;
 				if (InstanceType.IsArray())
-					ExecuterStatementInstanceArray = (VisualScriptTool.Editor.ExecuterStatementInstance[])Instance;
+					ExecuterStatementInstanceArray = (VisualScriptTool.Editor.Language.ExecuterStatementInstance[])Instance;
 				else
-					ExecuterStatementInstanceArray = ((System.Collections.Generic.List<VisualScriptTool.Editor.ExecuterStatementInstance>)Instance).ToArray();
+					ExecuterStatementInstanceArray = ((System.Collections.Generic.List<VisualScriptTool.Editor.Language.ExecuterStatementInstance>)Instance).ToArray();
 				for (int i = 0; i < ExecuterStatementInstanceArray.Length; ++i)
 				{
-					VisualScriptTool.Editor.ExecuterStatementInstance element = ExecuterStatementInstanceArray[i];
+					VisualScriptTool.Editor.Language.ExecuterStatementInstance element = ExecuterStatementInstanceArray[i];
 					if (element == null)
 						Add(Array, null);
 					else
@@ -72,7 +72,7 @@ namespace VisualScriptTool.Editor.Serializers
 			else
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
-				VisualScriptTool.Editor.ExecuterStatementInstance ExecuterStatementInstance = (VisualScriptTool.Editor.ExecuterStatementInstance)Instance;
+				VisualScriptTool.Editor.Language.ExecuterStatementInstance ExecuterStatementInstance = (VisualScriptTool.Editor.Language.ExecuterStatementInstance)Instance;
 				// Statement
 				if (ExecuterStatementInstance.Statement == null)
 					Set(Object, 3, null);
@@ -116,7 +116,7 @@ namespace VisualScriptTool.Editor.Serializers
 			if (Data is ISerializeArray)
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
-				VisualScriptTool.Editor.ExecuterStatementInstance[] ExecuterStatementInstanceArray = (VisualScriptTool.Editor.ExecuterStatementInstance[])System.Array.CreateInstance(Type, Array.Count);
+				VisualScriptTool.Editor.Language.ExecuterStatementInstance[] ExecuterStatementInstanceArray = (VisualScriptTool.Editor.Language.ExecuterStatementInstance[])System.Array.CreateInstance(Type, Array.Count);
 				for (uint i = 0; i < Array.Count; ++i)
 				{
 					ISerializeObject arrayObj = Get<ISerializeObject>(Array, i);
@@ -126,14 +126,14 @@ namespace VisualScriptTool.Editor.Serializers
 						ExecuterStatementInstanceArray[i] = null;
 						continue;
 					}
-					ExecuterStatementInstanceArray[i] = GetSerializer(targetType).DeserializeInternal<VisualScriptTool.Editor.ExecuterStatementInstance>(Get<ISerializeObject>(arrayObj, 2), References, ResolverList); 
+					ExecuterStatementInstanceArray[i] = GetSerializer(targetType).DeserializeInternal<VisualScriptTool.Editor.Language.ExecuterStatementInstance>(Get<ISerializeObject>(arrayObj, 2), References, ResolverList); 
 				}
 				returnValue = (T)(object)ExecuterStatementInstanceArray;
 			}
 			else
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
-				VisualScriptTool.Editor.ExecuterStatementInstance ExecuterStatementInstance = (VisualScriptTool.Editor.ExecuterStatementInstance)CreateInstance();
+				VisualScriptTool.Editor.Language.ExecuterStatementInstance ExecuterStatementInstance = (VisualScriptTool.Editor.Language.ExecuterStatementInstance)CreateInstance();
 				// Statement
 				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 3, null);
 				if (StatementObject != null)
