@@ -80,7 +80,7 @@ namespace VisualScriptTool.Editor
 
 			UpdateTabText();
 
-			GenerateCode();
+			//GenerateCode();
 
 			Application.ExitThread();
 		}

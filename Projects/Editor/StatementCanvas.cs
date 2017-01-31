@@ -69,6 +69,7 @@ namespace VisualScriptTool.Editor
 		private Pen selectedPen = null;
 		private bool candidateToShowGeneralMenu = false;
 		private CubicSPLine newConnectionLine = new CubicSPLine();
+		private Slot lastMouseOverSlot = null;
 
 		protected Point ClientMousePosition
 		{
@@ -116,6 +117,7 @@ namespace VisualScriptTool.Editor
 
 		public void AddStatementInstance(StatementInstance Instance)
 		{
+			Instance.StatementInstanceSelected += OnStatementInstanceSelected;
 			Instance.SlotSelected += OnSlotSelected;
 			Instance.SlotOver += OnSlotOver;
 			statements.Add(Instance);
@@ -153,6 +155,9 @@ namespace VisualScriptTool.Editor
 		{
 			base.OnMouseDown(e);
 
+			OnStatementInstanceSelected(null);
+			OnSlotSelected(null);
+
 			PointF location = ScreenToCanvas(e.Location);
 
 			for (int i = statements.Count - 1; i >= 0; --i)
@@ -173,7 +178,6 @@ namespace VisualScriptTool.Editor
 				return;
 
 			selectedStatements.Clear();
-			candidateToSelectStatements.Clear();
 
 			lastMousePosition = ScreenToCanvas(e.Location);
 
@@ -193,7 +197,7 @@ namespace VisualScriptTool.Editor
 				if (statement.Bounds.Contains(location))
 				{
 					candidateToSelectStatements.Add(statement);
-					statement.OnMouseDown(e.Button, location);
+					statement.OnMouseUp(e.Button, location);
 				}
 			}
 
@@ -207,16 +211,18 @@ namespace VisualScriptTool.Editor
 				{
 					if (MouseOverSlot == null)
 					{
-						//Slot mouseHoverSlot = GetSlotAtLocation(ScreenToCanvas(e.Location));
-						//if (mouseHoverSlot == null || mouseHoverSlot == SelectedSlot)
+						if (lastMouseOverSlot == null || MouseOverSlot == SelectedSlot)
 							ShowGeneralMenu();
-						//else
-						//	newConnectionLine.Clear();
+						else
+							newConnectionLine.Clear();
 					}
 					else
 					{
-						MouseOverSlot.AssignConnection(SelectedSlot);
-						SelectedSlot.AssignConnection(MouseOverSlot);
+						if (SelectedSlot.IsAssignmentAllowed(MouseOverSlot))
+						{
+							MouseOverSlot.AssignConnection(SelectedSlot);
+							SelectedSlot.AssignConnection(MouseOverSlot);
+						}
 
 						newConnectionLine.Clear();
 					}
@@ -242,6 +248,8 @@ namespace VisualScriptTool.Editor
 		{
 			base.OnMouseMove(e);
 
+			OnSlotOver(MouseOverSlot);
+
 			PointF location = ScreenToCanvas(e.Location);
 
 			for (int i = statements.Count - 1; i >= 0; --i)
@@ -251,17 +259,11 @@ namespace VisualScriptTool.Editor
 				if (statement.Bounds.Contains(location))
 				{
 					candidateToSelectStatements.Add(statement);
-					statement.OnMouseDown(e.Button, location);
+					statement.OnMouseMove(e.Button, location);
 				}
 			}
 
 			candidateToShowGeneralMenu = !IsPanning;
-
-			//if (SelectedSlot != null && (MouseOverSlot = GetSlotAtLocation(location)) != null)
-			//{
-			//	if (!SelectedSlot.IsAssignmentAllowed(MouseOverSlot))
-			//		MouseOverSlot = null;
-			//}
 
 			if (candidateToSelectStatements.Count != 0)
 			{
@@ -375,6 +377,11 @@ namespace VisualScriptTool.Editor
 			}
 		}
 
+		private void OnStatementInstanceSelected(StatementInstance Instance)
+		{
+			selectedStatements.Add(Instance);
+		}
+
 		private void OnSlotSelected(Slot Slot)
 		{
 			SelectedSlot = Slot;
@@ -382,6 +389,7 @@ namespace VisualScriptTool.Editor
 
 		private void OnSlotOver(Slot Slot)
 		{
+			lastMouseOverSlot = MouseOverSlot;
 			MouseOverSlot = Slot;
 		}
 
