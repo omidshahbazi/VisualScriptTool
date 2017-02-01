@@ -70,6 +70,11 @@ namespace VisualScriptTool.Editor
 		private CubicSPLine newConnectionLine = new CubicSPLine();
 		private Slot lastMouseOverSlot = null;
 
+		private bool isGroupSelection = false;
+		private PointF startGroupSelectionLocation;
+		private PointF endGroupSelectionLocation;
+		private Pen groupSelectionPen = null;
+
 		protected Point ClientMousePosition
 		{
 			get { return PointToClient(MousePosition); }
@@ -112,6 +117,9 @@ namespace VisualScriptTool.Editor
 			drawer = new StatementDrawer(this);
 
 			selectedPen = new Pen(Color.Orange, 1.5F);
+
+			groupSelectionPen = new Pen(Color.Black);
+			groupSelectionPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
 		}
 
 		public void AddStatementInstance(StatementInstance Instance)
@@ -149,27 +157,52 @@ namespace VisualScriptTool.Editor
 
 			if (SelectedSlot != null)
 				newConnectionLine.Draw(Graphics, ControlStatementDrawer.GetPen(SelectedSlot.Type));
+
+			if (isGroupSelection)
+			{
+				RectangleF rect = GetRectBetweenPoints(startGroupSelectionLocation, endGroupSelectionLocation);
+				Graphics.DrawRectangle(groupSelectionPen, rect.X, rect.Y, rect.Width, rect.Height);
+			}
+		}
+
+		private static RectangleF GetRectBetweenPoints(PointF A, PointF B)
+		{
+			RectangleF rect = new RectangleF();
+			rect.X = (A.X < B.X ? A.X : B.X);
+			rect.Y = (A.Y < B.Y ? A.Y : B.Y);
+			rect.Width = Math.Abs(A.X - B.X);
+			rect.Height = Math.Abs(A.Y - B.Y);
+			return rect;
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
 			base.OnMouseDown(e);
 
-			selectedStatements.Clear();
 			OnSlotSelected(null);
 
 			PointF location = ScreenToCanvas(e.Location);
 
+			bool isAnythingUnderMouse = false;
 			for (int i = statements.Count - 1; i >= 0; --i)
 			{
 				StatementInstance statement = Statements[i];
 
 				if (statement.Bounds.Contains(location))
+				{
+					isAnythingUnderMouse = true;
 					statement.OnMouseDown(e.Button, location);
+				}
 			}
 
 			if (e.Button == MouseButtons.Right)
 				candidateToShowGeneralMenu = true;
+			else if (!isAnythingUnderMouse && e.Button == MouseButtons.Left)
+			{
+				selectedStatements.Clear();
+				isGroupSelection = true;
+				startGroupSelectionLocation = endGroupSelectionLocation = location;
+			}
 
 			lastMousePosition = ScreenToCanvas(e.Location);
 
@@ -217,11 +250,13 @@ namespace VisualScriptTool.Editor
 					}
 				}
 			}
-			else if (e.Button == MouseButtons.Right && candidateToShowGeneralMenu)
+			else if (candidateToShowGeneralMenu && e.Button == MouseButtons.Right)
 			{
 				IsPanning = false;
 				ShowGeneralMenu();
 			}
+			else if (isGroupSelection && e.Button == MouseButtons.Left)
+				isGroupSelection = false;
 
 			Refresh();
 		}
@@ -270,6 +305,22 @@ namespace VisualScriptTool.Editor
 
 					newConnectionLine.Update(SelectedSlot.Center, startOffset, location, endOffset);
 				}
+				else if (isGroupSelection)
+				{
+					endGroupSelectionLocation = location;
+
+					RectangleF rect = GetRectBetweenPoints(startGroupSelectionLocation, endGroupSelectionLocation);
+
+					selectedStatements.Clear();
+
+					for (int i = statements.Count - 1; i >= 0; --i)
+					{
+						StatementInstance statement = Statements[i];
+
+						if (statement.Bounds.IntersectsWith(rect))
+							OnStatementInstanceSelected(statement);
+					}
+				}
 				else if (selectedStatements.Count != 0)
 				{
 					PointF delta = location.Subtract(lastMousePosition);
@@ -277,8 +328,6 @@ namespace VisualScriptTool.Editor
 					for (int i = 0; i < selectedStatements.Count; ++i)
 					{
 						StatementInstance statement = SelectedStatements[i];
-
-						Parent.Text = delta.ToString();
 
 						statement.Position = statement.Position.Add(delta);
 					}
