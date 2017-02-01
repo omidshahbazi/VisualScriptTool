@@ -19,6 +19,8 @@ namespace VisualScriptTool.Editor.Language
 		private RectangleF bounds;
 
 		private SlotList slots = null;
+
+		private bool isSelected = false;
 		private Slot lastSlotOver = null;
 
 		public event StatementInstanceSelectedHanlder StatementInstanceSelected = null;

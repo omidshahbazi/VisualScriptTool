@@ -64,7 +64,6 @@ namespace VisualScriptTool.Editor
 		private StatementDrawer drawer = null;
 		private StatementInstanceList statements = new StatementInstanceList();
 		private StatementInstanceList selectedStatements = new StatementInstanceList();
-		private StatementInstanceList candidateToSelectStatements = new StatementInstanceList();
 		private PointF lastMousePosition;
 		private Pen selectedPen = null;
 		private bool candidateToShowGeneralMenu = false;
@@ -156,7 +155,7 @@ namespace VisualScriptTool.Editor
 		{
 			base.OnMouseDown(e);
 
-			OnStatementInstanceSelected(null);
+			selectedStatements.Clear();
 			OnSlotSelected(null);
 
 			PointF location = ScreenToCanvas(e.Location);
@@ -166,19 +165,11 @@ namespace VisualScriptTool.Editor
 				StatementInstance statement = Statements[i];
 
 				if (statement.Bounds.Contains(location))
-				{
-					candidateToSelectStatements.Add(statement);
 					statement.OnMouseDown(e.Button, location);
-				}
 			}
 
 			if (e.Button == MouseButtons.Right)
 				candidateToShowGeneralMenu = true;
-
-			if (e.Button == MouseButtons.Middle)
-				return;
-
-			selectedStatements.Clear();
 
 			lastMousePosition = ScreenToCanvas(e.Location);
 
@@ -196,10 +187,7 @@ namespace VisualScriptTool.Editor
 				StatementInstance statement = Statements[i];
 
 				if (statement.Bounds.Contains(location))
-				{
-					candidateToSelectStatements.Add(statement);
 					statement.OnMouseUp(e.Button, location);
-				}
 			}
 
 			if (SelectedSlot != null)
@@ -235,13 +223,6 @@ namespace VisualScriptTool.Editor
 				ShowGeneralMenu();
 			}
 
-			if (candidateToSelectStatements.Count != 0)
-			{
-				selectedStatements.Clear();
-				selectedStatements.AddRange(candidateToSelectStatements);
-				candidateToSelectStatements.Clear();
-			}
-
 			Refresh();
 		}
 
@@ -262,7 +243,6 @@ namespace VisualScriptTool.Editor
 					if (!wasInArea)
 						statement.OnMouseEnter(location);
 
-					candidateToSelectStatements.Add(statement);
 					statement.OnMouseMove(e.Button, location);
 				}
 				else if (!isInArea && wasInArea)
@@ -270,12 +250,6 @@ namespace VisualScriptTool.Editor
 			}
 
 			candidateToShowGeneralMenu = !IsPanning;
-
-			if (candidateToSelectStatements.Count != 0)
-			{
-				selectedStatements.AddRange(candidateToSelectStatements);
-				candidateToSelectStatements.Clear();
-			}
 
 			if (e.Button == MouseButtons.Left)
 			{
@@ -303,6 +277,8 @@ namespace VisualScriptTool.Editor
 					for (int i = 0; i < selectedStatements.Count; ++i)
 					{
 						StatementInstance statement = SelectedStatements[i];
+
+						Parent.Text = delta.ToString();
 
 						statement.Position = statement.Position.Add(delta);
 					}
@@ -387,6 +363,9 @@ namespace VisualScriptTool.Editor
 
 		private void OnStatementInstanceSelected(StatementInstance Instance)
 		{
+			if (selectedStatements.Contains(Instance))
+				return;
+
 			selectedStatements.Add(Instance);
 		}
 
