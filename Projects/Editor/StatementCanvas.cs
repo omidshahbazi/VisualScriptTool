@@ -120,6 +120,7 @@ namespace VisualScriptTool.Editor
 			Instance.StatementInstanceSelected += OnStatementInstanceSelected;
 			Instance.SlotSelected += OnSlotSelected;
 			Instance.SlotOver += OnSlotOver;
+			Instance.SlotExit += OnSlotExit;
 			statements.Add(Instance);
 		}
 
@@ -211,7 +212,7 @@ namespace VisualScriptTool.Editor
 				{
 					if (MouseOverSlot == null)
 					{
-						if (lastMouseOverSlot == null || MouseOverSlot == SelectedSlot)
+						if (lastMouseOverSlot == null || lastMouseOverSlot == SelectedSlot)
 							ShowGeneralMenu();
 						else
 							newConnectionLine.Clear();
@@ -248,19 +249,24 @@ namespace VisualScriptTool.Editor
 		{
 			base.OnMouseMove(e);
 
-			OnSlotOver(MouseOverSlot);
-
 			PointF location = ScreenToCanvas(e.Location);
 
 			for (int i = statements.Count - 1; i >= 0; --i)
 			{
 				StatementInstance statement = Statements[i];
+				bool wasInArea = statement.Bounds.Contains(lastMousePosition);
+				bool isInArea = statement.Bounds.Contains(location);
 
-				if (statement.Bounds.Contains(location))
+				if (isInArea)
 				{
+					if (!wasInArea)
+						statement.OnMouseEnter(location);
+
 					candidateToSelectStatements.Add(statement);
 					statement.OnMouseMove(e.Button, location);
 				}
+				else if (!isInArea && wasInArea)
+					statement.OnMouseExit(location);
 			}
 
 			candidateToShowGeneralMenu = !IsPanning;
@@ -306,6 +312,8 @@ namespace VisualScriptTool.Editor
 
 				Refresh();
 			}
+
+			lastMousePosition = location;
 		}
 
 		protected override void OnKeyUp(KeyEventArgs e)
@@ -342,7 +350,7 @@ namespace VisualScriptTool.Editor
 
 		private void OnContextMenuClosed(object sender, ToolStripDropDownClosedEventArgs e)
 		{
-			//newConnectionLine.Clear();
+			newConnectionLine.Clear();
 
 			Refresh();
 		}
@@ -358,22 +366,22 @@ namespace VisualScriptTool.Editor
 				StatementInstance instance = (StatementInstance)obj;
 				AddStatementInstance(instance);
 
-				//if (SelectedSlot != null)
-				//{
-				//	Slot[] slots = instance.Slots;
-				//	for (int i = 0; i < slots.Length; ++i)
-				//	{
-				//		Slot otherSlot = slots[i];
+				if (SelectedSlot != null)
+				{
+					Slot[] slots = instance.Slots;
+					for (int i = 0; i < slots.Length; ++i)
+					{
+						Slot otherSlot = slots[i];
 
-				//		if (SelectedSlot.IsAssignmentAllowed(otherSlot))
-				//		{
-				//			if (!SelectedSlot.AssignConnection(otherSlot))
-				//				otherSlot.AssignConnection(SelectedSlot);
+						if (SelectedSlot.IsAssignmentAllowed(otherSlot))
+						{
+							if (!SelectedSlot.AssignConnection(otherSlot))
+								otherSlot.AssignConnection(SelectedSlot);
 
-				//			break;
-				//		}
-				//	}
-				//}
+							break;
+						}
+					}
+				}
 			}
 		}
 
@@ -389,8 +397,13 @@ namespace VisualScriptTool.Editor
 
 		private void OnSlotOver(Slot Slot)
 		{
-			lastMouseOverSlot = MouseOverSlot;
 			MouseOverSlot = Slot;
+		}
+
+		private void OnSlotExit(Slot Slot)
+		{
+			lastMouseOverSlot = Slot;
+			MouseOverSlot = null;
 		}
 
 		private void OnRemoveConnection(Slot Slot)

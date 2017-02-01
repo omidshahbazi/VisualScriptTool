@@ -11,8 +11,7 @@ namespace VisualScriptTool.Editor.Language
 	public abstract class StatementInstance : IMouseIntractible
 	{
 		public delegate void StatementInstanceSelectedHanlder(StatementInstance Instance);
-		public delegate void SlotSelectedHandler(Slot Slot);
-		public delegate void SlotOverHandler(Slot Slot);
+		public delegate void SlotHandler(Slot Slot);
 
 		private const float SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = 20.0F;
 		private const float HALF_SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT = SLOT_SELECTION_RECTANGLE_ENLARGE_AMOUNT / 2.0F;
@@ -20,10 +19,12 @@ namespace VisualScriptTool.Editor.Language
 		private RectangleF bounds;
 
 		private SlotList slots = null;
+		private Slot lastSlotOver = null;
 
 		public event StatementInstanceSelectedHanlder StatementInstanceSelected = null;
-		public event SlotSelectedHandler SlotSelected = null;
-		public event SlotOverHandler SlotOver = null;
+		public event SlotHandler SlotSelected = null;
+		public event SlotHandler SlotOver = null;
+		public event SlotHandler SlotExit = null;
 
 		[SerializableElement(3)]
 		public Statement Statement
@@ -129,6 +130,17 @@ namespace VisualScriptTool.Editor.Language
 		{
 		}
 
+		public virtual void OnMouseEnter(PointF Location)
+		{
+
+		}
+
+		public virtual void OnMouseExit(PointF Location)
+		{
+			if (lastSlotOver != null)
+				OnSlotExit(lastSlotOver);
+		}
+
 		public virtual void OnMouseDown(MouseButtons Button, PointF Location)
 		{
 			OnStatementInstanceSelectedd(this);
@@ -145,8 +157,16 @@ namespace VisualScriptTool.Editor.Language
 		public virtual void OnMouseMove(MouseButtons Button, PointF Location)
 		{
 			Slot underMouse = GetSlotAtLocation(Location);
-			if (underMouse != null)
-				OnSlotOver(underMouse);
+			if (underMouse != lastSlotOver)
+			{
+				if (lastSlotOver != null)
+					OnSlotExit(lastSlotOver);
+
+				if (underMouse != null)
+					OnSlotOver(underMouse);
+
+				lastSlotOver = underMouse;
+			}
 		}
 
 		private Slot GetSlotAtLocation(PointF Location)
@@ -183,6 +203,12 @@ namespace VisualScriptTool.Editor.Language
 		{
 			if (SlotOver != null)
 				SlotOver(Slot);
+		}
+
+		protected virtual void OnSlotExit(Slot Slot)
+		{
+			if (SlotExit != null)
+				SlotExit(Slot);
 		}
 	}
 

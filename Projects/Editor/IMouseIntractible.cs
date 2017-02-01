@@ -6,6 +6,9 @@ namespace VisualScriptTool.Editor
 {
 	interface IMouseIntractible
 	{
+		void OnMouseEnter(PointF Location);
+		void OnMouseExit(PointF Location);
+
 		void OnMouseDown(MouseButtons Button, PointF Location);
 		void OnMouseUp(MouseButtons Button, PointF Location);
 		void OnMouseMove(MouseButtons Button, PointF Location);
