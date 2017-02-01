@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using VisualScriptTool.Editor.Extensions;
 using VisualScriptTool.Editor.Language;
 using VisualScriptTool.Editor.Language.Drawers;
 using VisualScriptTool.Language.Statements;
@@ -160,19 +161,9 @@ namespace VisualScriptTool.Editor
 
 			if (isGroupSelection)
 			{
-				RectangleF rect = GetRectBetweenPoints(startGroupSelectionLocation, endGroupSelectionLocation);
+				RectangleF rect = RectangleFExtensions.GetRectBetweenPoints(startGroupSelectionLocation, endGroupSelectionLocation);
 				Graphics.DrawRectangle(groupSelectionPen, rect.X, rect.Y, rect.Width, rect.Height);
 			}
-		}
-
-		private static RectangleF GetRectBetweenPoints(PointF A, PointF B)
-		{
-			RectangleF rect = new RectangleF();
-			rect.X = (A.X < B.X ? A.X : B.X);
-			rect.Y = (A.Y < B.Y ? A.Y : B.Y);
-			rect.Width = Math.Abs(A.X - B.X);
-			rect.Height = Math.Abs(A.Y - B.Y);
-			return rect;
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)
@@ -309,7 +300,7 @@ namespace VisualScriptTool.Editor
 				{
 					endGroupSelectionLocation = location;
 
-					RectangleF rect = GetRectBetweenPoints(startGroupSelectionLocation, endGroupSelectionLocation);
+					RectangleF rect = RectangleFExtensions.GetRectBetweenPoints(startGroupSelectionLocation, endGroupSelectionLocation);
 
 					selectedStatements.Clear();
 
@@ -318,7 +309,7 @@ namespace VisualScriptTool.Editor
 						StatementInstance statement = Statements[i];
 
 						if (statement.Bounds.IntersectsWith(rect))
-							OnStatementInstanceSelected(statement);
+							selectedStatements.Add(statement);
 					}
 				}
 				else if (selectedStatements.Count != 0)
@@ -414,6 +405,8 @@ namespace VisualScriptTool.Editor
 		{
 			if (selectedStatements.Contains(Instance))
 				return;
+
+			selectedStatements.Clear();
 
 			selectedStatements.Add(Instance);
 		}

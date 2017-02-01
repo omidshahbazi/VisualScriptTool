@@ -2,7 +2,7 @@
 
 using System.Drawing;
 
-namespace VisualScriptTool.Editor
+namespace VisualScriptTool.Editor.Extensions
 {
 	public static class PointFExtensions
 	{

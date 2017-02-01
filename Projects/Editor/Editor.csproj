@@ -62,7 +62,8 @@
     <Compile Include="Language\Slot.cs" />
     <Compile Include="Language\IfStatementInstance.cs" />
     <Compile Include="Language\VariableStatementInstance.cs" />
-    <Compile Include="PointFExtensions.cs" />
+    <Compile Include="Extensions\RectangleFExtensions.cs" />
+    <Compile Include="Extensions\PointFExtensions.cs" />
     <Compile Include="Serializers\BooleanVariable_Serializer.cs" />
     <Compile Include="Serializers\Compiler.cs" />
     <Compile Include="Serializers\ExecuterStatementInstance_Serializer.cs" />

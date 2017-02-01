@@ -16,7 +16,6 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			contents = Contents.ToCharArray();
 
 			char c = GetChar();
-			//MoveToNextChar();
 
 			if (c == '{')
 				return ParseObject(null);
@@ -84,12 +83,12 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 
 			while (true)
 			{
+				MoveToNextChar();
+
 				char c = GetChar();
 
 				if (c == ']')
 					break;
-
-				MoveToNextChar();
 
 				c = GetChar();
 
