@@ -76,13 +76,15 @@ namespace VisualScriptTool.Editor
 			for (int i = 0; i < Statements.Length; ++i)
 				Statements[i].ResolveSlotConnections(canvas);
 
+			VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable var = new VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable();
+			canvas.AddStatementInstance(new VariableStatementInstance(var, VariableStatementInstance.Modes.Setter));
+			canvas.AddStatementInstance(new VariableStatementInstance(var, VariableStatementInstance.Modes.Getter));
+
 			canvas.Refresh();
 
 			UpdateTabText();
 
 			//GenerateCode();
-
-			Application.ExitThread();
 		}
 
 		private void GenerateCode()
