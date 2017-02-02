@@ -92,6 +92,11 @@ namespace VisualScriptTool.Editor.Language
 			return slot;
 		}
 
+		protected void RemoveSlot(Slot Slot)
+		{
+			slots.Remove(Slot);
+		}
+
 		protected virtual void UpdateConnectedSlot(IStatementInspector Inspector, uint Index, Statement ConnectedStatement)
 		{
 			if (ConnectedStatement == null)

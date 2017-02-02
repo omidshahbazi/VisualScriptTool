@@ -49,7 +49,7 @@ namespace VisualScriptTool.Serialization
 			CodeBuilder deserialize = new CodeBuilder();
 			CodeBuilder deserializeInternal = new CodeBuilder();
 
-			string typeName = Type.FullName;
+			string typeName = GetFullTypeName(Type);
 			bool hasNamespace = !string.IsNullOrEmpty(Type.Namespace);
 			indent = 0;
 
@@ -95,11 +95,11 @@ namespace VisualScriptTool.Serialization
 				if (instantiatorMethod.IsPublic)
 				{
 					if (instantiatorMethod is ConstructorInfo)
-						instatiator.Append("new " + instantiatorMethod.DeclaringType.FullName + "(");
+						instatiator.Append("new " + GetFullTypeName(instantiatorMethod.DeclaringType) + "(");
 					else if (instantiatorMethod is MethodInfo)
 					{
 						constantParametersCount = 1;
-						instatiator.Append(instantiatorMethod.DeclaringType.FullName + "." + instantiatorMethod.Name + "(Type");
+						instatiator.Append(GetFullTypeName(instantiatorMethod.DeclaringType) + "." + instantiatorMethod.Name + "(Type");
 					}
 				}
 				else
@@ -112,7 +112,7 @@ namespace VisualScriptTool.Serialization
 						{
 							if (i != 0)
 								instatiator.Append(", ");
-							instatiator.Append("System.Type.GetType(\"" + parameters[i].ParameterType.FullName + "\")");
+							instatiator.Append("System.Type.GetType(\"" + GetFullTypeName(parameters[i].ParameterType) + "\")");
 						}
 
 						instatiator.Append(" }, null).Invoke(new object[] { ");
@@ -124,7 +124,7 @@ namespace VisualScriptTool.Serialization
 						if (instantiatorMethod.DeclaringType == Type)
 							instatiator.Append("Type");
 						else
-							instatiator.Append("System.Type.GetType(\"" + instantiatorMethod.DeclaringType.FullName + "\")");
+							instatiator.Append("System.Type.GetType(\"" + GetFullTypeName(instantiatorMethod.DeclaringType) + "\")");
 
 						instatiator.Append(".GetMethod(\"" + instantiatorMethod.Name + "\", ");
 						instatiator.Append("System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags." + (instantiatorMethod.IsPublic ? "Public" : "NonPublic"));
@@ -184,19 +184,19 @@ namespace VisualScriptTool.Serialization
 			serializeInternal.AppendLine("{", indent);
 
 			serializeInternal.AppendLine("ISerializeArray Array = (ISerializeArray)Data; ", ++indent);
-			serializeInternal.AppendLine(Type.FullName + "[] " + typeArrayName + " = null;", indent);
+			serializeInternal.AppendLine(GetFullTypeName(Type) + "[] " + typeArrayName + " = null;", indent);
 
 			serializeInternal.AppendLine("if (InstanceType.IsArray())", indent);
-			serializeInternal.AppendLine(typeArrayName + " = (" + Type.FullName + "[])Instance;", ++indent);
+			serializeInternal.AppendLine(typeArrayName + " = (" + GetFullTypeName(Type) + "[])Instance;", ++indent);
 			--indent;
 			serializeInternal.AppendLine("else", indent);
-			serializeInternal.AppendLine(typeArrayName + " = ((System.Collections.Generic.List<" + Type.FullName + ">)Instance).ToArray();", ++indent);
+			serializeInternal.AppendLine(typeArrayName + " = ((System.Collections.Generic.List<" + GetFullTypeName(Type) + ">)Instance).ToArray();", ++indent);
 			--indent;
 
 			serializeInternal.AppendLine("for (int i = 0; i < " + typeArrayName + ".Length; ++i)", indent);
 			serializeInternal.AppendLine("{", indent);
 
-			serializeInternal.AppendLine(Type.FullName + " element = " + typeArrayName + "[i];", ++indent);
+			serializeInternal.AppendLine(GetFullTypeName(Type) + " element = " + typeArrayName + "[i];", ++indent);
 
 			if (!Type.IsValueType)
 			{
@@ -225,7 +225,7 @@ namespace VisualScriptTool.Serialization
 			serializeInternal.AppendLine("{", indent);
 
 			serializeInternal.AppendLine("ISerializeObject Object = (ISerializeObject)Data; ", ++indent);
-			serializeInternal.AppendLine(Type.FullName + " " + GetTypeVariableName(Type) + " = (" + Type.FullName + ")Instance;", indent);
+			serializeInternal.AppendLine(GetFullTypeName(Type) + " " + GetTypeVariableName(Type) + " = (" + GetFullTypeName(Type) + ")Instance;", indent);
 
 			AppendCallback(Strategy.GetPreSerialize(Type), serializeInternal);
 
@@ -241,7 +241,7 @@ namespace VisualScriptTool.Serialization
 			deserializeInternal.AppendLine("{", indent);
 
 			deserializeInternal.AppendLine("ISerializeArray Array = (ISerializeArray)Data; ", ++indent);
-			deserializeInternal.AppendLine(Type.FullName + "[] " + typeArrayName + " = (" + Type.FullName + "[])System.Array.CreateInstance(Type, Array.Count);", indent);
+			deserializeInternal.AppendLine(GetFullTypeName(Type) + "[] " + typeArrayName + " = (" + GetFullTypeName(Type) + "[])System.Array.CreateInstance(Type, Array.Count);", indent);
 
 			deserializeInternal.AppendLine("for (uint i = 0; i < Array.Count; ++i)", indent);
 			deserializeInternal.AppendLine("{", indent);
@@ -255,12 +255,12 @@ namespace VisualScriptTool.Serialization
 				deserializeInternal.AppendLine("continue;", indent);
 				deserializeInternal.AppendLine("}", --indent);
 				//deserialize.AppendLine("if (" + typeArrayName + "[i] == null)", indent);
-				//deserialize.AppendLine(typeArrayName + "[i] = (" + Type.FullName + ")GetSerializer(targetType)." + CREATE_INSTANCE_METHOD_NAME + "();", ++indent);
+				//deserialize.AppendLine(typeArrayName + "[i] = (" + GetFullTypeName(Type) + ")GetSerializer(targetType)." + CREATE_INSTANCE_METHOD_NAME + "();", ++indent);
 				//--indent;
 			}
 
 
-			deserializeInternal.AppendLine(typeArrayName + "[i] = GetSerializer(targetType)." + DESERIALIZE_INTERNAL_METHOD_NAME + "<" + Type.FullName + ">(Get<ISerializeObject>(arrayObj, " + DATA_STRUCTURE_VALUE_ID + "), References, ResolverList); ", indent);
+			deserializeInternal.AppendLine(typeArrayName + "[i] = GetSerializer(targetType)." + DESERIALIZE_INTERNAL_METHOD_NAME + "<" + GetFullTypeName(Type) + ">(Get<ISerializeObject>(arrayObj, " + DATA_STRUCTURE_VALUE_ID + "), References, ResolverList); ", indent);
 
 			--indent;
 			deserializeInternal.AppendLine("}", indent);
@@ -276,7 +276,7 @@ namespace VisualScriptTool.Serialization
 			AppendCallback(Strategy.GetPreDeserialize(Type), deserializeInternal);
 
 			deserializeInternal.AppendLine("ISerializeObject Object = (ISerializeObject)Data; ", ++indent);
-			deserializeInternal.AppendLine(Type.FullName + " " + GetTypeVariableName(Type) + " = (" + Type.FullName + ")CreateInstance();", indent);
+			deserializeInternal.AppendLine(GetFullTypeName(Type) + " " + GetTypeVariableName(Type) + " = (" + GetFullTypeName(Type) + ")CreateInstance();", indent);
 			--indent;
 
 			CompileMembers(Type, serializeInternal, deserializeInternal);
@@ -373,7 +373,7 @@ namespace VisualScriptTool.Serialization
 			if (MemberType == typeof(string))
 				defaultValue = "\"" + defaultValue + "\"";
 
-			DeserializeMethod.AppendLine(MemberAccessName + " = Get<" + MemberType.FullName + ">(" + ObjectName + ", " + ID + ", " + defaultValue + ");", indent);
+			DeserializeMethod.AppendLine(MemberAccessName + " = Get<" + GetFullTypeName(MemberType) + ">(" + ObjectName + ", " + ID + ", " + defaultValue + ");", indent);
 		}
 
 		private void AppendArray(MemberInfo Member, Type MemberType, int ID, string MemberAccessName, CodeBuilder SerializeMethod, CodeBuilder DeserializeMethod, string ObjectName, ValueType ValueType)
@@ -395,7 +395,7 @@ namespace VisualScriptTool.Serialization
 
 			++indent;
 
-			SerializeMethod.AppendLine(elementType.FullName + " element = " + MemberAccessName + "[i];", indent);
+			SerializeMethod.AppendLine(GetFullTypeName(elementType) + " element = " + MemberAccessName + "[i];", indent);
 
 			SerializeMethod.AppendLine("if (element == null)", indent);
 			SerializeMethod.AppendLine("{", indent);
@@ -434,7 +434,7 @@ namespace VisualScriptTool.Serialization
 
 			++indent;
 			if (ValueType == ValueType.Array)
-				DeserializeMethod.AppendLine(MemberAccessName + " = (" + MemberType.FullName + ")System.Array.CreateInstance(typeof(" + elementType.FullName + "), " + arrayName + ".Count);", indent);
+				DeserializeMethod.AppendLine(MemberAccessName + " = (" + GetFullTypeName(MemberType) + ")System.Array.CreateInstance(typeof(" + GetFullTypeName(elementType) + "), " + arrayName + ".Count);", indent);
 			else
 				DeserializeMethod.AppendLine("// " + MemberAccessName + " Allocation", indent);
 
@@ -445,9 +445,9 @@ namespace VisualScriptTool.Serialization
 			if (elementValueType == ValueType.Primitive)
 			{
 				if (ValueType == ValueType.Array)
-					DeserializeMethod.AppendLine(MemberAccessName + "[(int)i] = " + arrayName + ".Get<" + elementType.FullName + ">(i);", indent);
+					DeserializeMethod.AppendLine(MemberAccessName + "[(int)i] = " + arrayName + ".Get<" + GetFullTypeName(elementType) + ">(i);", indent);
 				else
-					DeserializeMethod.AppendLine(MemberAccessName + ".Add(" + arrayName + ".Get<" + elementType.FullName + ">(i));", indent);
+					DeserializeMethod.AppendLine(MemberAccessName + ".Add(" + arrayName + ".Get<" + GetFullTypeName(elementType) + ">(i));", indent);
 			}
 			//else if (elementValueType == ValueType.Array || elementValueType == ValueType.List)
 			//{
@@ -460,7 +460,7 @@ namespace VisualScriptTool.Serialization
 			else if (elementValueType == ValueType.DataStructure)
 			{
 				if (ValueType == ValueType.Array)
-					DeserializeMethod.AppendLine(MemberAccessName + "[(int)i] = (" + elementType.FullName + ")GetSerializer(" + MemberAccessName + ".GetType())." + CREATE_INSTANCE_METHOD_NAME + "();", indent);
+					DeserializeMethod.AppendLine(MemberAccessName + "[(int)i] = (" + GetFullTypeName(elementType) + ")GetSerializer(" + MemberAccessName + ".GetType())." + CREATE_INSTANCE_METHOD_NAME + "();", indent);
 				else
 					DeserializeMethod.AppendLine("// " + MemberAccessName + ".Add(Allocated);", indent);
 
@@ -527,8 +527,8 @@ namespace VisualScriptTool.Serialization
 			}
 
 			DeserializeMethod.AppendLine("Serializer " + serializerName + " = GetSerializer(System.Type.GetType(Get<string>(" + objectName + ", " + DATA_STRUCTURE_TYPE_ID + ")));", indent);
-			//DeserializeMethod.AppendLine(MemberAccessName + " = (" + MemberType.FullName + ")" + serializerName + "." + CREATE_INSTANCE_METHOD_NAME + "();", indent);
-			DeserializeMethod.AppendLine(MemberAccessName + " = " + serializerName + "." + DESERIALIZE_INTERNAL_METHOD_NAME + "<" + MemberType.FullName + ">(Get<ISerializeObject>(" + objectName + ", " + DATA_STRUCTURE_VALUE_ID + "), References, ResolverList);", indent);
+			//DeserializeMethod.AppendLine(MemberAccessName + " = (" +GetFullTypeName( MemberType)+ ")" + serializerName + "." + CREATE_INSTANCE_METHOD_NAME + "();", indent);
+			DeserializeMethod.AppendLine(MemberAccessName + " = " + serializerName + "." + DESERIALIZE_INTERNAL_METHOD_NAME + "<" + GetFullTypeName(MemberType) + ">(Get<ISerializeObject>(" + objectName + ", " + DATA_STRUCTURE_VALUE_ID + "), References, ResolverList);", indent);
 
 			if (!MemberType.IsValueType)
 			{
@@ -604,6 +604,14 @@ namespace VisualScriptTool.Serialization
 		private static string GetTypeVariableName(Type Type)
 		{
 			return Type.Name;
+		}
+
+		private static string GetFullTypeName(Type Type)
+		{
+			if (Type.IsNested)
+				return Type.FullName.Replace('+', '.');
+
+			return Type.FullName;
 		}
 	}
 }

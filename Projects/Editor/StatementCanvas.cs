@@ -121,6 +121,18 @@ namespace VisualScriptTool.Editor
 
 			groupSelectionPen = new Pen(Color.Black);
 			groupSelectionPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+
+
+
+			VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable var = new VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable();
+
+			VariableStatementInstance instance = new VariableStatementInstance(var);
+			instance.Mode = VariableStatementInstance.Modes.Getter;
+			AddStatementInstance(new VariableStatementInstance(var));
+
+			instance = new VariableStatementInstance(var);
+			instance.Mode = VariableStatementInstance.Modes.Setter;
+			AddStatementInstance(new VariableStatementInstance(var));
 		}
 
 		public void AddStatementInstance(StatementInstance Instance)
