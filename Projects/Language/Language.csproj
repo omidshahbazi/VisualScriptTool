@@ -36,6 +36,7 @@
     <Compile Include="Statements\Variables\FloatVariable.cs" />
     <Compile Include="Statements\Variables\StringVariable.cs" />
     <Compile Include="Statements\Variables\IntegerVariable.cs" />
+    <Compile Include="Statements\Variables\VariableSetterStatement.cs" />
     <Compile Include="Statements\Variables\VariableStatement.cs" />
     <Compile Include="Statements\Control\ControlStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

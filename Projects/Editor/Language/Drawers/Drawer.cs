@@ -14,6 +14,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		protected const float SLOT_SIZE = 10.0F;
 		protected const float HALF_SLOT_SIZE = SLOT_SIZE / 2;
 		protected const float SLOT_MARGIN = 10.0F;
+		public static readonly Color EXECUTION_SLOT_COLOR = Color.White;
+		public const float LINE_START_OFFSET_AMOUNT = 100.0F;
 
 		private Brush headeTextBrush = null;
 		private Brush headeBackBrush = null;
@@ -21,6 +23,10 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		private Brush executeSlotBrush = null;
 		private Brush variableSlotBrush = null;
 		private Brush argumentSlotBrush = null;
+		private static Pen executionPen = null;
+		private static Pen argumentPen = null;
+
+		private CubicSPLine line = new CubicSPLine();
 
 		protected Graphics Graphics
 		{
@@ -79,6 +85,10 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			executeSlotBrush = new SolidBrush(ControlStatementDrawer.EXECUTION_SLOT_COLOR);
 			variableSlotBrush = new SolidBrush(VariableDrawer.HEADER_COLOR);
 			argumentSlotBrush = new SolidBrush(VariableDrawer.HEADER_COLOR);
+			executionPen = new Pen(EXECUTION_SLOT_COLOR, 2.0F);
+			argumentPen = new Pen(VariableDrawer.HEADER_COLOR, 1.0F);
+
+			line = new CubicSPLine();
 		}
 
 		public void Draw(Graphics Graphics, StatementInstance StatementInstance)
@@ -124,6 +134,15 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		public virtual void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
 		{
+			Slot[] slots = StatementInstance.Slots;
+
+			for (int i = 0; i < slots.Length; ++i)
+			{
+				Slot slot = slots[i];
+
+				if (slot.ConnectedSlot != null)
+					DrawLine(slot, slot.ConnectedSlot);
+			}
 		}
 
 		protected virtual void DrawSlot(Slot Slot)
@@ -156,6 +175,18 @@ namespace VisualScriptTool.Editor.Language.Drawers
 					DrawFillPolygon(argumentSlotBrush, new PointF[] { new PointF(position.X, position.Y + HALF_SLOT_SIZE), new PointF(position.X + HALF_SLOT_SIZE, position.Y), new PointF(position.X + SLOT_SIZE, position.Y + HALF_SLOT_SIZE), new PointF(position.X + HALF_SLOT_SIZE, position.Y + SLOT_SIZE) });
 					break;
 			}
+		}
+
+		protected void DrawLine(Slot From, Slot To)
+		{
+			PointF startOffset = PointF.Empty;
+			PointF endOffset = PointF.Empty;
+
+			startOffset.X = DirectionToOffset(From);
+			endOffset.X = DirectionToOffset(To);
+
+			line.Update(From.Center, startOffset, To.Center, endOffset);
+			line.Draw(Graphics, GetPen(From.Type));
 		}
 
 		protected void DrawString(string Value, float X, float Y, Brush Brush)
@@ -249,6 +280,31 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			float halfEnlargeAmount = EnlargeAmount / 2.0F;
 
 			return new RectangleF(position.X - HALF_SLOT_SIZE - halfEnlargeAmount, position.Y - HALF_SLOT_SIZE - halfEnlargeAmount, SLOT_SIZE + EnlargeAmount, SLOT_SIZE + EnlargeAmount);
+		}
+
+		private float DirectionToOffset(Slot Slot)
+		{
+			if (Slot.IsLeftAligned)
+				return -LINE_START_OFFSET_AMOUNT;
+
+			return LINE_START_OFFSET_AMOUNT;
+		}
+
+		public static Pen GetPen(Slot.Types Type)
+		{
+			switch (Type)
+			{
+				case Slot.Types.EntryPoint:
+				case Slot.Types.Executer:
+					return executionPen;
+
+				case Slot.Types.Setter:
+				case Slot.Types.Getter:
+				case Slot.Types.Argument:
+					return argumentPen;
+			}
+
+			return null;
 		}
 	}
 }

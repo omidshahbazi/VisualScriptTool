@@ -52,6 +52,7 @@
     <Compile Include="Language\ControlStatementInstance.cs" />
     <Compile Include="Language\Drawers\ForStatementDrawer.cs" />
     <Compile Include="Language\Drawers\ExecuterStatementDrawer.cs" />
+    <Compile Include="Language\Drawers\VariableSetterDrawer.cs" />
     <Compile Include="Language\Drawers\WhileStatementDrawer.cs" />
     <Compile Include="Language\Drawers\IfStatementDrawer.cs" />
     <Compile Include="Language\Drawers\ControlStatementDrawer.cs" />

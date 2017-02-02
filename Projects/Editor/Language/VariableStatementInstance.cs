@@ -45,24 +45,26 @@ namespace VisualScriptTool.Editor.Language
 
 		private bool CheckConditionAssignment(Slot Other)
 		{
-			return (Other.StatementInstance.Statement is BooleanVariable);
+			VariableSetterStatement statement = (VariableSetterStatement)Statement;
+
+			return (statement.Variable.GetType() == Other.StatementInstance.Statement.GetType());
 		}
 
 		private void OnConditionAssigned(Slot Self, Slot Other)
 		{
-			VariableStatement statement = (VariableStatement)Statement;
+			VariableSetterStatement statement = (VariableSetterStatement)Statement;
 
 			SetConnection(Self, Other);
 
-			//statement.Condition = (BooleanVariable)Other.StatementInstance.Statement;
+			statement.Statement = (VariableStatement)Other.StatementInstance.Statement;
 		}
 
 		private void OnRemoveConditionConnection(Slot Self)
 		{
 			UnsetConnection(Self);
 
-			VariableStatement statement = (VariableStatement)Statement;
-			//statement.Condition = null;
+			VariableSetterStatement statement = (VariableSetterStatement)Statement;
+			statement.Statement = null;
 		}
 	}
 }
