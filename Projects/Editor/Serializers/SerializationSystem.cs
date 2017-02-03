@@ -14,6 +14,7 @@ namespace VisualScriptTool.Editor.Serializers
 			Serialization.Creator.AddSerializer(new IntegerVariable_Serializer());
 			Serialization.Creator.AddSerializer(new FloatVariable_Serializer());
 			Serialization.Creator.AddSerializer(new StringVariable_Serializer());
+			Serialization.Creator.AddSerializer(new VariableSetterStatement_Serializer());
 			Serialization.Creator.AddSerializer(new ExecuterStatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new StatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new IfStatementInstance_Serializer());

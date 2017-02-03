@@ -10,7 +10,7 @@ namespace VisualScriptTool.CodeGeneration.Language.CSharp
 	{
 		public override Type[] StatementTypes
 		{
-			get { return new Type[] { typeof(BooleanVariable), typeof(IntegerVariable), typeof(FloatVariable), typeof(StringVariable) }; }
+			get { return new Type[] { typeof(BooleanVariable), typeof(IntegerVariable), typeof(FloatVariable), typeof(StringVariable)}; }
 		}
 
 		public override void Generate(StringBuilder Builder, Statement Statement)

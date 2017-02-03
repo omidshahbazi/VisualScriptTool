@@ -30,6 +30,7 @@ namespace VisualScriptTool.Editor.Serializers
 			types[typeof(IntegerVariable)] = defaultCompilerStrategy;
 			types[typeof(FloatVariable)] = defaultCompilerStrategy;
 			types[typeof(StringVariable)] = defaultCompilerStrategy;
+			types[typeof(VariableSetterStatement)] = defaultCompilerStrategy;
 
 			types[typeof(ExecuterStatementInstance)] = defaultCompilerStrategy;
 			types[typeof(StatementInstance)] = defaultCompilerStrategy;

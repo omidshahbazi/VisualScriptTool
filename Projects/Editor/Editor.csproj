@@ -82,6 +82,7 @@
     <Compile Include="Serializers\Statement_Serializer.cs" />
     <Compile Include="Serializers\StringVariable_Serializer.cs" />
     <Compile Include="Serializers\SystemCompilerStrategy.cs" />
+    <Compile Include="Serializers\VariableSetterStatement_Serializer.cs" />
     <Compile Include="Serializers\VariableStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\WhileStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\WhileStatement_Serializer.cs" />

@@ -93,6 +93,9 @@ namespace VisualScriptTool.Reflection
 			if (Type == typeof(float))
 				return 0.0F;
 
+			if (Type.IsEnum)
+				return Enum.GetValues(Type).GetValue(0);
+
 			if (Type.IsGenericType && Type.GetGenericTypeDefinition() == typeof(Nullable<>))
 				Type = Type.GetProperty("Value").PropertyType;
 

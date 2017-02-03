@@ -147,7 +147,12 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			if (obj is T)
 				return (T)obj;
 
-			obj = Convert.ChangeType(obj, typeof(T));
+			Type type = typeof(T);
+
+			if (type.IsEnum)
+				obj = Enum.ToObject(type, obj);
+			else
+				obj = Convert.ChangeType(obj, typeof(T));
 
 			return (T)obj;
 

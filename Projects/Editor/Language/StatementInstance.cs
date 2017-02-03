@@ -146,7 +146,10 @@ namespace VisualScriptTool.Editor.Language
 		public virtual void OnMouseExit(PointF Location)
 		{
 			if (lastSlotOver != null)
+			{
+				lastSlotOver = null;
 				OnSlotExit(lastSlotOver);
+			}
 		}
 
 		public virtual void OnMouseDown(MouseButtons Button, PointF Location)
@@ -164,11 +167,23 @@ namespace VisualScriptTool.Editor.Language
 
 		public virtual void OnMouseMove(MouseButtons Button, PointF Location)
 		{
+
+			Console.WriteLine("MouseMove");
+
 			Slot underMouse = GetSlotAtLocation(Location);
+
+
+			Console.WriteLine("underMouse : " + (underMouse == null ? "null" : underMouse.Type.ToString()));
+			Console.WriteLine("lastSlotOver : " + (lastSlotOver == null ? "null" : lastSlotOver.Type.ToString()));
+
 			if (underMouse != lastSlotOver)
 			{
+
 				if (lastSlotOver != null)
+				{
 					OnSlotExit(lastSlotOver);
+					lastSlotOver = null;
+				}
 
 				if (underMouse != null)
 					OnSlotOver(underMouse);

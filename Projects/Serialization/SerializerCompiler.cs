@@ -20,6 +20,7 @@ namespace VisualScriptTool.Serialization
 		private enum ValueType
 		{
 			Primitive = 0,
+			Enumerator,
 			Array,
 			List,
 			Map,
@@ -348,8 +349,8 @@ namespace VisualScriptTool.Serialization
 
 			ValueType valueType = GetValueType(memberType);
 
-			if (valueType == ValueType.Primitive)
-				AppendPrimitive(Member, memberType, ID, memberAccessName, SerializeMethod, DeserializeMethod, ObjectName);
+			if (valueType == ValueType.Primitive || valueType == ValueType.Enumerator)
+				AppendPrimitive(Member, memberType, ID, memberAccessName, SerializeMethod, DeserializeMethod, ObjectName, valueType);
 			else if (valueType == ValueType.Array)
 				AppendArray(Member, memberType, ID, memberAccessName, SerializeMethod, DeserializeMethod, ObjectName, valueType);
 			//else if (valueType == ValueType.List)
@@ -362,13 +363,21 @@ namespace VisualScriptTool.Serialization
 				AppendDataStructure(Member, memberType, ID, memberAccessName, SerializeMethod, DeserializeMethod, ObjectName);
 		}
 
-		private void AppendPrimitive(MemberInfo Member, Type MemberType, int ID, string MemberAccessName, CodeBuilder SerializeMethod, CodeBuilder DeserializeMethod, string ObjectName)
+		private void AppendPrimitive(MemberInfo Member, Type MemberType, int ID, string MemberAccessName, CodeBuilder SerializeMethod, CodeBuilder DeserializeMethod, string ObjectName, ValueType ValueType)
 		{
-			SerializeMethod.AppendLine("Set(" + ObjectName + ", " + ID + ", " + MemberAccessName + ");", indent);
+			SerializeMethod.AppendLine("Set(" + ObjectName + ", " + ID + ", ", indent);
+
+			if (ValueType == ValueType.Enumerator)
+				SerializeMethod.Append("(int)");
+
+			SerializeMethod.Append(MemberAccessName + ");");
 
 			string defaultValue = Strategy.GetMemberDefaultValue(Member);
 			if (string.IsNullOrEmpty(defaultValue))
-				defaultValue = MemberType.GetDefaultValue().ToString().ToLower();
+				if (ValueType == ValueType.Enumerator)
+					defaultValue = GetFullTypeName(MemberType) + "." + MemberType.GetDefaultValue().ToString();
+				else
+					defaultValue = MemberType.GetDefaultValue().ToString().ToLower();
 
 			if (MemberType == typeof(string))
 				defaultValue = "\"" + defaultValue + "\"";
@@ -591,6 +600,8 @@ namespace VisualScriptTool.Serialization
 		{
 			if (Strategy.IsPrimitive(Type))
 				return ValueType.Primitive;
+			if (Type.IsEnum)
+				return ValueType.Enumerator;
 			else if (Strategy.IsArray(Type))
 				return ValueType.Array;
 			else if (Strategy.IsList(Type))

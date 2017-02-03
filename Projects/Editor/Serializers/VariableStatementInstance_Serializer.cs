@@ -74,10 +74,7 @@ namespace VisualScriptTool.Editor.Serializers
 				ISerializeObject Object = (ISerializeObject)Data; 
 				VisualScriptTool.Editor.Language.VariableStatementInstance VariableStatementInstance = (VisualScriptTool.Editor.Language.VariableStatementInstance)Instance;
 				// Mode
-				ISerializeObject ModeObject = AddObject(Object, 4); 
-				System.Type ModeType = VariableStatementInstance.Mode.GetType();
-				Set(ModeObject, 1, ModeType.AssemblyQualifiedName);
-				GetSerializer(ModeType).SerializeInternal(AddObject(ModeObject, 2), VariableStatementInstance.Mode, ModeType, References);
+				Set(Object, 4, (int)VariableStatementInstance.Mode);
 				// Statement
 				if (VariableStatementInstance.Statement == null)
 					Set(Object, 3, null);
@@ -140,13 +137,7 @@ namespace VisualScriptTool.Editor.Serializers
 				ISerializeObject Object = (ISerializeObject)Data; 
 				VisualScriptTool.Editor.Language.VariableStatementInstance VariableStatementInstance = (VisualScriptTool.Editor.Language.VariableStatementInstance)CreateInstance();
 				// Mode
-				ISerializeObject ModeObject = Get<ISerializeObject>(Object, 4, null);
-				if (ModeObject != null)
-				{
-					ISerializeObject ModeObjectValue = Get<ISerializeObject>(Object, 4); 
-					Serializer ModeSerializer = GetSerializer(System.Type.GetType(Get<string>(ModeObjectValue, 1)));
-					VariableStatementInstance.Mode = ModeSerializer.DeserializeInternal<VisualScriptTool.Editor.Language.VariableStatementInstance.Modes>(Get<ISerializeObject>(ModeObjectValue, 2), References, ResolverList);
-				}
+				VariableStatementInstance.Mode = Get<VisualScriptTool.Editor.Language.VariableStatementInstance.Modes>(Object, 4, VisualScriptTool.Editor.Language.VariableStatementInstance.Modes.None);
 				// Statement
 				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 3, null);
 				if (StatementObject != null)

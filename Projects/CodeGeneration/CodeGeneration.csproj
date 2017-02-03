@@ -39,6 +39,7 @@
     <Compile Include="CodeGeneratorBase.cs" />
     <Compile Include="CSharpCodeGenerator.cs" />
     <Compile Include="Language\CSharp\ControlStatementCodeGenerator.cs" />
+    <Compile Include="Language\CSharp\VariableSetterCodeGenerator.cs" />
     <Compile Include="Language\CSharp\WhileCodeGenerator.cs" />
     <Compile Include="Language\CSharp\ForCodeGenerator.cs" />
     <Compile Include="Language\CSharp\IfCodeGenerator.cs" />

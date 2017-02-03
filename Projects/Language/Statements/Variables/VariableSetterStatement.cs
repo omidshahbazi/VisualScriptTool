@@ -12,8 +12,15 @@ namespace VisualScriptTool.Language.Statements.Declaration.Variables
 			set;
 		}
 
-		[SerializableElement(1)]
+		[SerializableElement(2)]
 		public VariableStatement Statement
+		{
+			get;
+			set;
+		}
+
+		[SerializableElement(3)]
+		public object DefaultValue
 		{
 			get;
 			set;
