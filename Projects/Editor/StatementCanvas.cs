@@ -122,18 +122,18 @@ namespace VisualScriptTool.Editor
 			groupSelectionPen = new Pen(Color.Black);
 			groupSelectionPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
 
-			VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable var = new VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable();
+			//VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable var = new VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable();
 
-			VariableStatementInstance instance = new VariableStatementInstance(var);
-			instance.Mode = VariableStatementInstance.Modes.Getter;
-			AddStatementInstance(instance);
+			//VariableStatementInstance instance = new VariableStatementInstance(var);
+			//instance.Mode = VariableStatementInstance.Modes.Getter;
+			//AddStatementInstance(instance);
 
-			VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement varSetter = new VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement();
-			varSetter.Variable = var;
+			//VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement varSetter = new VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement();
+			//varSetter.Variable = var;
 
-			instance = new VariableStatementInstance(varSetter);
-			instance.Mode = VariableStatementInstance.Modes.Setter;
-			AddStatementInstance(instance);
+			//instance = new VariableStatementInstance(varSetter);
+			//instance.Mode = VariableStatementInstance.Modes.Setter;
+			//AddStatementInstance(instance);
 		}
 
 		public void AddStatementInstance(StatementInstance Instance)
