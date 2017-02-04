@@ -7,9 +7,9 @@ namespace VisualScriptTool.Editor.Language
 	{
 		[Serialization.SerializableInstantiator((StatementInstance)null)]
 		public VariableStatementInstance(VariableStatement Statement) :
-					base(Statement)
+			base(Statement)
 		{
-			AddSlot(Slot.Types.Getter, 0);
+			AddGetterSlot(0);
 		}
 	}
 }

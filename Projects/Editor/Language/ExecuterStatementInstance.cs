@@ -9,7 +9,7 @@ namespace VisualScriptTool.Editor.Language
 		public ExecuterStatementInstance() :
 			base(new ExecuterStatement())
 		{
-			AddSlot("Execute", Slot.Types.Executer, 0, null, OnTrueAssigned, OnRemoveTrueConnection);
+			AddExecuterSlot("Execute", 0, null, OnTrueAssigned, OnRemoveTrueConnection);
 		}
 
 		private void OnTrueAssigned(Slot Self, Slot Other)

@@ -12,17 +12,17 @@ namespace VisualScriptTool.Editor.Language
 		public ForStatementInstance() :
 			base(new ForStatement())
 		{
-			AddSlot("Body", Slot.Types.Executer, 1, null, OnBodyAssigned, OnRemoveBodyConnection);
+			AddExecuterSlot("Body", 1, null, OnBodyAssigned, OnRemoveBodyConnection);
 
-			AddSlot("Minimum", Slot.Types.Argument, 1, CheckVariableAssignment, OnMinimumAssigned, OnRemoveMinimumConnection);
-			AddSlot("Maximum", Slot.Types.Argument, 2, CheckVariableAssignment, OnMaximumAssigned, OnRemoveMaximumConnection);
-			AddSlot("Step", Slot.Types.Argument, 3, CheckVariableAssignment, OnStepAssigned, OnRemoveStepConnection);
+			AddArgumentSlot("Minimum", 1, CheckVariableAssignment, OnMinimumAssigned, OnRemoveMinimumConnection);
+			AddArgumentSlot("Maximum", 2, CheckVariableAssignment, OnMaximumAssigned, OnRemoveMaximumConnection);
+			AddArgumentSlot("Step", 3, CheckVariableAssignment, OnStepAssigned, OnRemoveStepConnection);
 		}
 
 		private void OnBodyAssigned(Slot Self, Slot Other)
 		{
 			ForStatement statement = (ForStatement)Statement;
-			
+
 			statement.Statement = Other.StatementInstance.Statement;
 
 			SetConnection(Self, Other);

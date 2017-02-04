@@ -10,7 +10,6 @@ namespace VisualScriptTool.Editor.Language
 		{
 			EntryPoint = 0,
 			Executer,
-			Setter,
 			Getter,
 			Argument
 		}
@@ -69,7 +68,7 @@ namespace VisualScriptTool.Editor.Language
 
 		public bool IsLeftAligned
 		{
-			get { return (Type == Types.Setter || Type == Types.EntryPoint || Type == Types.Argument); }
+			get { return ( Type == Types.EntryPoint || Type == Types.Argument); }//Type == Types.Setter ||
 		}
 
 		public bool IsRightAligned
@@ -125,9 +124,6 @@ namespace VisualScriptTool.Editor.Language
 				return true;
 
 			if (CombinitionTypeAllowedCheck(this, Slot, Types.Argument, Types.Getter))
-				return true;
-
-			if (CombinitionTypeAllowedCheck(this, Slot, Types.Getter, Types.Setter))
 				return true;
 
 			return false;

@@ -10,9 +10,9 @@ namespace VisualScriptTool.Editor.Language
 		public WhileStatementInstance() :
 			base(new WhileStatement())
 		{
-			AddSlot("Condition", Slot.Types.Argument, 1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
+			AddArgumentSlot("Condition", 1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
 
-			AddSlot("Body", Slot.Types.Executer, 1, null, OnBodyAssigned, OnRemoveBodyConnection);
+			AddExecuterSlot("Body", 1, null, OnBodyAssigned, OnRemoveBodyConnection);
 		}
 
 		private bool CheckConditionAssignment(Slot Other)

@@ -8,8 +8,8 @@ namespace VisualScriptTool.Editor.Language
 		public FlowStatementInstance(FlowStatement Statement) :
 			base(Statement)
 		{
-			AddSlot(Slot.Types.EntryPoint, 0, CheckEntryPointAssignment);
-			AddSlot(Slot.Types.Executer, 0, CheckExecuterAssignment, OnExecuterAssigned, OnExecuterRemoveConnection);
+			AddEntryPointSlot(0, CheckEntryPointAssignment);
+			AddExecuterSlot(0, CheckExecuterAssignment, OnExecuterAssigned, OnExecuterRemoveConnection);
 		}
 
 		protected virtual bool CheckEntryPointAssignment(Slot Other)

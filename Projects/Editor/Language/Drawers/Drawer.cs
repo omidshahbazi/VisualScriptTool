@@ -162,7 +162,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			switch (Slot.Type)
 			{
 				case Slot.Types.Getter:
-				case Slot.Types.Setter:
+				//case Slot.Types.Setter:
 					DrawFillTriangle(position.X, position.Y, position.X, position.Y + SLOT_SIZE, position.X + SLOT_SIZE, position.Y + HALF_SLOT_SIZE, variableSlotBrush);
 					break;
 
@@ -298,7 +298,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 				case Slot.Types.Executer:
 					return executionPen;
 
-				case Slot.Types.Setter:
+				//case Slot.Types.Setter:
 				case Slot.Types.Getter:
 				case Slot.Types.Argument:
 					return argumentPen;

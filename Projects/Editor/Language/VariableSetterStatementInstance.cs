@@ -9,7 +9,7 @@ namespace VisualScriptTool.Editor.Language
 		public VariableSetterStatementInstance(VariableSetterStatement Statement) :
 			base(Statement)
 		{
-			AddSlot(Slot.Types.Setter, 1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
+			AddArgumentSlot(1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
 		}
 
 		private bool CheckConditionAssignment(Slot Other)

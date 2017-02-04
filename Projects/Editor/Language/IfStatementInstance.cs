@@ -11,10 +11,10 @@ namespace VisualScriptTool.Editor.Language
 		public IfStatementInstance() :
 			base(new IfStatement())
 		{
-			AddSlot("Condition", Slot.Types.Argument, 1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
+			AddArgumentSlot("Condition", 1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
 
-			AddSlot("True", Slot.Types.Executer, 1, null, OnTrueAssigned, OnRemoveTrueConnection);
-			AddSlot("False", Slot.Types.Executer, 2, null, OnFalseAssigned, OnRemoveFalseConnection);
+			AddExecuterSlot("True", 1, null, OnTrueAssigned, OnRemoveTrueConnection);
+			AddExecuterSlot("False", 2, null, OnFalseAssigned, OnRemoveFalseConnection);
 		}
 
 		private bool CheckConditionAssignment(Slot Other)
