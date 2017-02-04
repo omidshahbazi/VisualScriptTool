@@ -79,19 +79,6 @@ namespace VisualScriptTool.Editor
 			canvas.Refresh();
 
 			UpdateTabText();
-
-			GenerateCode();
-		}
-
-		private void GenerateCode()
-		{
-			VisualScriptTool.Language.Statements.Statement[] statements = new VisualScriptTool.Language.Statements.Statement[Statements.Length];
-			for (int i = 0; i < Statements.Length; ++i)
-				statements[i] = Statements[i].Statement;
-
-			CSharpCodeGenerator codeGenerator = new CSharpCodeGenerator();
-
-			File.WriteAllText(Application.StartupPath + "/" + Name + ".cs", codeGenerator.Generate(statements)[0]);
 		}
 
 		public bool Save()
@@ -127,6 +114,17 @@ namespace VisualScriptTool.Editor
 			serializer.Serialize(dataArray, Statements);
 
 			File.WriteAllText(FilePath, dataArray.Content);
+		}
+
+		public void GenerateCode()
+		{
+			VisualScriptTool.Language.Statements.Statement[] statements = new VisualScriptTool.Language.Statements.Statement[Statements.Length];
+			for (int i = 0; i < Statements.Length; ++i)
+				statements[i] = Statements[i].Statement;
+
+			CSharpCodeGenerator codeGenerator = new CSharpCodeGenerator();
+
+			File.WriteAllText(Application.StartupPath + "/" + Name + ".cs", codeGenerator.Generate(statements)[0]);
 		}
 
 		private void SomethingChanged(object sender, System.EventArgs e)

@@ -9,7 +9,7 @@ namespace VisualScriptTool.Renderer
 {
 	public class Canvas : UserControl
 	{
-		public delegate void DrawCanvasHandler(Graphics Graphics);
+		public delegate void DrawCanvasHandler(IDevice Device);
 
 		protected Matrix matrix = new Matrix();
 
@@ -18,6 +18,8 @@ namespace VisualScriptTool.Renderer
 		private PointF[] pointArray = new PointF[1] { PointF.Empty };
 
 		public event DrawCanvasHandler DrawCanvas;
+
+		private Device device = null;
 
 		public PointF Pan
 		{
@@ -115,6 +117,10 @@ namespace VisualScriptTool.Renderer
 
 		protected override void OnPaint(PaintEventArgs e)
 		{
+			if (device == null)
+				device = new Device();
+			device.Graphics = e.Graphics;
+
 			matrix.Reset();
 			matrix.Translate(Pan.X, Pan.Y);
 			matrix.Scale(Zoom, Zoom);
@@ -129,13 +135,13 @@ namespace VisualScriptTool.Renderer
 			e.Graphics.TextContrast = TextContrast;
 			e.Graphics.TextRenderingHint = TextRenderingHint;
 
-			OnDrawCanvas(e.Graphics);
+			OnDrawCanvas(device);
 		}
 
-		protected virtual void OnDrawCanvas(Graphics Graphics)
+		protected virtual void OnDrawCanvas(IDevice Device)
 		{
 			if (DrawCanvas != null)
-				DrawCanvas(Graphics);
+				DrawCanvas(Device);
 		}
 
 		public void LookAt(PointF Point)

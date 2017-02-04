@@ -35,11 +35,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			if (statement.Condition == null)
 			{
 				Slot slot = StatementInstance.Slots[2];
-				SizeF size = MeasureString(slot.Name);
-
-				DrawFillRectangle(slot.Bounds.Left + size.Width + 30, slot.Position.Y, 10, 10, System.Drawing.Brushes.DimGray);
-
-				DrawFillCircle(slot.Bounds.Left + size.Width + 32, slot.Position.Y + 2, 6, System.Drawing.Brushes.Green);
+				SizeF size = Device.MeasureString(slot.Name, Font);
 			}
 		}
 	}

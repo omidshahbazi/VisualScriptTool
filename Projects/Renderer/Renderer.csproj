@@ -34,6 +34,8 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CodeArea.cs" />
+    <Compile Include="IDevice.cs" />
+    <Compile Include="Device.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

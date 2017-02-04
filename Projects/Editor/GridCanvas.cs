@@ -15,9 +15,9 @@ namespace VisualScriptTool.Editor
 			set;
 		}
 
-		protected override void OnDrawCanvas(Graphics Graphics)
+		protected override void OnDrawCanvas(IDevice Device)
 		{
-			base.OnDrawCanvas(Graphics);
+			base.OnDrawCanvas(Device);
 
 			Pen originPen = new Pen(Color.Black, 1.0F);
 			Pen gridPen = new Pen(Color.Gray, 0.5F);
@@ -31,8 +31,8 @@ namespace VisualScriptTool.Editor
 			//for (float y = min.Y; y < max.Y; y += 10)
 			//	Graphics.DrawLine(gridPen, min.X, y, max.X, y);
 
-			Graphics.DrawLine(originPen, min.X, 0.0F, max.X, 0.0F);
-			Graphics.DrawLine(originPen, 0.0F, min.Y, 0.0F, max.Y);
+			Device.DrawLine(min.X, 0.0F, max.X, 0.0F, originPen);
+			Device.DrawLine(0.0F, min.Y, 0.0F, max.Y, originPen);
 		}
 
 		protected override void OnMouseDown(MouseEventArgs e)

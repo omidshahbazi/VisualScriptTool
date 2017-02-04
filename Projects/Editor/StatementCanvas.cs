@@ -7,6 +7,7 @@ using VisualScriptTool.Editor.Extensions;
 using VisualScriptTool.Editor.Language;
 using VisualScriptTool.Editor.Language.Drawers;
 using VisualScriptTool.Language.Statements;
+using VisualScriptTool.Renderer;
 
 namespace VisualScriptTool.Editor
 {
@@ -149,30 +150,30 @@ namespace VisualScriptTool.Editor
 				AddStatementInstance(it.Current);
 		}
 
-		protected override void OnDrawCanvas(Graphics Graphics)
+		protected override void OnDrawCanvas(IDevice Device)
 		{
-			base.OnDrawCanvas(Graphics);
+			base.OnDrawCanvas(Device);
 
 			for (int i = 0; i < statements.Count; ++i)
-				drawer.Draw(Graphics, Statements[i]);
+				drawer.Draw(Device, Statements[i]);
 
 			for (int i = 0; i < selectedStatements.Count; ++i)
 			{
 				RectangleF rect = selectedStatements[i].Bounds;
 
-				Graphics.DrawRectangle(selectedPen, rect.X, rect.Y, rect.Width, rect.Height);
+				Device.DrawRectangle(rect.X, rect.Y, rect.Width, rect.Height, selectedPen);
 			}
 
 			for (int i = 0; i < statements.Count; ++i)
-				drawer.DrawConections(Graphics, Statements[i]);
+				drawer.DrawConections(Device, Statements[i]);
 
 			if (SelectedSlot != null)
-				newConnectionLine.Draw(Graphics, ControlStatementDrawer.GetPen(SelectedSlot.Type));
+				newConnectionLine.Draw(Device, ControlStatementDrawer.GetPen(SelectedSlot.Type));
 
 			if (isGroupSelection)
 			{
 				RectangleF rect = RectangleFExtensions.GetRectBetweenPoints(startGroupSelectionLocation, endGroupSelectionLocation);
-				Graphics.DrawRectangle(groupSelectionPen, rect.X, rect.Y, rect.Width, rect.Height);
+				Device.DrawRectangle(rect.X, rect.Y, rect.Width, rect.Height, groupSelectionPen);
 			}
 		}
 

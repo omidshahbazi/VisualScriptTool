@@ -35,5 +35,14 @@ namespace VisualScriptTool.Editor.Language
 			VariableSetterStatement statement = (VariableSetterStatement)Statement;
 			statement.Statement = null;
 		}
+
+		public override void ResolveSlotConnections(IStatementInspector Inspector)
+		{
+			base.ResolveSlotConnections(Inspector);
+
+			VariableSetterStatement statement = (VariableSetterStatement)Statement;
+
+			UpdateConnectedSlot(Inspector, 2, statement.Statement);
+		}
 	}
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using VisualScriptTool.Editor.Extensions;
+using VisualScriptTool.Renderer;
 
 namespace VisualScriptTool.Editor
 {
@@ -38,12 +39,12 @@ namespace VisualScriptTool.Editor
 			points.Clear();
 		}
 
-		public void Draw(Graphics Graphics, Pen Pen)
+		public void Draw(IDevice Device, Pen Pen)
 		{
 			if (points.Count == 0)
 				return;
 
-			Graphics.DrawLines(Pen, points.ToArray());
+			Device.DrawLines(points.ToArray(), Pen);
 		}
 	}
 }

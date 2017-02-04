@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using VisualScriptTool.Language.Statements;
+using VisualScriptTool.Renderer;
 
 namespace VisualScriptTool.Editor.Language.Drawers
 {
@@ -28,7 +29,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		private CubicSPLine line = new CubicSPLine();
 
-		protected Graphics Graphics
+		protected IDevice Device
 		{
 			get;
 			private set;
@@ -91,11 +92,11 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			line = new CubicSPLine();
 		}
 
-		public void Draw(Graphics Graphics, StatementInstance StatementInstance)
+		public void Draw(IDevice Device, StatementInstance StatementInstance)
 		{
-			this.Graphics = Graphics;
+			this.Device = Device;
 
-			SizeF headerSize = MeasureString(StatementInstance.Statement.Name) + new SizeF(TWO_HEADER_TEXT_MARGIN, TWO_HEADER_TEXT_MARGIN);
+			SizeF headerSize = Device.MeasureString(StatementInstance.Statement.Name, Font) + new SizeF(TWO_HEADER_TEXT_MARGIN, TWO_HEADER_TEXT_MARGIN);
 			headerSize.Width = Math.Max(headerSize.Width, MinimumWidth);
 			StatementInstance.HeaderSize = headerSize;
 
@@ -112,14 +113,14 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		{
 			Statement statement = StatementInstance.Statement;
 
-			DrawFillRectangle(StatementInstance.Position.X, StatementInstance.Position.Y, StatementInstance.HeaderSize.Width, StatementInstance.HeaderSize.Height, headeBackBrush);
+			Device.DrawFillRectangle(StatementInstance.Position.X, StatementInstance.Position.Y, StatementInstance.HeaderSize.Width, StatementInstance.HeaderSize.Height, headeBackBrush);
 
-			DrawString(statement.Name, StatementInstance.Position.X + HEADER_TEXT_MARGIN, StatementInstance.Position.Y + HEADER_TEXT_MARGIN, headeTextBrush);
+			Device.DrawString(statement.Name, StatementInstance.Position.X + HEADER_TEXT_MARGIN, StatementInstance.Position.Y + HEADER_TEXT_MARGIN, headeTextBrush, Font);
 		}
 
 		protected virtual void DrawBody(StatementInstance StatementInstance)
 		{
-			DrawFillRectangle(StatementInstance.Position.X, StatementInstance.Position.Y + StatementInstance.HeaderSize.Height, StatementInstance.BodySize.Width, StatementInstance.BodySize.Height, bodyBackBrush);
+			Device.DrawFillRectangle(StatementInstance.Position.X, StatementInstance.Position.Y + StatementInstance.HeaderSize.Height, StatementInstance.BodySize.Width, StatementInstance.BodySize.Height, bodyBackBrush);
 
 			DrawSlots(StatementInstance);
 		}
@@ -132,7 +133,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 				DrawSlot(slots[i]);
 		}
 
-		public virtual void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
+		public virtual void DrawConections(StatementInstance StatementInstance)
 		{
 			Slot[] slots = StatementInstance.Slots;
 
@@ -153,26 +154,26 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			if (!string.IsNullOrEmpty(Slot.Name))
 			{
-				SizeF nameSize = MeasureString(Slot.Name);
+				SizeF nameSize = Device.MeasureString(Slot.Name, Font);
 
 				PointF namePosition = new PointF(Slot.IsLeftAligned ? Slot.Bounds.Right + SLOT_MARGIN : Slot.Bounds.Left - nameSize.Width - SLOT_MARGIN, position.Y - ((nameSize.Height - Slot.Bounds.Height) / 2.0F));
-				DrawString(Slot.Name, namePosition.X, namePosition.Y, headeTextBrush);
-            }
+				Device.DrawString(Slot.Name, namePosition.X, namePosition.Y, headeTextBrush, Font);
+			}
 
 			switch (Slot.Type)
 			{
 				case Slot.Types.Getter:
-				//case Slot.Types.Setter:
-					DrawFillTriangle(position.X, position.Y, position.X, position.Y + SLOT_SIZE, position.X + SLOT_SIZE, position.Y + HALF_SLOT_SIZE, variableSlotBrush);
+					//case Slot.Types.Setter:
+					Device.DrawFillTriangle(position.X, position.Y, position.X, position.Y + SLOT_SIZE, position.X + SLOT_SIZE, position.Y + HALF_SLOT_SIZE, variableSlotBrush);
 					break;
 
 				case Slot.Types.EntryPoint:
 				case Slot.Types.Executer:
-					DrawFillCircle(position.X, position.Y, SLOT_SIZE, executeSlotBrush);
+					Device.DrawFillCircle(position.X, position.Y, SLOT_SIZE, executeSlotBrush);
 					break;
 
 				case Slot.Types.Argument:
-					DrawFillPolygon(argumentSlotBrush, new PointF[] { new PointF(position.X, position.Y + HALF_SLOT_SIZE), new PointF(position.X + HALF_SLOT_SIZE, position.Y), new PointF(position.X + SLOT_SIZE, position.Y + HALF_SLOT_SIZE), new PointF(position.X + HALF_SLOT_SIZE, position.Y + SLOT_SIZE) });
+					Device.DrawFillPolygon(argumentSlotBrush, new PointF[] { new PointF(position.X, position.Y + HALF_SLOT_SIZE), new PointF(position.X + HALF_SLOT_SIZE, position.Y), new PointF(position.X + SLOT_SIZE, position.Y + HALF_SLOT_SIZE), new PointF(position.X + HALF_SLOT_SIZE, position.Y + SLOT_SIZE) });
 					break;
 			}
 		}
@@ -186,67 +187,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			endOffset.X = DirectionToOffset(To);
 
 			line.Update(From.Center, startOffset, To.Center, endOffset);
-			line.Draw(Graphics, GetPen(From.Type));
-		}
-
-		protected void DrawString(string Value, float X, float Y, Brush Brush)
-		{
-			DrawString(Value, X, Y, Brush, Font);
-		}
-
-		protected void DrawString(string Value, float X, float Y, Brush Brush, Font Font)
-		{
-			Graphics.DrawString(Value, Font, Brush, X, Y);
-		}
-
-		protected void DrawTriangle(float X1, float Y1, float X2, float Y2, float X3, float Y3, Pen Pen)
-		{
-			DrawPolygon(Pen, new PointF[] { new PointF(X1, Y1), new PointF(X2, Y2), new PointF(X3, Y3) });
-		}
-
-		protected void DrawFillTriangle(float X1, float Y1, float X2, float Y2, float X3, float Y3, Brush Brush)
-		{
-			DrawFillPolygon(Brush, new PointF[] { new PointF(X1, Y1), new PointF(X2, Y2), new PointF(X3, Y3) });
-		}
-
-		protected void DrawPolygon(Pen Pen, params PointF[] Points)
-		{
-			Graphics.DrawPolygon(Pen, Points);
-		}
-
-		protected void DrawFillPolygon(Brush Brush, params PointF[] Points)
-		{
-			Graphics.FillPolygon(Brush, Points);
-		}
-
-		protected void DrawRectangle(float X, float Y, float Width, float Height, Pen Pen)
-		{
-			Graphics.DrawRectangle(Pen, X, Y, Width, Height);
-		}
-
-		protected void DrawFillRectangle(float X, float Y, float Width, float Height, Brush Brush)
-		{
-			Graphics.FillRectangle(Brush, X, Y, Width, Height);
-		}
-
-		protected void DrawCircle(float X, float Y, float Radius, Pen Pen)
-		{
-			Graphics.DrawEllipse(Pen, new RectangleF(X, Y, Radius, Radius));
-		}
-
-		protected void DrawFillCircle(float X, float Y, float Radius, Brush Brush)
-		{
-			Graphics.FillEllipse(Brush, new RectangleF(X, Y, Radius, Radius));
-		}
-
-		protected SizeF MeasureString(string Value)
-		{
-			return MeasureString(Value, Font);
-		}
-
-		protected SizeF MeasureString(string Value, Font Font)
-		{
-			return Graphics.MeasureString(Value, Font);
+			line.Draw(Device, GetPen(From.Type));
 		}
 
 		protected virtual float GetSlotYOffset(Slot Slot)

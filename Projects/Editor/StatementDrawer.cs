@@ -5,6 +5,7 @@ using System.Drawing;
 using VisualScriptTool.Editor.Language;
 using VisualScriptTool.Editor.Language.Drawers;
 using VisualScriptTool.Reflection;
+using VisualScriptTool.Renderer;
 
 namespace VisualScriptTool.Editor
 {
@@ -43,16 +44,16 @@ namespace VisualScriptTool.Editor
 			}
 		}
 
-		public void Draw(Graphics Graphics, StatementInstance StatementInstance)
+		public void Draw(IDevice Device, StatementInstance StatementInstance)
 		{
 			Drawer drawer = GetDrawer(StatementInstance);
-			drawer.Draw(Graphics, StatementInstance);
+			drawer.Draw(Device, StatementInstance);
 		}
 
-		public void DrawConections(Graphics Graphics, StatementInstance StatementInstance)
+		public void DrawConections(IDevice Device, StatementInstance StatementInstance)
 		{
 			Drawer drawer = GetDrawer(StatementInstance);
-			drawer.DrawConections(Graphics, StatementInstance);
+			drawer.DrawConections(StatementInstance);
 		}
 
 		public Drawer GetDrawer(StatementInstance StatementInstance)

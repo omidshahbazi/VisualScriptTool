@@ -58,6 +58,14 @@ namespace VisualScriptTool.Editor
 				SaveDiagramTab((DiagramTab)TabControl.TabPages[i]);
 		}
 
+		private void GenerateCSharpCode_Click(object sender, System.EventArgs e)
+		{
+			if (CurrentTab == null)
+				return;
+
+			CurrentTab.GenerateCode();
+		}
+
 		private DiagramTab AddTab()
 		{
 			DiagramTab diagramTab = new DiagramTab();
