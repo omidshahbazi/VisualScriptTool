@@ -73,12 +73,14 @@ namespace VisualScriptTool.Editor.Serializers
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
 				VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement VariableSetterStatement = (VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement)Instance;
+				// Name
+				Set(Object, 0, VariableSetterStatement.Name);
 				// Variable
 				if (VariableSetterStatement.Variable == null)
-					Set(Object, 1, null);
+					Set(Object, 2, null);
 				else
 				{
-					ISerializeObject VariableObject = AddObject(Object, 1); 
+					ISerializeObject VariableObject = AddObject(Object, 2); 
 					string guid = string.Empty;
 					if (References.ContainsKey(VariableSetterStatement.Variable))
 						guid = References[VariableSetterStatement.Variable];
@@ -94,10 +96,10 @@ namespace VisualScriptTool.Editor.Serializers
 				}
 				// Statement
 				if (VariableSetterStatement.Statement == null)
-					Set(Object, 2, null);
+					Set(Object, 3, null);
 				else
 				{
-					ISerializeObject StatementObject = AddObject(Object, 2); 
+					ISerializeObject StatementObject = AddObject(Object, 3); 
 					string guid = string.Empty;
 					if (References.ContainsKey(VariableSetterStatement.Statement))
 						guid = References[VariableSetterStatement.Statement];
@@ -113,10 +115,10 @@ namespace VisualScriptTool.Editor.Serializers
 				}
 				// DefaultValue
 				if (VariableSetterStatement.DefaultValue == null)
-					Set(Object, 3, null);
+					Set(Object, 4, null);
 				else
 				{
-					ISerializeObject DefaultValueObject = AddObject(Object, 3); 
+					ISerializeObject DefaultValueObject = AddObject(Object, 4); 
 					string guid = string.Empty;
 					if (References.ContainsKey(VariableSetterStatement.DefaultValue))
 						guid = References[VariableSetterStatement.DefaultValue];
@@ -130,8 +132,25 @@ namespace VisualScriptTool.Editor.Serializers
 					}
 					Set(DefaultValueObject, 0, guid);
 				}
-				// Name
-				Set(Object, 0, VariableSetterStatement.Name);
+				// CompleteStatement
+				if (VariableSetterStatement.CompleteStatement == null)
+					Set(Object, 1, null);
+				else
+				{
+					ISerializeObject CompleteStatementObject = AddObject(Object, 1); 
+					string guid = string.Empty;
+					if (References.ContainsKey(VariableSetterStatement.CompleteStatement))
+						guid = References[VariableSetterStatement.CompleteStatement];
+					else
+					{
+						guid = System.Guid.NewGuid().ToString();
+						References[VariableSetterStatement.CompleteStatement] = guid;
+						System.Type CompleteStatementType = VariableSetterStatement.CompleteStatement.GetType();
+						Set(CompleteStatementObject, 1, CompleteStatementType.AssemblyQualifiedName);
+						GetSerializer(CompleteStatementType).SerializeInternal(AddObject(CompleteStatementObject, 2), VariableSetterStatement.CompleteStatement, CompleteStatementType, References);
+					}
+					Set(CompleteStatementObject, 0, guid);
+				}
 			}
 		}
 
@@ -159,11 +178,13 @@ namespace VisualScriptTool.Editor.Serializers
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
 				VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement VariableSetterStatement = (VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement)CreateInstance();
+				// Name
+				VariableSetterStatement.Name = Get<System.String>(Object, 0, "");
 				// Variable
-				ISerializeObject VariableObject = Get<ISerializeObject>(Object, 1, null);
+				ISerializeObject VariableObject = Get<ISerializeObject>(Object, 2, null);
 				if (VariableObject != null)
 				{
-					ISerializeObject VariableObjectValue = Get<ISerializeObject>(Object, 1); 
+					ISerializeObject VariableObjectValue = Get<ISerializeObject>(Object, 2); 
 					string guid = Get<string>(VariableObjectValue, 0);
 					if (Contains(VariableObjectValue, 1))
 					{
@@ -177,10 +198,10 @@ namespace VisualScriptTool.Editor.Serializers
 				else
 					VariableSetterStatement.Variable = null;
 				// Statement
-				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 2, null);
+				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 3, null);
 				if (StatementObject != null)
 				{
-					ISerializeObject StatementObjectValue = Get<ISerializeObject>(Object, 2); 
+					ISerializeObject StatementObjectValue = Get<ISerializeObject>(Object, 3); 
 					string guid = Get<string>(StatementObjectValue, 0);
 					if (Contains(StatementObjectValue, 1))
 					{
@@ -194,10 +215,10 @@ namespace VisualScriptTool.Editor.Serializers
 				else
 					VariableSetterStatement.Statement = null;
 				// DefaultValue
-				ISerializeObject DefaultValueObject = Get<ISerializeObject>(Object, 3, null);
+				ISerializeObject DefaultValueObject = Get<ISerializeObject>(Object, 4, null);
 				if (DefaultValueObject != null)
 				{
-					ISerializeObject DefaultValueObjectValue = Get<ISerializeObject>(Object, 3); 
+					ISerializeObject DefaultValueObjectValue = Get<ISerializeObject>(Object, 4); 
 					string guid = Get<string>(DefaultValueObjectValue, 0);
 					if (Contains(DefaultValueObjectValue, 1))
 					{
@@ -210,8 +231,23 @@ namespace VisualScriptTool.Editor.Serializers
 				}
 				else
 					VariableSetterStatement.DefaultValue = null;
-				// Name
-				VariableSetterStatement.Name = Get<System.String>(Object, 0, "");
+				// CompleteStatement
+				ISerializeObject CompleteStatementObject = Get<ISerializeObject>(Object, 1, null);
+				if (CompleteStatementObject != null)
+				{
+					ISerializeObject CompleteStatementObjectValue = Get<ISerializeObject>(Object, 1); 
+					string guid = Get<string>(CompleteStatementObjectValue, 0);
+					if (Contains(CompleteStatementObjectValue, 1))
+					{
+						Serializer CompleteStatementSerializer = GetSerializer(System.Type.GetType(Get<string>(CompleteStatementObjectValue, 1)));
+						VariableSetterStatement.CompleteStatement = CompleteStatementSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Statement>(Get<ISerializeObject>(CompleteStatementObjectValue, 2), References, ResolverList);
+						References[guid] = VariableSetterStatement.CompleteStatement;
+					}
+					else
+						ResolverList.Add(new ReferenceResolver(guid, VariableSetterStatement, VariableSetterStatement.GetType().GetProperty("CompleteStatement", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
+				}
+				else
+					VariableSetterStatement.CompleteStatement = null;
 				returnValue = (T)(object)VariableSetterStatement;
 			}
 			return returnValue;

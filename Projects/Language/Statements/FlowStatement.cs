@@ -3,7 +3,13 @@ using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Language.Statements.Control
 {
-	public abstract class ControlStatement : FlowStatement
+	public abstract class FlowStatement : Statement
 	{
+		[SerializableElement(1)]
+		public Statement CompleteStatement
+		{
+			get;
+			set;
+		}
 	}
 }

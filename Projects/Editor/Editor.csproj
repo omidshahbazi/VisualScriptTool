@@ -49,7 +49,9 @@
     </Compile>
     <Compile Include="IMouseIntractible.cs" />
     <Compile Include="IStatementInspector.cs" />
+    <Compile Include="Language\FlowStatementInstance.cs" />
     <Compile Include="Language\ControlStatementInstance.cs" />
+    <Compile Include="Language\Drawers\FlowStatementDrawer.cs" />
     <Compile Include="Language\Drawers\ForStatementDrawer.cs" />
     <Compile Include="Language\Drawers\ExecuterStatementDrawer.cs" />
     <Compile Include="Language\Drawers\VariableSetterDrawer.cs" />
@@ -59,10 +61,11 @@
     <Compile Include="Language\Drawers\VariableDrawer.cs" />
     <Compile Include="Language\ForStatementInstance.cs" />
     <Compile Include="Language\ExecuterStatementInstance.cs" />
+    <Compile Include="Language\VariableSetterStatementInstance.cs" />
     <Compile Include="Language\WhileStatementInstance.cs" />
     <Compile Include="Language\Slot.cs" />
     <Compile Include="Language\IfStatementInstance.cs" />
-    <Compile Include="Language\VariableStatementInstance.cs" />
+    <Compile Include="Language\VariableGetterStatementInstance.cs" />
     <Compile Include="Extensions\RectangleFExtensions.cs" />
     <Compile Include="Extensions\PointFExtensions.cs" />
     <Compile Include="Serializers\BooleanVariable_Serializer.cs" />
@@ -82,8 +85,8 @@
     <Compile Include="Serializers\Statement_Serializer.cs" />
     <Compile Include="Serializers\StringVariable_Serializer.cs" />
     <Compile Include="Serializers\SystemCompilerStrategy.cs" />
+    <Compile Include="Serializers\VariableGetterStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\VariableSetterStatement_Serializer.cs" />
-    <Compile Include="Serializers\VariableStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\WhileStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\WhileStatement_Serializer.cs" />
     <Compile Include="StatementCanvas.cs">

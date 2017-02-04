@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace VisualScriptTool.Editor.Language.Drawers
 {
-	public abstract class ControlStatementDrawer : Drawer
+	public abstract class ControlStatementDrawer : FlowStatementDrawer
 	{
 		protected override Color HeaderBackColor
 		{
