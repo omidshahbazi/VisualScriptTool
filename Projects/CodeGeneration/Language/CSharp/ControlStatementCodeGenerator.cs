@@ -5,14 +5,7 @@ using VisualScriptTool.Language.Statements.Control;
 
 namespace VisualScriptTool.CodeGeneration.Language.CSharp
 {
-	abstract class ControlStatementCodeGenerator : StatementCodeGenerator
+	abstract class ControlStatementCodeGenerator : FlowStatementCodeGenerator
 	{
-		public override void Generate(StringBuilder Builder, Statement Statement)
-		{
-			ControlStatement statement = (ControlStatement)Statement;
-
-			if (statement.CompleteStatement != null)
-				Get(statement.CompleteStatement.GetType()).Generate(Builder, statement.CompleteStatement);
-		}
 	}
 }

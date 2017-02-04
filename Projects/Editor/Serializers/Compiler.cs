@@ -37,7 +37,8 @@ namespace VisualScriptTool.Editor.Serializers
 			types[typeof(IfStatementInstance)] = defaultCompilerStrategy;
 			types[typeof(WhileStatementInstance)] = defaultCompilerStrategy;
 			types[typeof(ForStatementInstance)] = defaultCompilerStrategy;
-			types[typeof(VariableGetterStatementInstance)] = defaultCompilerStrategy;
+			types[typeof(VariableStatementInstance)] = defaultCompilerStrategy;
+			types[typeof(VariableSetterStatementInstance)] = defaultCompilerStrategy;
 
 			types[typeof(PointF)] = systemCompilerStrategy;
 			types[typeof(SizeF)] = systemCompilerStrategy;

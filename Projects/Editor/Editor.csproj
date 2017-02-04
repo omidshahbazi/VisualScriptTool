@@ -65,7 +65,7 @@
     <Compile Include="Language\WhileStatementInstance.cs" />
     <Compile Include="Language\Slot.cs" />
     <Compile Include="Language\IfStatementInstance.cs" />
-    <Compile Include="Language\VariableGetterStatementInstance.cs" />
+    <Compile Include="Language\VariableStatementInstance.cs" />
     <Compile Include="Extensions\RectangleFExtensions.cs" />
     <Compile Include="Extensions\PointFExtensions.cs" />
     <Compile Include="Serializers\BooleanVariable_Serializer.cs" />
@@ -85,8 +85,9 @@
     <Compile Include="Serializers\Statement_Serializer.cs" />
     <Compile Include="Serializers\StringVariable_Serializer.cs" />
     <Compile Include="Serializers\SystemCompilerStrategy.cs" />
-    <Compile Include="Serializers\VariableGetterStatementInstance_Serializer.cs" />
+    <Compile Include="Serializers\VariableSetterStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\VariableSetterStatement_Serializer.cs" />
+    <Compile Include="Serializers\VariableStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\WhileStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\WhileStatement_Serializer.cs" />
     <Compile Include="StatementCanvas.cs">

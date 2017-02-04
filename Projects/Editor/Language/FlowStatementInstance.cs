@@ -26,7 +26,7 @@ namespace VisualScriptTool.Editor.Language
 		{
 			SetConnection(Self, Other);
 
-			ControlStatement statement = (ControlStatement)Statement;
+			FlowStatement statement = (FlowStatement)Statement;
 			statement.CompleteStatement = Other.StatementInstance.Statement;
 		}
 
@@ -34,7 +34,7 @@ namespace VisualScriptTool.Editor.Language
 		{
 			UnsetConnection(Self);
 
-			ControlStatement statement = (ControlStatement)Statement;
+			FlowStatement statement = (FlowStatement)Statement;
 			statement.CompleteStatement = null;
 		}
 
@@ -42,7 +42,7 @@ namespace VisualScriptTool.Editor.Language
 		{
 			base.ResolveSlotConnections(Inspector);
 
-			ControlStatement statement = (ControlStatement)Statement;
+			FlowStatement statement = (FlowStatement)Statement;
 
 			UpdateConnectedSlot(Inspector, 1, statement.CompleteStatement);
 		}

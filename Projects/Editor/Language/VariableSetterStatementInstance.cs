@@ -3,13 +3,13 @@ using VisualScriptTool.Language.Statements.Declaration.Variables;
 
 namespace VisualScriptTool.Editor.Language
 {
-	public class VariableSetterStatementInstance : StatementInstance
+	public class VariableSetterStatementInstance : FlowStatementInstance
 	{
 		[Serialization.SerializableInstantiator((StatementInstance)null)]
-		public VariableSetterStatementInstance(VariableStatement Statement) :
+		public VariableSetterStatementInstance(VariableSetterStatement Statement) :
 			base(Statement)
 		{
-			AddSlot(Slot.Types.Setter, 0, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
+			AddSlot(Slot.Types.Setter, 1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
 		}
 
 		private bool CheckConditionAssignment(Slot Other)

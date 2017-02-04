@@ -9,8 +9,8 @@ namespace VisualScriptTool.Language.Statements.Declaration.Variables
 		[SerializableElement(0)]
 		public override string Name
 		{
-			get;
-			set;
+			get { return Variable.Name; }
+			set { }
 		}
 
 		[SerializableElement(2)]

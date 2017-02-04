@@ -6,7 +6,7 @@ using VisualScriptTool.Language.Statements.Declaration.Variables;
 
 namespace VisualScriptTool.CodeGeneration.Language.CSharp
 {
-	class VariableSetterCodeGenerator : StatementCodeGenerator
+	class VariableSetterCodeGenerator : FlowStatementCodeGenerator
 	{
 		public override Type[] StatementTypes
 		{
@@ -29,6 +29,8 @@ namespace VisualScriptTool.CodeGeneration.Language.CSharp
 				Builder.Append(statement.Statement.Name);
 
 			Builder.AppendLine(";");
+
+			base.Generate(Builder, Statement);
 		}
 	}
 }

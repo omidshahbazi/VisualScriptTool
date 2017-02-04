@@ -20,7 +20,8 @@ namespace VisualScriptTool.Editor.Serializers
 			Serialization.Creator.AddSerializer(new IfStatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new WhileStatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new ForStatementInstance_Serializer());
-			Serialization.Creator.AddSerializer(new VariableGetterStatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new VariableStatementInstance_Serializer());
+			Serialization.Creator.AddSerializer(new VariableSetterStatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new PointF_Serializer());
 			Serialization.Creator.AddSerializer(new SizeF_Serializer());
 		}

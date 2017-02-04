@@ -3,10 +3,10 @@ using VisualScriptTool.Language.Statements.Declaration.Variables;
 
 namespace VisualScriptTool.Editor.Language
 {
-	public class VariableGetterStatementInstance : StatementInstance
+	public class VariableStatementInstance : StatementInstance
 	{
 		[Serialization.SerializableInstantiator((StatementInstance)null)]
-		public VariableGetterStatementInstance(VariableStatement Statement) :
+		public VariableStatementInstance(VariableStatement Statement) :
 					base(Statement)
 		{
 			AddSlot(Slot.Types.Getter, 0);

@@ -59,8 +59,6 @@ namespace VisualScriptTool.Editor
 			this.Name = Name;
 			IsNew = true;
 			IsDirty = true;
-
-			GenerateCode();
 		}
 
 		public void Load(string FilePath)
@@ -81,6 +79,8 @@ namespace VisualScriptTool.Editor
 			canvas.Refresh();
 
 			UpdateTabText();
+
+			GenerateCode();
 		}
 
 		private void GenerateCode()

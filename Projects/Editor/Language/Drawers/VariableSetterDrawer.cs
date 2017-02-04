@@ -5,7 +5,7 @@ using VisualScriptTool.Language.Statements.Declaration.Variables;
 
 namespace VisualScriptTool.Editor.Language.Drawers
 {
-	public class VariableSetterDrawer : VariableDrawer
+	public class VariableSetterDrawer : FlowStatementDrawer
 	{
 		protected override float MinimumWidth
 		{
@@ -14,12 +14,12 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		public override uint RowCount
 		{
-			get { return 1; }
+			get { return 2; }
 		}
 
 		protected override Color HeaderBackColor
 		{
-			get { return HEADER_COLOR; }
+			get { return VariableDrawer.HEADER_COLOR; }
 		}
 
 		protected override Color BodyBackColor
