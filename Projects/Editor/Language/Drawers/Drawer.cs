@@ -1,6 +1,7 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
 using System.Drawing;
+using VisualScriptTool.Editor.Language.Drawers.Controls;
 using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Renderer;
 
@@ -123,6 +124,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			Device.DrawFillRectangle(StatementInstance.Position.X, StatementInstance.Position.Y + StatementInstance.HeaderSize.Height, StatementInstance.BodySize.Width, StatementInstance.BodySize.Height, bodyBackBrush);
 
 			DrawSlots(StatementInstance);
+
+			DrawControls(StatementInstance);
 		}
 
 		protected virtual void DrawSlots(StatementInstance StatementInstance)
@@ -131,6 +134,14 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			for (int i = 0; i < slots.Length; ++i)
 				DrawSlot(slots[i]);
+		}
+
+		protected virtual void DrawControls(StatementInstance StatementInstance)
+		{
+			ControlBase[] controls = StatementInstance.Controls;
+
+			for (int i = 0; i < controls.Length; ++i)
+				DrawControl(controls[i]);
 		}
 
 		public virtual void DrawConections(StatementInstance StatementInstance)
@@ -176,6 +187,11 @@ namespace VisualScriptTool.Editor.Language.Drawers
 					Device.DrawFillPolygon(argumentSlotBrush, new PointF[] { new PointF(position.X, position.Y + HALF_SLOT_SIZE), new PointF(position.X + HALF_SLOT_SIZE, position.Y), new PointF(position.X + SLOT_SIZE, position.Y + HALF_SLOT_SIZE), new PointF(position.X + HALF_SLOT_SIZE, position.Y + SLOT_SIZE) });
 					break;
 			}
+		}
+
+		protected virtual void DrawControl(ControlBase Control)
+		{
+			Control.Draw(Device);
 		}
 
 		protected void DrawLine(Slot From, Slot To)

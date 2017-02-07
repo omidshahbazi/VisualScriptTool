@@ -1,5 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
-using System;
+using System.Drawing;
+using VisualScriptTool.Editor.Language.Drawers.Controls;
 using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Language.Statements.Declaration.Variables;
 
@@ -7,11 +8,13 @@ namespace VisualScriptTool.Editor.Language
 {
 	public class IfStatementInstance : ControlStatementInstance
 	{
+		private Slot conditionSlot = null;
+
 		[Serialization.SerializableInstantiator]
 		public IfStatementInstance() :
 			base(new IfStatement())
 		{
-			AddArgumentSlot("Condition", 1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
+			conditionSlot = AddArgumentSlot("Condition", 1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
 
 			AddExecuterSlot("True", 1, null, OnTrueAssigned, OnRemoveTrueConnection);
 			AddExecuterSlot("False", 2, null, OnFalseAssigned, OnRemoveFalseConnection);
@@ -82,6 +85,12 @@ namespace VisualScriptTool.Editor.Language
 			UpdateConnectedSlot(Inspector, 2, statement.Condition);
 			UpdateConnectedSlot(Inspector, 3, statement.Statement);
 			UpdateConnectedSlot(Inspector, 4, statement.ElseStatment);
+
+			CheckBox conditionCheckbox = new CheckBox(this);
+			conditionCheckbox.Location = new PointF(100, 55);
+			conditionCheckbox.Value = ((IfStatement)Statement).ConditionDefaultValue;
+			conditionCheckbox.ValueChanged += (control) => { ((IfStatement)Statement).ConditionDefaultValue = conditionCheckbox.Value; };
+			AddControl(conditionCheckbox);
 		}
 	}
 }

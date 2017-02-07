@@ -49,7 +49,7 @@
     </Compile>
     <Compile Include="IMouseIntractible.cs" />
     <Compile Include="IStatementInspector.cs" />
-    <Compile Include="Language\Drawers\Controls\Checkbox.cs" />
+    <Compile Include="Language\Drawers\Controls\CheckBox.cs" />
     <Compile Include="Language\Drawers\Controls\ControlBase.cs" />
     <Compile Include="Language\FlowStatementInstance.cs" />
     <Compile Include="Language\ControlStatementInstance.cs" />

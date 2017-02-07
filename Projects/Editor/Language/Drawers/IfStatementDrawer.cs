@@ -1,7 +1,9 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
 using System.Drawing;
+using VisualScriptTool.Editor.Language.Drawers.Controls;
 using VisualScriptTool.Language.Statements.Control;
+using VisualScriptTool.Renderer;
 
 namespace VisualScriptTool.Editor.Language.Drawers
 {
@@ -22,21 +24,20 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return new Type[] { typeof(IfStatement) }; }
 		}
 
-		public IfStatementDrawer()
-		{
-		}
+		//public override void Draw(IDevice Device, StatementInstance StatementInstance)
+		//{
+		//	base.Draw(Device, StatementInstance);
 
-		protected override void DrawBody(StatementInstance StatementInstance)
-		{
-			base.DrawBody(StatementInstance);
-			
-			IfStatement statement = (IfStatement)StatementInstance.Statement;
+		//	IfStatement statement = (IfStatement)StatementInstance.Statement;
 
-			if (statement.Condition == null)
-			{
-				Slot slot = StatementInstance.Slots[2];
-				SizeF size = Device.MeasureString(slot.Name, Font);
-			}
-		}
+		//	if (statement.Condition == null)
+		//	{
+		//		Slot slot = StatementInstance.Slots[2];
+
+		//		checkBox.Value = statement.ConditionDefaultValue;
+		//		checkBox.Location = new PointF(slot.Bounds.Right + 80, slot.Bounds.Y);
+		//		checkBox.Draw(Device);
+		//	}
+		//}
 	}
 }

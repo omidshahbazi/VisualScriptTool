@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Extensions;
+using VisualScriptTool.Editor.Language.Drawers.Controls;
 using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Serialization;
 
@@ -20,6 +21,7 @@ namespace VisualScriptTool.Editor.Language
 		private RectangleF bounds;
 
 		private SlotList slots = null;
+		private ControlList controls = null;
 
 		private bool isSelected = false;
 		private Slot lastSlotOver = null;
@@ -67,12 +69,18 @@ namespace VisualScriptTool.Editor.Language
 			get { return slots.ToArray(); }
 		}
 
+		public ControlBase[] Controls
+		{
+			get { return controls.ToArray(); }
+		}
+
 		public StatementInstance(Statement Statement)
 		{
 			bounds = new RectangleF();
 			this.Statement = Statement;
 
 			slots = new SlotList();
+			controls = new ControlList();
 		}
 
 		public void UpdateBounds()
@@ -113,6 +121,11 @@ namespace VisualScriptTool.Editor.Language
 		protected void RemoveSlot(Slot Slot)
 		{
 			slots.Remove(Slot);
+		}
+
+		protected void AddControl(ControlBase Control)
+		{
+			controls.Add(Control);
 		}
 
 		protected virtual void UpdateConnectedSlot(IStatementInspector Inspector, uint Index, Statement ConnectedStatement)
@@ -181,22 +194,21 @@ namespace VisualScriptTool.Editor.Language
 
 		public virtual void OnMouseUp(MouseButtons Button, PointF Location)
 		{
+			for (int i = 0; i < controls.Count;++i)
+			{
+				ControlBase control = controls[i];
+
+				if (control.Bounds.Contains(Location))
+					control.OnMouseUp(Button, Location);
+			}
 		}
 
 		public virtual void OnMouseMove(MouseButtons Button, PointF Location)
 		{
-
-			Console.WriteLine("MouseMove");
-
 			Slot underMouse = GetSlotAtLocation(Location);
-
-
-			Console.WriteLine("underMouse : " + (underMouse == null ? "null" : underMouse.Type.ToString()));
-			Console.WriteLine("lastSlotOver : " + (lastSlotOver == null ? "null" : lastSlotOver.Type.ToString()));
 
 			if (underMouse != lastSlotOver)
 			{
-
 				if (lastSlotOver != null)
 				{
 					OnSlotExit(lastSlotOver);
