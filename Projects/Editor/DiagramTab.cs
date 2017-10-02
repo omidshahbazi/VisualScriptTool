@@ -4,12 +4,14 @@ using System.IO;
 using System.Windows.Forms;
 using VisualScriptTool.CodeGeneration;
 using VisualScriptTool.Editor.Language;
+using VisualScriptTool.Language.Statements.Declaration.Variables;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
 {
 	public class DiagramTab : TabPage
 	{
+		private ListBox list = null;
 		private StatementCanvas canvas = null;
 
 		private bool isDirty = false;
@@ -44,14 +46,32 @@ namespace VisualScriptTool.Editor
 
 		public DiagramTab()
 		{
+			list = new ListBox();
+			list.Size = new Size(300, 1);
+			list.Dock = DockStyle.Left;
+			list.IntegralHeight = false;
+			list.MouseMove += List_MouseMove;
+
 			canvas = new StatementCanvas();
 			canvas.BackColor = Color.DimGray;
 			canvas.Dock = DockStyle.Fill;
 			canvas.MinimumZoom = 0.5F;
 			canvas.MaximumZoom = 1.0F;
 			canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+			canvas.AllowDrop = true;
 
+			Controls.Add(list);
 			Controls.Add(canvas);
+		}
+
+		private void List_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (e.Button != MouseButtons.Left || list.SelectedItem == null)
+				return;
+
+			DragAndDropManager.SetData(list.SelectedItem);
+
+			list.DoDragDrop(list.SelectedItem.ToString(), DragDropEffects.Copy);
 		}
 
 		public void New(string Name)
@@ -71,7 +91,13 @@ namespace VisualScriptTool.Editor
 
 			ISerializeArray dataArray = Creator.Create<ISerializeArray>(File.ReadAllText(FilePath));
 
-			canvas.AddStatementInstance(serializer.Deserialize<StatementInstance[]>(dataArray));
+			StatementInstance[] instance = serializer.Deserialize<StatementInstance[]>(dataArray);
+
+			canvas.AddStatementInstance(instance);
+
+			foreach (StatementInstance inst in instance)
+				if (inst is VariableStatementInstance && !list.Items.Contains(inst.Statement))
+					list.Items.Add(inst.Statement);
 
 			for (int i = 0; i < Statements.Length; ++i)
 				Statements[i].ResolveSlotConnections(canvas);

@@ -22,7 +22,7 @@ namespace VisualScriptTool.Editor
 		{
 			InitializeComponent();
 
-			//AddTab().Load(Application.StartupPath + "/1.json");
+			AddTab().Load(Application.StartupPath + "/New Diagram.json");
 		}
 
 		private void NewMenuItem_Click(object sender, System.EventArgs e)

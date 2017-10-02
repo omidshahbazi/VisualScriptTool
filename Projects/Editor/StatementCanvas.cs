@@ -63,6 +63,7 @@ namespace VisualScriptTool.Editor
 
 		private ContextMenuStrip generalContextMenu = null;
 		private ContextMenuStrip slotContextMenu = null;
+		private ContextMenuStrip variableContextMenu = null;
 		private StatementDrawer drawer = null;
 		private StatementInstanceList statements = new StatementInstanceList();
 		private StatementInstanceList selectedStatements = new StatementInstanceList();
@@ -115,6 +116,10 @@ namespace VisualScriptTool.Editor
 			}
 
 			slotContextMenu = new ContextMenuStrip();
+
+			variableContextMenu = new ContextMenuStrip();
+			variableContextMenu.Items.Add("Getter", null, (s, e) => { AddVariableStatementFropDropItem(false); });
+			variableContextMenu.Items.Add("Setter", null, (s, e) => { AddVariableStatementFropDropItem(true); });
 
 			drawer = new StatementDrawer(this);
 
@@ -358,6 +363,16 @@ namespace VisualScriptTool.Editor
 			}
 		}
 
+		protected override void OnDragEnter(DragEventArgs e)
+		{
+			e.Effect = DragDropEffects.Copy;
+		}
+
+		protected override void OnDragDrop(DragEventArgs e)
+		{
+			ShowVariableMenu();
+		}
+
 		private void ShowGeneralMenu()
 		{
 			generalContextMenu.Show(this, ClientMousePosition);
@@ -373,6 +388,11 @@ namespace VisualScriptTool.Editor
 			//	slotContextMenu.Items.Add("Remove All Connections", null, (s, e) => { OnRemoveAllConnections(SelectedSlot); });
 
 			slotContextMenu.Show(this, ClientMousePosition);
+		}
+
+		private void ShowVariableMenu()
+		{
+			variableContextMenu.Show(this, ClientMousePosition);
 		}
 
 		private void OnContextMenuClosed(object sender, ToolStripDropDownClosedEventArgs e)
@@ -391,6 +411,7 @@ namespace VisualScriptTool.Editor
 			if (obj is StatementInstance)
 			{
 				StatementInstance instance = (StatementInstance)obj;
+				instance.OnPostLoad();
 				AddStatementInstance(instance);
 
 				if (SelectedSlot != null)
@@ -451,6 +472,27 @@ namespace VisualScriptTool.Editor
 
 			for (int i = 0; i < relatedSlots.Length; ++i)
 				relatedSlots[i].RemoveConnection();
+
+			Refresh();
+		}
+
+		private void AddVariableStatementFropDropItem(bool IsSetter)
+		{
+			StatementInstance instance = null;
+
+			VisualScriptTool.Language.Statements.Declaration.Variables.VariableStatement statement = (VisualScriptTool.Language.Statements.Declaration.Variables.VariableStatement)DragAndDropManager.GetData();
+
+			if (IsSetter)
+			{
+				VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement setterStatement = new VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement();
+				setterStatement.Variable = statement;
+				instance = new VariableSetterStatementInstance(setterStatement);
+			}
+			else
+				instance = new VariableStatementInstance(statement);
+
+			instance.Position = ScreenToCanvas(PointToClient(MousePosition));
+			AddStatementInstance(instance);
 
 			Refresh();
 		}

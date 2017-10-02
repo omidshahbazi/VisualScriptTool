@@ -96,6 +96,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CubicSPLine.cs" />
+    <Compile Include="DragAndDropManager.cs" />
     <Compile Include="StatementDrawer.cs" />
     <Compile Include="DiagramTab.cs">
       <SubType>Component</SubType>

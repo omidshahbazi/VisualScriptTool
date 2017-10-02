@@ -83,6 +83,11 @@ namespace VisualScriptTool.Editor.Language
 			controls = new ControlList();
 		}
 
+		[SerializablePostDeserialize]
+		public virtual void OnPostLoad()
+		{
+		}
+
 		public void UpdateBounds()
 		{
 			bounds.Size = new SizeF(HeaderSize.Width, HeaderSize.Height + BodySize.Height);

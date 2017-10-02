@@ -20,6 +20,17 @@ namespace VisualScriptTool.Editor.Language
 			AddExecuterSlot("False", 2, null, OnFalseAssigned, OnRemoveFalseConnection);
 		}
 
+		public override void OnPostLoad()
+		{
+			base.OnPostLoad();
+
+			CheckBox conditionCheckbox = new CheckBox(this);
+			conditionCheckbox.Location = new PointF(100, 55);
+			conditionCheckbox.Value = ((IfStatement)Statement).ConditionDefaultValue;
+			conditionCheckbox.ValueChanged += (control) => { ((IfStatement)Statement).ConditionDefaultValue = conditionCheckbox.Value; };
+			AddControl(conditionCheckbox);
+		}
+
 		private bool CheckConditionAssignment(Slot Other)
 		{
 			return (Other.StatementInstance.Statement is BooleanVariable);
@@ -86,11 +97,7 @@ namespace VisualScriptTool.Editor.Language
 			UpdateConnectedSlot(Inspector, 3, statement.Statement);
 			UpdateConnectedSlot(Inspector, 4, statement.ElseStatment);
 
-			CheckBox conditionCheckbox = new CheckBox(this);
-			conditionCheckbox.Location = new PointF(100, 55);
-			conditionCheckbox.Value = ((IfStatement)Statement).ConditionDefaultValue;
-			conditionCheckbox.ValueChanged += (control) => { ((IfStatement)Statement).ConditionDefaultValue = conditionCheckbox.Value; };
-			AddControl(conditionCheckbox);
+			OnPostLoad();
 		}
 	}
 }

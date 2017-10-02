@@ -176,6 +176,7 @@ namespace VisualScriptTool.Editor.Serializers
 					WhileStatementInstance.BodySize = BodySizeSerializer.DeserializeInternal<System.Drawing.SizeF>(Get<ISerializeObject>(BodySizeObjectValue, 2), References, ResolverList);
 				}
 				returnValue = (T)(object)WhileStatementInstance;
+				WhileStatementInstance.OnPostLoad();
 			}
 			return returnValue;
 		}
