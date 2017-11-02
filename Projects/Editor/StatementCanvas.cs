@@ -118,8 +118,8 @@ namespace VisualScriptTool.Editor
 			slotContextMenu = new ContextMenuStrip();
 
 			variableContextMenu = new ContextMenuStrip();
-			variableContextMenu.Items.Add("Getter", null, (s, e) => { AddVariableStatementFropDropItem(false); });
-			variableContextMenu.Items.Add("Setter", null, (s, e) => { AddVariableStatementFropDropItem(true); });
+			variableContextMenu.Items.Add("Getter", null, (s, e) => { AddVariableStatementForpDropItem(false); });
+			variableContextMenu.Items.Add("Setter", null, (s, e) => { AddVariableStatementForpDropItem(true); });
 
 			drawer = new StatementDrawer(this);
 
@@ -476,7 +476,7 @@ namespace VisualScriptTool.Editor
 			Refresh();
 		}
 
-		private void AddVariableStatementFropDropItem(bool IsSetter)
+		private void AddVariableStatementForpDropItem(bool IsSetter)
 		{
 			StatementInstance instance = null;
 

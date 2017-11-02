@@ -13,8 +13,10 @@ namespace VisualScriptTool.Editor
 	{
 		private ListBox list = null;
 		private StatementCanvas canvas = null;
-
-		private bool isDirty = false;
+        private System.ComponentModel.IContainer components;
+        private ContextMenuStrip listMenu;
+        private ToolStripMenuItem AddVariableButton;
+        private bool isDirty = false;
 
 		public bool IsDirty
 		{
@@ -46,33 +48,8 @@ namespace VisualScriptTool.Editor
 
 		public DiagramTab()
 		{
-			list = new ListBox();
-			list.Size = new Size(300, 1);
-			list.Dock = DockStyle.Left;
-			list.IntegralHeight = false;
-			list.MouseMove += List_MouseMove;
-
-			canvas = new StatementCanvas();
-			canvas.BackColor = Color.DimGray;
-			canvas.Dock = DockStyle.Fill;
-			canvas.MinimumZoom = 0.5F;
-			canvas.MaximumZoom = 1.0F;
-			canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-			canvas.AllowDrop = true;
-
-			Controls.Add(list);
-			Controls.Add(canvas);
-		}
-
-		private void List_MouseMove(object sender, MouseEventArgs e)
-		{
-			if (e.Button != MouseButtons.Left || list.SelectedItem == null)
-				return;
-
-			DragAndDropManager.SetData(list.SelectedItem);
-
-			list.DoDragDrop(list.SelectedItem.ToString(), DragDropEffects.Copy);
-		}
+            InitializeComponent();
+        }
 
 		public void New(string Name)
 		{
@@ -168,8 +145,90 @@ namespace VisualScriptTool.Editor
 
 		private void InitializeComponent()
 		{
-			SuspendLayout();
-			ResumeLayout(false);
-		}
-	}
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagramTab));
+            this.listMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.list = new System.Windows.Forms.ListBox();
+            this.canvas = new VisualScriptTool.Editor.StatementCanvas();
+            this.AddVariableButton = new System.Windows.Forms.ToolStripMenuItem();
+            this.listMenu.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // listMenu
+            // 
+            this.listMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.AddVariableButton});
+            this.listMenu.Name = "listMenu";
+            this.listMenu.Size = new System.Drawing.Size(141, 26);
+            // 
+            // list
+            // 
+            this.list.Dock = System.Windows.Forms.DockStyle.Left;
+            this.list.IntegralHeight = false;
+            this.list.Location = new System.Drawing.Point(0, 0);
+            this.list.Name = "list";
+            this.list.Size = new System.Drawing.Size(300, 100);
+            this.list.TabIndex = 1;
+            this.list.MouseUp += List_MouseClick;
+            // 
+            // canvas
+            // 
+            this.canvas.AllowDrop = true;
+            this.canvas.BackColor = System.Drawing.Color.DimGray;
+            this.canvas.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.Default;
+            this.canvas.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.canvas.GraphicsUnit = System.Drawing.GraphicsUnit.Pixel;
+            this.canvas.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
+            this.canvas.Location = new System.Drawing.Point(0, 0);
+            this.canvas.MaximumZoom = 1F;
+            this.canvas.MinimumZoom = 0.5F;
+            this.canvas.Name = "canvas";
+            this.canvas.Origin = new System.Drawing.Point(0, 0);
+            this.canvas.Pan = ((System.Drawing.PointF)(resources.GetObject("canvas.Pan")));
+            this.canvas.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Default;
+            this.canvas.Size = new System.Drawing.Size(200, 100);
+            this.canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            this.canvas.TabIndex = 2;
+            this.canvas.TextContrast = 0;
+            this.canvas.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
+            this.canvas.Zoom = 1F;
+            // 
+            // AddVariableButton
+            // 
+            this.AddVariableButton.Name = "AddVariableButton";
+            this.AddVariableButton.Size = new System.Drawing.Size(140, 22);
+            this.AddVariableButton.Text = "Add Variable";
+            this.AddVariableButton.Click += AddVariableButton_Click;
+            // 
+            // DiagramTab
+            // 
+            this.Controls.Add(this.list);
+            this.Controls.Add(this.canvas);
+            this.listMenu.ResumeLayout(false);
+            this.ResumeLayout(false);
+
+        }
+
+        private void AddVariableButton_Click(object sender, System.EventArgs e)
+        {
+        }
+
+        private void List_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+                return;
+
+            listMenu.Show(list, e.Location);
+        }
+
+        private void List_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left || list.SelectedItem == null)
+                return;
+
+            DragAndDropManager.SetData(list.SelectedItem);
+
+            list.DoDragDrop(list.SelectedItem.ToString(), DragDropEffects.Copy);
+        }
+    }
 }
