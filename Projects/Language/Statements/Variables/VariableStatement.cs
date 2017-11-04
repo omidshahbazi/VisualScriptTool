@@ -11,5 +11,10 @@ namespace VisualScriptTool.Language.Statements.Declaration.Variables
 			get;
 			set;
 		}
-	}
+
+        public override string ToString()
+        {
+            return Name + " (" + GetType().Name.Replace("Variable", "") + ")";
+        }
+    }
 }

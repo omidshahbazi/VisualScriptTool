@@ -1,15 +1,14 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
-using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using VisualScriptTool.CodeGeneration;
+using VisualScriptTool.Editor.Extensions;
 using VisualScriptTool.Editor.Language;
-using VisualScriptTool.Language.Statements.Declaration.Variables;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
 {
-	public class DiagramTab : TabPage
+    public class DiagramTab : TabPage
 	{
 		private ListBox list = null;
 		private StatementCanvas canvas = null;
@@ -71,10 +70,6 @@ namespace VisualScriptTool.Editor
 			StatementInstance[] instance = serializer.Deserialize<StatementInstance[]>(dataArray);
 
 			canvas.AddStatementInstance(instance);
-
-			foreach (StatementInstance inst in instance)
-				if (inst is VariableStatementInstance && !list.Items.Contains(inst.Statement))
-					list.Items.Add(inst.Statement);
 
 			for (int i = 0; i < Statements.Length; ++i)
 				Statements[i].ResolveSlotConnections(canvas);
@@ -149,7 +144,6 @@ namespace VisualScriptTool.Editor
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagramTab));
             this.listMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.list = new System.Windows.Forms.ListBox();
-            this.canvas = new VisualScriptTool.Editor.StatementCanvas();
             this.AddVariableButton = new System.Windows.Forms.ToolStripMenuItem();
             this.listMenu.SuspendLayout();
             this.SuspendLayout();
@@ -170,9 +164,12 @@ namespace VisualScriptTool.Editor
             this.list.Size = new System.Drawing.Size(300, 100);
             this.list.TabIndex = 1;
             this.list.MouseUp += List_MouseClick;
+            this.list.MouseMove += List_MouseMove;
+            this.list.KeyUp += List_KeyUp;
             // 
             // canvas
             // 
+            this.canvas = new VisualScriptTool.Editor.StatementCanvas();
             this.canvas.AllowDrop = true;
             this.canvas.BackColor = System.Drawing.Color.DimGray;
             this.canvas.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.Default;
@@ -192,6 +189,7 @@ namespace VisualScriptTool.Editor
             this.canvas.TextContrast = 0;
             this.canvas.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
             this.canvas.Zoom = 1F;
+            this.canvas.OnStatementChanged += OnStatementChanged;
             // 
             // AddVariableButton
             // 
@@ -206,11 +204,35 @@ namespace VisualScriptTool.Editor
             this.Controls.Add(this.canvas);
             this.listMenu.ResumeLayout(false);
             this.ResumeLayout(false);
+        }
 
+        private void List_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Delete)
+            {
+                if (list.SelectedItem == null)
+                    return;
+
+                if (!Utilities.ShowConfirmation("Warning", "Are you sure ?"))
+                    return;
+
+                canvas.RemoveStatementInstance(((IStatementInspector)canvas).GetInstance((VisualScriptTool.Language.Statements.Statement)list.SelectedItem));
+            }
+        }
+
+        private void OnStatementChanged()
+        {
+            list.Items.Clear();
+
+            foreach (StatementInstance inst in Statements)
+                if (inst is VariableStatementInstance && !list.Items.Contains(inst.Statement))
+                    list.Items.Add(inst.Statement);
         }
 
         private void AddVariableButton_Click(object sender, System.EventArgs e)
         {
+            AddVariableForm form = new Editor.AddVariableForm(canvas);
+            form.ShowDialog();
         }
 
         private void List_MouseClick(object sender, MouseEventArgs e)

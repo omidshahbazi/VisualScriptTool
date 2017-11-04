@@ -44,6 +44,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddVariableForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddVariableForm.Designer.cs">
+      <DependentUpon>AddVariableForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Extensions\Utilities.cs" />
     <Compile Include="GridCanvas.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -111,6 +118,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AddVariableForm.resx">
+      <DependentUpon>AddVariableForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="DiagramTab.resx">
       <DependentUpon>DiagramTab.cs</DependentUpon>
     </EmbeddedResource>
