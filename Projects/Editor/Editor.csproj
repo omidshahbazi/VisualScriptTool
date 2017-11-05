@@ -58,6 +58,7 @@
     <Compile Include="IStatementInspector.cs" />
     <Compile Include="Language\Drawers\Controls\CheckBox.cs" />
     <Compile Include="Language\Drawers\Controls\ControlBase.cs" />
+    <Compile Include="Language\Drawers\FunctionStatementDrawer.cs" />
     <Compile Include="Language\FlowStatementInstance.cs" />
     <Compile Include="Language\ControlStatementInstance.cs" />
     <Compile Include="Language\Drawers\FlowStatementDrawer.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Language\Drawers\VariableDrawer.cs" />
     <Compile Include="Language\ForStatementInstance.cs" />
     <Compile Include="Language\ExecuterStatementInstance.cs" />
+    <Compile Include="Language\FunctionStatementInstance.cs" />
     <Compile Include="Language\VariableSetterStatementInstance.cs" />
     <Compile Include="Language\WhileStatementInstance.cs" />
     <Compile Include="Language\Slot.cs" />

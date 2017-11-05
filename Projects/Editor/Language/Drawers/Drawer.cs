@@ -77,6 +77,12 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get;
 		}
 
+        protected StatementInstance StatementInstance
+        {
+            get;
+            private set;
+        }
+
 		public Drawer()
 		{
 			Font = new Font("Tahoma", 9.0F, FontStyle.Bold);
@@ -96,21 +102,24 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		public void Draw(IDevice Device, StatementInstance StatementInstance)
 		{
 			this.Device = Device;
+            this.StatementInstance = StatementInstance;
 
-			SizeF headerSize = Device.MeasureString(StatementInstance.Statement.Name, Font) + new SizeF(TWO_HEADER_TEXT_MARGIN, TWO_HEADER_TEXT_MARGIN);
+            SizeF headerSize = Device.MeasureString(StatementInstance.Statement.Name, Font) + new SizeF(TWO_HEADER_TEXT_MARGIN, TWO_HEADER_TEXT_MARGIN);
 			headerSize.Width = Math.Max(headerSize.Width, MinimumWidth);
 			StatementInstance.HeaderSize = headerSize;
 
-			DrawHeader(StatementInstance);
+			DrawHeader();
 
 			StatementInstance.BodySize = new SizeF(StatementInstance.HeaderSize.Width, BodyHeight);
 
 			StatementInstance.UpdateBounds();
 
-			DrawBody(StatementInstance);
-		}
+			DrawBody();
 
-		protected virtual void DrawHeader(StatementInstance StatementInstance)
+            this.StatementInstance = null;
+        }
+
+		protected virtual void DrawHeader()
 		{
 			Statement statement = StatementInstance.Statement;
 
@@ -119,7 +128,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			Device.DrawString(statement.Name, StatementInstance.Position.X + HEADER_TEXT_MARGIN, StatementInstance.Position.Y + HEADER_TEXT_MARGIN, headeTextBrush, Font);
 		}
 
-		protected virtual void DrawBody(StatementInstance StatementInstance)
+		protected virtual void DrawBody()
 		{
 			Device.DrawFillRectangle(StatementInstance.Position.X, StatementInstance.Position.Y + StatementInstance.HeaderSize.Height, StatementInstance.BodySize.Width, StatementInstance.BodySize.Height, bodyBackBrush);
 

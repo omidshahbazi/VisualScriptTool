@@ -61,6 +61,12 @@ namespace VisualScriptTool.Editor
                 WhileStatementInstance statement = new WhileStatementInstance();
                 statement.Position = Position;
                 return statement;
+            }),
+            new Item("F", (Position) =>
+            {
+                FunctionStatementInstance statement = new FunctionStatementInstance(new VisualScriptTool.Language.Statements.Control.FunctionStatement(typeof(StatementCanvas).GetMethod("RemoveStatementInstance")));
+                statement.Position = Position;
+                return statement;
             }) };
 
         private ContextMenuStrip generalContextMenu = null;
