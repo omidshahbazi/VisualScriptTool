@@ -14,7 +14,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		public override uint RowCount
 		{
-			get { return (uint)StatementInstance.Slots.Length; }
+			get { return (uint)((FunctionStatement)StatementInstance.Statement).Parameters.Length + 1; }
 		}
 
 		public override Type[] StatementTypes

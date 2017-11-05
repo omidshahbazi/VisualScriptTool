@@ -6,7 +6,6 @@ namespace VisualScriptTool.Language.Statements.Control
 {
 	public class FunctionStatement : FlowStatement
 	{
-		private MethodInfo method = null;
 		private Statement[] parameters = null;
 
 		[SerializableElement(0)]
@@ -16,7 +15,7 @@ namespace VisualScriptTool.Language.Statements.Control
 			set;
 		}
 
-		public string[] ParametersName
+		public MethodInfo Method
 		{
 			get;
 			private set;
@@ -27,6 +26,18 @@ namespace VisualScriptTool.Language.Statements.Control
 			get { return parameters; }
 		}
 
+		public string[] ParametersName
+		{
+			get;
+			private set;
+		}
+
+		public object[] ParametersDefaultValue
+		{
+			get;
+			private set;
+		}
+
 		public bool HasReturnValue
 		{
 			get;
@@ -35,17 +46,20 @@ namespace VisualScriptTool.Language.Statements.Control
 
 		public FunctionStatement(MethodInfo Method)
 		{
-			method = Method;
+			this.Method = Method;
 
-			Name = method.Name;
+			Name = Method.Name;
 
-			ParameterInfo[] parametersInfo = method.GetParameters();
+			ParameterInfo[] parametersInfo = Method.GetParameters();
+
 			parameters = new Statement[parametersInfo.Length];
+			ParametersDefaultValue = new object[parametersInfo.Length];
 			ParametersName = new string[parametersInfo.Length];
+
 			for (int i = 0; i < parametersInfo.Length; ++i)
 				ParametersName[i] = parametersInfo[i].Name;
 
-			HasReturnValue = (method.ReturnType != typeof(void));
+			HasReturnValue = (Method.ReturnType != typeof(void));
 		}
 	}
 }

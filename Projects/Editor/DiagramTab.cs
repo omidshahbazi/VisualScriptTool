@@ -48,6 +48,8 @@ namespace VisualScriptTool.Editor
 		public DiagramTab()
 		{
             InitializeComponent();
+
+			canvas.BindClassFunctions(typeof(System.Math));
         }
 
 		public void New(string Name)
@@ -140,70 +142,66 @@ namespace VisualScriptTool.Editor
 
 		private void InitializeComponent()
 		{
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagramTab));
-            this.listMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.list = new System.Windows.Forms.ListBox();
-            this.AddVariableButton = new System.Windows.Forms.ToolStripMenuItem();
-            this.listMenu.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // listMenu
-            // 
-            this.listMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DiagramTab));
+			this.listMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.AddVariableButton = new System.Windows.Forms.ToolStripMenuItem();
+			this.list = new System.Windows.Forms.ListBox();
+			this.canvas = new VisualScriptTool.Editor.StatementCanvas();
+			this.listMenu.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// listMenu
+			// 
+			this.listMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AddVariableButton});
-            this.listMenu.Name = "listMenu";
-            this.listMenu.Size = new System.Drawing.Size(141, 26);
-            // 
-            // list
-            // 
-            this.list.Dock = System.Windows.Forms.DockStyle.Left;
-            this.list.IntegralHeight = false;
-            this.list.Location = new System.Drawing.Point(0, 0);
-            this.list.Name = "list";
-            this.list.Size = new System.Drawing.Size(300, 100);
-            this.list.TabIndex = 1;
-            this.list.MouseUp += List_MouseClick;
-            this.list.MouseMove += List_MouseMove;
-            this.list.KeyUp += List_KeyUp;
-            // 
-            // canvas
-            // 
-            this.canvas = new VisualScriptTool.Editor.StatementCanvas();
-            this.canvas.AllowDrop = true;
-            this.canvas.BackColor = System.Drawing.Color.DimGray;
-            this.canvas.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.Default;
-            this.canvas.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.canvas.GraphicsUnit = System.Drawing.GraphicsUnit.Pixel;
-            this.canvas.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
-            this.canvas.Location = new System.Drawing.Point(0, 0);
-            this.canvas.MaximumZoom = 1F;
-            this.canvas.MinimumZoom = 0.5F;
-            this.canvas.Name = "canvas";
-            this.canvas.Origin = new System.Drawing.Point(0, 0);
-            this.canvas.Pan = ((System.Drawing.PointF)(resources.GetObject("canvas.Pan")));
-            this.canvas.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Default;
-            this.canvas.Size = new System.Drawing.Size(200, 100);
-            this.canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            this.canvas.TabIndex = 2;
-            this.canvas.TextContrast = 0;
-            this.canvas.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
-            this.canvas.Zoom = 1F;
-            this.canvas.OnStatementChanged += OnStatementChanged;
-            // 
-            // AddVariableButton
-            // 
-            this.AddVariableButton.Name = "AddVariableButton";
-            this.AddVariableButton.Size = new System.Drawing.Size(140, 22);
-            this.AddVariableButton.Text = "Add Variable";
-            this.AddVariableButton.Click += AddVariableButton_Click;
-            // 
-            // DiagramTab
-            // 
-            this.Controls.Add(this.list);
-            this.Controls.Add(this.canvas);
-            this.listMenu.ResumeLayout(false);
-            this.ResumeLayout(false);
+			this.listMenu.Name = "listMenu";
+			this.listMenu.Size = new System.Drawing.Size(141, 26);
+			// 
+			// AddVariableButton
+			// 
+			this.AddVariableButton.Name = "AddVariableButton";
+			this.AddVariableButton.Size = new System.Drawing.Size(140, 22);
+			this.AddVariableButton.Text = "Add Variable";
+			// 
+			// list
+			// 
+			this.list.Dock = System.Windows.Forms.DockStyle.Left;
+			this.list.IntegralHeight = false;
+			this.list.Location = new System.Drawing.Point(0, 0);
+			this.list.Name = "list";
+			this.list.Size = new System.Drawing.Size(300, 100);
+			this.list.TabIndex = 1;
+			// 
+			// canvas
+			// 
+			this.canvas.AllowDrop = true;
+			this.canvas.BackColor = System.Drawing.Color.DimGray;
+			this.canvas.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.Default;
+			this.canvas.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.canvas.GraphicsUnit = System.Drawing.GraphicsUnit.Pixel;
+			this.canvas.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
+			this.canvas.Location = new System.Drawing.Point(0, 0);
+			this.canvas.MaximumZoom = 1F;
+			this.canvas.MinimumZoom = 0.5F;
+			this.canvas.Name = "canvas";
+			this.canvas.Origin = new System.Drawing.Point(0, 0);
+			this.canvas.Pan = ((System.Drawing.PointF)(resources.GetObject("canvas.Pan")));
+			this.canvas.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Default;
+			this.canvas.Size = new System.Drawing.Size(200, 100);
+			this.canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+			this.canvas.TabIndex = 2;
+			this.canvas.TextContrast = 0;
+			this.canvas.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
+			this.canvas.Zoom = 1F;
+			// 
+			// DiagramTab
+			// 
+			this.Controls.Add(this.list);
+			this.Controls.Add(this.canvas);
+			this.listMenu.ResumeLayout(false);
+			this.ResumeLayout(false);
+
         }
 
         private void List_KeyUp(object sender, KeyEventArgs e)
