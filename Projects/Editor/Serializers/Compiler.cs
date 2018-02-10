@@ -31,16 +31,18 @@ namespace VisualScriptTool.Editor.Serializers
 			types[typeof(FloatVariable)] = defaultCompilerStrategy;
 			types[typeof(StringVariable)] = defaultCompilerStrategy;
 			types[typeof(VariableSetterStatement)] = defaultCompilerStrategy;
+			types[typeof(FunctionStatement)] = defaultCompilerStrategy;
 
-			types[typeof(ExecuterStatementInstance)] = defaultCompilerStrategy;
+            types[typeof(ExecuterStatementInstance)] = defaultCompilerStrategy;
 			types[typeof(StatementInstance)] = defaultCompilerStrategy;
 			types[typeof(IfStatementInstance)] = defaultCompilerStrategy;
 			types[typeof(WhileStatementInstance)] = defaultCompilerStrategy;
 			types[typeof(ForStatementInstance)] = defaultCompilerStrategy;
 			types[typeof(VariableStatementInstance)] = defaultCompilerStrategy;
 			types[typeof(VariableSetterStatementInstance)] = defaultCompilerStrategy;
+			types[typeof(FunctionStatementInstance)] = defaultCompilerStrategy;
 
-			types[typeof(PointF)] = systemCompilerStrategy;
+            types[typeof(PointF)] = systemCompilerStrategy;
 			types[typeof(SizeF)] = systemCompilerStrategy;
 
 

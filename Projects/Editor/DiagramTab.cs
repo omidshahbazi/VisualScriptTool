@@ -50,7 +50,7 @@ namespace VisualScriptTool.Editor
             InitializeComponent();
 
 			canvas.BindClassFunctions(typeof(System.Math));
-        }
+		}
 
 		public void New(string Name)
 		{

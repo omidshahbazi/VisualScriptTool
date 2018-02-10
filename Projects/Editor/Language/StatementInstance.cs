@@ -32,7 +32,7 @@ namespace VisualScriptTool.Editor.Language
 		public event SlotHandler SlotExit = null;
 
 		[SerializableElement(3)]
-		public Statement Statement
+		public virtual Statement Statement
 		{
 			get;
 			set;

@@ -1,19 +1,39 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System.Diagnostics;
+using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Language.Statements.Control;
+using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor.Language
 {
 	public class FunctionStatementInstance : FlowStatementInstance
-	{
-		[Serialization.SerializableInstantiator]
-		public FunctionStatementInstance(FunctionStatement Statement) :
-			base(Statement)
+    {
+        [SerializableElement(3)]
+        public override Statement Statement
 		{
-			for (uint i = 0; i < Statement.ParametersName.Length; ++i)
-				AddArgumentSlot(Statement.ParametersName[i], i + 1);
+			get { return base.Statement; }
+			set
+			{
+                base.Statement = value;
 
-			if (Statement.HasReturnValue)
-				AddGetterSlot(1);
+                if (base.Statement == null)
+                    return;
+
+                Debug.Assert(value is FunctionStatement);
+
+                FunctionStatement fnstmt = (FunctionStatement)Statement;
+
+				for (uint i = 0; i < fnstmt.ParametersName.Length; ++i)
+					AddArgumentSlot(fnstmt.ParametersName[i], i + 1);
+
+				if (fnstmt.HasReturnValue)
+					AddGetterSlot(1);
+			}
+		}
+
+		public FunctionStatementInstance() :
+			base(null)
+		{
 		}
 
 		public override void OnPostLoad()

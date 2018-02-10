@@ -86,6 +86,8 @@
     <Compile Include="Serializers\FloatVariable_Serializer.cs" />
     <Compile Include="Serializers\ForStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\ForStatement_Serializer.cs" />
+    <Compile Include="Serializers\FunctionStatementInstance_Serializer.cs" />
+    <Compile Include="Serializers\FunctionStatement_Serializer.cs" />
     <Compile Include="Serializers\IfStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\IfStatement_Serializer.cs" />
     <Compile Include="Serializers\IntegerVariable_Serializer.cs" />

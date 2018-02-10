@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using VisualScriptTool.Editor.Extensions;
 using VisualScriptTool.Editor.Language;
 using VisualScriptTool.Editor.Language.Drawers;
+using VisualScriptTool.Language.Extensions;
 using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Renderer;
 
@@ -190,12 +191,15 @@ namespace VisualScriptTool.Editor
 
 				Item item = new Item("While", (Position) =>
 				{
-					FunctionStatementInstance statement = new FunctionStatementInstance(new VisualScriptTool.Language.Statements.Control.FunctionStatement(method));
-					statement.Position = Position;
+                    VisualScriptTool.Language.Statements.Control.FunctionStatement fnstmt = new VisualScriptTool.Language.Statements.Control.FunctionStatement();
+                    fnstmt.Method = method;
+                    FunctionStatementInstance statement = new FunctionStatementInstance();
+                    statement.Statement = fnstmt;
+                    statement.Position = Position;
 					return statement;
 				});
 
-				parentItem.DropDownItems.Add(method.Name, null, (s, e) => { OnItemClicked(item); });
+				parentItem.DropDownItems.Add(method.GetPrettyName(), null, (s, e) => { OnItemClicked(item); });
 			}
 		}
 
