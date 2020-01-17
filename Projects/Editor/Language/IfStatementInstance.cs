@@ -8,13 +8,11 @@ namespace VisualScriptTool.Editor.Language
 {
 	public class IfStatementInstance : ControlStatementInstance
 	{
-		private Slot conditionSlot = null;
-
 		[Serialization.SerializableInstantiator]
 		public IfStatementInstance() :
 			base(new IfStatement())
 		{
-			conditionSlot = AddArgumentSlot("Condition", 1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
+			AddArgumentSlot("Condition", 1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
 
 			AddExecuterSlot("True", 1, null, OnTrueAssigned, OnRemoveTrueConnection);
 			AddExecuterSlot("False", 2, null, OnFalseAssigned, OnRemoveFalseConnection);

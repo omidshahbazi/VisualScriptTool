@@ -2,29 +2,30 @@
 using System.Diagnostics;
 using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Language.Statements.Control;
+using VisualScriptTool.Language.Statements.Declaration.Variables;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor.Language
 {
 	public class FunctionStatementInstance : FlowStatementInstance
-    {
-        [SerializableElement(3)]
-        public override Statement Statement
+	{
+		[SerializableElement(3)]
+		public override Statement Statement
 		{
 			get { return base.Statement; }
 			set
 			{
-                base.Statement = value;
+				base.Statement = value;
 
-                if (base.Statement == null)
-                    return;
+				if (base.Statement == null)
+					return;
 
-                Debug.Assert(value is FunctionStatement);
+				Debug.Assert(value is FunctionStatement);
 
-                FunctionStatement fnstmt = (FunctionStatement)Statement;
+				FunctionStatement fnstmt = (FunctionStatement)Statement;
 
 				for (uint i = 0; i < fnstmt.ParametersName.Length; ++i)
-					AddArgumentSlot(fnstmt.ParametersName[i], i + 1);
+					AddArgumentSlot(fnstmt.ParametersName[i], i + 1, CheckParameterAssignment, OnParameterAssigned, OnRemoveParameterConnection);
 
 				if (fnstmt.HasReturnValue)
 					AddGetterSlot(1);
@@ -36,15 +37,26 @@ namespace VisualScriptTool.Editor.Language
 		{
 		}
 
-		public override void OnPostLoad()
+		private bool CheckParameterAssignment(Slot Other)
 		{
-			base.OnPostLoad();
+			return (Other.StatementInstance.Statement is FloatVariable);
+		}
 
-			//CheckBox conditionCheckbox = new CheckBox(this);
-			//conditionCheckbox.Location = new PointF(100, 55);
-			//conditionCheckbox.Value = ((IfStatement)Statement).ConditionDefaultValue;
-			//conditionCheckbox.ValueChanged += (control) => { ((IfStatement)Statement).ConditionDefaultValue = conditionCheckbox.Value; };
-			//AddControl(conditionCheckbox);
+		private void OnParameterAssigned(Slot Self, Slot Other)
+		{
+			FunctionStatement statement = (FunctionStatement)Statement;
+
+			SetConnection(Self, Other);
+
+			//statement.Condition = (FloatVariable)Other.StatementInstance.Statement;
+		}
+
+		private void OnRemoveParameterConnection(Slot Self)
+		{
+			UnsetConnection(Self);
+
+			FunctionStatement statement = (FunctionStatement)Statement;
+			//statement.Condition = null;
 		}
 	}
 }

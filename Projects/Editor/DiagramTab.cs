@@ -163,9 +163,11 @@ namespace VisualScriptTool.Editor
 			this.AddVariableButton.Name = "AddVariableButton";
 			this.AddVariableButton.Size = new System.Drawing.Size(140, 22);
 			this.AddVariableButton.Text = "Add Variable";
+			this.AddVariableButton.Click += AddVariableButton_Click;
 			// 
 			// list
 			// 
+			this.list.ContextMenuStrip = this.listMenu;
 			this.list.Dock = System.Windows.Forms.DockStyle.Left;
 			this.list.IntegralHeight = false;
 			this.list.Location = new System.Drawing.Point(0, 0);
