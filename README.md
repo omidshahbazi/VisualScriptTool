@@ -1,6 +1,6 @@
 # Visual Script Tool
 
-And experimental and prototype of a visual scripting language
+An experimental and prototype of a visual scripting language
 
 ## Project Showcase
 
