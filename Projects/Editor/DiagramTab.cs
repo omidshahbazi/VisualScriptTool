@@ -10,14 +10,14 @@ using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor
 {
-    public class DiagramTab : TabPage
+	public class DiagramTab : TabPage
 	{
 		private ListBox list = null;
 		private StatementCanvas canvas = null;
-        private IContainer components;
-        private ContextMenuStrip listMenu;
-        private ToolStripMenuItem AddVariableButton;
-        private bool isDirty = false;
+		private IContainer components;
+		private ContextMenuStrip listMenu;
+		private ToolStripMenuItem AddVariableButton;
+		private bool isDirty = false;
 
 		public bool IsDirty
 		{
@@ -49,7 +49,7 @@ namespace VisualScriptTool.Editor
 
 		public DiagramTab()
 		{
-            InitializeComponent();
+			InitializeComponent();
 
 			canvas.BindClassFunctions(typeof(Math));
 
@@ -158,7 +158,7 @@ namespace VisualScriptTool.Editor
 			// listMenu
 			// 
 			this.listMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AddVariableButton});
+			this.AddVariableButton});
 			this.listMenu.Name = "listMenu";
 			this.listMenu.Size = new System.Drawing.Size(141, 26);
 			// 
@@ -167,7 +167,7 @@ namespace VisualScriptTool.Editor
 			this.AddVariableButton.Name = "AddVariableButton";
 			this.AddVariableButton.Size = new System.Drawing.Size(140, 22);
 			this.AddVariableButton.Text = "Add Variable";
-            this.AddVariableButton.Click += AddVariableButton_Click;
+			this.AddVariableButton.Click += AddVariableButton_Click;
 			// 
 			// list
 			// 
@@ -178,8 +178,9 @@ namespace VisualScriptTool.Editor
 			this.list.Name = "list";
 			this.list.Size = new System.Drawing.Size(300, 100);
 			this.list.TabIndex = 1;
-			this.list.MouseClick += new System.Windows.Forms.MouseEventHandler(this.List_MouseClick);
-			this.list.MouseMove += new System.Windows.Forms.MouseEventHandler(this.List_MouseMove);
+			this.list.KeyUp += List_KeyUp;
+			this.list.MouseClick += List_MouseClick;
+			this.list.MouseMove += List_MouseMove;
 			// 
 			// canvas
 			// 
@@ -211,58 +212,53 @@ namespace VisualScriptTool.Editor
 			this.listMenu.ResumeLayout(false);
 			this.ResumeLayout(false);
 
-        }
+		}
 
-        private void AddVariableButton_Click1(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+		private void List_KeyUp(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Delete)
+			{
+				if (list.SelectedItem == null)
+					return;
 
-        private void List_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Delete)
-            {
-                if (list.SelectedItem == null)
-                    return;
+				if (!Utilities.ShowConfirmation("Warning", "Are you sure ?"))
+					return;
 
-                if (!Utilities.ShowConfirmation("Warning", "Are you sure ?"))
-                    return;
+				canvas.RemoveStatementInstance(((IStatementInspector)canvas).GetInstance((VisualScriptTool.Language.Statements.Statement)list.SelectedItem));
+			}
+		}
 
-                canvas.RemoveStatementInstance(((IStatementInspector)canvas).GetInstance((VisualScriptTool.Language.Statements.Statement)list.SelectedItem));
-            }
-        }
-
-        private void OnStatementChanged()
-        {
-            list.Items.Clear();
+		private void OnStatementChanged()
+		{
+			list.Items.Clear();
 
 			foreach (StatementInstance inst in Statements)
 				if (inst is VariableStatementInstance && !list.Items.Contains(inst.Statement))
 					list.Items.Add(inst.Statement);
 		}
 
-        private void AddVariableButton_Click(object sender, System.EventArgs e)
-        {
-            AddVariableForm form = new Editor.AddVariableForm(canvas);
-            form.ShowDialog();
+		private void AddVariableButton_Click(object sender, System.EventArgs e)
+		{
+			AddVariableForm form = new Editor.AddVariableForm(canvas);
+			form.ShowDialog();
 		}
 
-        private void List_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Right)
-                return;
+		private void List_MouseClick(object sender, MouseEventArgs e)
+		{
+			if (e.Button != MouseButtons.Right)
+				return;
 
-            listMenu.Show(list, e.Location);
-        }
+			listMenu.Show(list, e.Location);
+		}
 
-        private void List_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Left || list.SelectedItem == null)
-                return;
+		private void List_MouseMove(object sender, MouseEventArgs e)
+		{
+			if (e.Button != MouseButtons.Left || list.SelectedItem == null)
+				return;
 
-            DragAndDropManager.SetData(list.SelectedItem);
+			DragAndDropManager.SetData(list.SelectedItem);
 
-            list.DoDragDrop(list.SelectedItem.ToString(), DragDropEffects.Copy);
-        }
-    }
+			list.DoDragDrop(list.SelectedItem.ToString(), DragDropEffects.Copy);
+		}
+	}
 }
