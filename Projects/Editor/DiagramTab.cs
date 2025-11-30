@@ -1,4 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
+using System.ComponentModel;
 using System.IO;
 using System.Windows.Forms;
 using VisualScriptTool.CodeGeneration;
@@ -12,7 +14,7 @@ namespace VisualScriptTool.Editor
 	{
 		private ListBox list = null;
 		private StatementCanvas canvas = null;
-        private System.ComponentModel.IContainer components;
+        private IContainer components;
         private ContextMenuStrip listMenu;
         private ToolStripMenuItem AddVariableButton;
         private bool isDirty = false;
@@ -49,7 +51,9 @@ namespace VisualScriptTool.Editor
 		{
             InitializeComponent();
 
-			canvas.BindClassFunctions(typeof(System.Math));
+			canvas.BindClassFunctions(typeof(Math));
+
+			canvas.OnStatementChanged += OnStatementChanged;
 		}
 
 		public void New(string Name)
@@ -163,7 +167,7 @@ namespace VisualScriptTool.Editor
 			this.AddVariableButton.Name = "AddVariableButton";
 			this.AddVariableButton.Size = new System.Drawing.Size(140, 22);
 			this.AddVariableButton.Text = "Add Variable";
-			this.AddVariableButton.Click += AddVariableButton_Click;
+            this.AddVariableButton.Click += AddVariableButton_Click;
 			// 
 			// list
 			// 
@@ -174,6 +178,8 @@ namespace VisualScriptTool.Editor
 			this.list.Name = "list";
 			this.list.Size = new System.Drawing.Size(300, 100);
 			this.list.TabIndex = 1;
+			this.list.MouseClick += new System.Windows.Forms.MouseEventHandler(this.List_MouseClick);
+			this.list.MouseMove += new System.Windows.Forms.MouseEventHandler(this.List_MouseMove);
 			// 
 			// canvas
 			// 
@@ -181,6 +187,7 @@ namespace VisualScriptTool.Editor
 			this.canvas.BackColor = System.Drawing.Color.DimGray;
 			this.canvas.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.Default;
 			this.canvas.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.canvas.DrawAxis = false;
 			this.canvas.GraphicsUnit = System.Drawing.GraphicsUnit.Pixel;
 			this.canvas.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
 			this.canvas.Location = new System.Drawing.Point(0, 0);
@@ -206,6 +213,11 @@ namespace VisualScriptTool.Editor
 
         }
 
+        private void AddVariableButton_Click1(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private void List_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
@@ -224,16 +236,16 @@ namespace VisualScriptTool.Editor
         {
             list.Items.Clear();
 
-            foreach (StatementInstance inst in Statements)
-                if (inst is VariableStatementInstance && !list.Items.Contains(inst.Statement))
-                    list.Items.Add(inst.Statement);
-        }
+			foreach (StatementInstance inst in Statements)
+				if (inst is VariableStatementInstance && !list.Items.Contains(inst.Statement))
+					list.Items.Add(inst.Statement);
+		}
 
         private void AddVariableButton_Click(object sender, System.EventArgs e)
         {
             AddVariableForm form = new Editor.AddVariableForm(canvas);
             form.ShowDialog();
-        }
+		}
 
         private void List_MouseClick(object sender, MouseEventArgs e)
         {

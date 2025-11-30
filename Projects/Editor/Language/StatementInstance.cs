@@ -93,32 +93,32 @@ namespace VisualScriptTool.Editor.Language
 			bounds.Size = new SizeF(HeaderSize.Width, HeaderSize.Height + BodySize.Height);
 		}
 
-		protected Slot AddEntryPointSlot(uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
+		protected Slot AddEntryPointSlot(uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
 			return AddSlot(string.Empty, Slot.Types.EntryPoint, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
-		protected Slot AddExecuterSlot(uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
+		protected Slot AddExecuterSlot(uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
 			return AddExecuterSlot(string.Empty, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
-		protected Slot AddExecuterSlot(string Name, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
+		protected Slot AddExecuterSlot(string Name, uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
 			return AddSlot(Name, Slot.Types.Executer, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
-		protected Slot AddArgumentSlot(uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
+		protected Slot AddArgumentSlot(uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
 			return AddArgumentSlot(string.Empty, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
-		protected Slot AddArgumentSlot(string Name, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
+		protected Slot AddArgumentSlot(string Name, uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
 			return AddSlot(Name, Slot.Types.Argument, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
-		protected Slot AddGetterSlot(uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
+		protected Slot AddGetterSlot(uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
 			return AddSlot(string.Empty, Slot.Types.Getter, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
@@ -183,8 +183,8 @@ namespace VisualScriptTool.Editor.Language
 		{
 			if (lastSlotOver != null)
 			{
-				lastSlotOver = null;
 				OnSlotExit(lastSlotOver);
+				lastSlotOver = null;
 			}
 		}
 

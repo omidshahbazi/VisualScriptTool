@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Language;
 using VisualScriptTool.Language.Statements.Declaration.Variables;
@@ -31,7 +32,7 @@ namespace VisualScriptTool.Editor
             TypeComboBox.SelectedItem = Types.Boolean;
         }
 
-        private void AddButton_Click(object sender, System.EventArgs e)
+        private void AddButton_Click(object sender, EventArgs e)
         {
             VariableStatement variable = null;
 
@@ -58,7 +59,7 @@ namespace VisualScriptTool.Editor
             Close();
         }
 
-        private void CancelButton_Click(object sender, System.EventArgs e)
+        private void CancelButton_Click(object sender, EventArgs e)
         {
             Close();
         }

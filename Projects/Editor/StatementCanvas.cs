@@ -154,6 +154,8 @@ namespace VisualScriptTool.Editor
 			statements.Add(Instance);
 
 			OnStatementChanged?.Invoke();
+
+			Refresh();
 		}
 
 		public void AddStatementInstance(IEnumerable<StatementInstance> Instances)
@@ -172,6 +174,8 @@ namespace VisualScriptTool.Editor
 			statements.Remove(Instance);
 
 			OnStatementChanged?.Invoke();
+
+
 
 			Refresh();
 		}

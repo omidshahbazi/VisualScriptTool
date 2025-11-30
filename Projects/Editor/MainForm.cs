@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Windows.Forms;
 
 namespace VisualScriptTool.Editor
@@ -25,12 +26,12 @@ namespace VisualScriptTool.Editor
 			AddTab().Load(Application.StartupPath + "/Diagram.json");
 		}
 
-		private void NewMenuItem_Click(object sender, System.EventArgs e)
+		private void NewMenuItem_Click(object sender, EventArgs e)
 		{
 			AddTab().New("New Diagram");
 		}
 
-		private void LoadMenuItem_Click(object sender, System.EventArgs e)
+		private void LoadMenuItem_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog openFileDialog = new OpenFileDialog();
 			openFileDialog.Multiselect = true;
@@ -44,7 +45,7 @@ namespace VisualScriptTool.Editor
 				AddTab().Load(openFileDialog.FileNames[i]);
 		}
 
-		private void SaveMenuItem_Click(object sender, System.EventArgs e)
+		private void SaveMenuItem_Click(object sender, EventArgs e)
 		{
 			if (CurrentTab == null)
 				return;
@@ -52,13 +53,13 @@ namespace VisualScriptTool.Editor
 			SaveDiagramTab(CurrentTab);
 		}
 
-		private void SaveAllMenuItem_Click(object sender, System.EventArgs e)
+		private void SaveAllMenuItem_Click(object sender, EventArgs e)
 		{
 			for (int i = 0; i < TabControl.TabCount; ++i)
 				SaveDiagramTab((DiagramTab)TabControl.TabPages[i]);
 		}
 
-		private void GenerateCSharpCode_Click(object sender, System.EventArgs e)
+		private void GenerateCSharpCode_Click(object sender, EventArgs e)
 		{
 			if (CurrentTab == null)
 				return;

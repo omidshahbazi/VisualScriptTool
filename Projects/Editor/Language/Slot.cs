@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -88,7 +89,7 @@ namespace VisualScriptTool.Editor.Language
 			private set;
 		}
 
-		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, System.Func<Slot, bool> CheckAssignment, System.Action<Slot, Slot> OnAssignment, System.Action<Slot> OnRemoveConnection)
+		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, Func<Slot, bool> CheckAssignment, Action<Slot, Slot> OnAssignment, System.Action<Slot> OnRemoveConnection)
 		{
 			RelatedSlots = new SlotList();
 

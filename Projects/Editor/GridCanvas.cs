@@ -9,6 +9,12 @@ namespace VisualScriptTool.Editor
 	{
 		private Point lastMousePosition;
 
+		public bool DrawAxis
+		{
+			get;
+			set;
+		}
+
 		protected bool IsPanning
 		{
 			get;
@@ -18,6 +24,9 @@ namespace VisualScriptTool.Editor
 		protected override void OnDrawCanvas(IDevice Device)
 		{
 			base.OnDrawCanvas(Device);
+
+			if (!DrawAxis)
+				return;
 
 			Pen originPen = new Pen(Color.Black, 1.0F);
 			Pen gridPen = new Pen(Color.Gray, 0.5F);

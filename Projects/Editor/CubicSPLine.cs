@@ -9,7 +9,7 @@ namespace VisualScriptTool.Editor
 {
 	public class CubicSPLine
 	{
-		List<PointF> points = new List<PointF>();
+		private List<PointF> points = new List<PointF>();
 
 		public void Update(PointF Start, PointF End)
 		{
