@@ -237,7 +237,7 @@ namespace VisualScriptTool.Editor
 					list.Items.Add(inst.Statement);
 		}
 
-		private void AddVariableButton_Click(object sender, System.EventArgs e)
+		private void AddVariableButton_Click(object sender, EventArgs e)
 		{
 			AddVariableForm form = new Editor.AddVariableForm(canvas);
 			form.ShowDialog();
