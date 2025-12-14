@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Language;
-using VisualScriptTool.Language.Statements.Declaration.Variables;
+using VisualScriptTool.Language.Statements.Declaration;
 
 namespace VisualScriptTool.Editor
 {

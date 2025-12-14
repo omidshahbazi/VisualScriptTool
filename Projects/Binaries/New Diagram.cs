@@ -1,0 +1,6 @@
+class x
+{
+void doIt()
+{
+}
+}

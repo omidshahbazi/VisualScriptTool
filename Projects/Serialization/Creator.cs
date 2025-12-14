@@ -18,7 +18,7 @@ namespace VisualScriptTool.Serialization
 
 		public static T Create<T>(string Data) where T : ISerializeData
 		{
-			return JSONSerializeObject.Deserialize<T>(Data);
+			return JSONSerializeObject.Deserialize<T>(Data, true);
 		}
 
 		public static Serializer GetSerializer(System.Type Type)

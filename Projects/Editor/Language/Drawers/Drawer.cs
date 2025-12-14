@@ -90,7 +90,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			headeTextBrush = new SolidBrush(HeaderTextColor);
 			headeBackBrush = new SolidBrush(HeaderBackColor);
 			bodyBackBrush = new SolidBrush(BodyBackColor);
-			executeSlotBrush = new SolidBrush(ControlStatementDrawer.EXECUTION_SLOT_COLOR);
+			executeSlotBrush = new SolidBrush(EXECUTION_SLOT_COLOR);
 			variableSlotBrush = new SolidBrush(VariableDrawer.HEADER_COLOR);
 			argumentSlotBrush = new SolidBrush(VariableDrawer.HEADER_COLOR);
 			executionPen = new Pen(EXECUTION_SLOT_COLOR, 2.0F);

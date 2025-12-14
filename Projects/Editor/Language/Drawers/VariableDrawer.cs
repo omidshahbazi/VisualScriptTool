@@ -1,7 +1,7 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
 using System.Drawing;
-using VisualScriptTool.Language.Statements.Declaration.Variables;
+using VisualScriptTool.Language.Statements.Declaration;
 
 namespace VisualScriptTool.Editor.Language.Drawers
 {

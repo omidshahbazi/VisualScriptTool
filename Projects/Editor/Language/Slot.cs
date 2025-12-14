@@ -16,9 +16,9 @@ namespace VisualScriptTool.Editor.Language
 		}
 
 		private RectangleF bounds;
-		private System.Func<Slot, bool> checkAssignment = null;
-		private System.Action<Slot, Slot> onAssignment = null;
-		private System.Action<Slot> onRemoveConnection = null;
+		private Func<Slot, bool> checkAssignment = null;
+		private Action<Slot, Slot> onAssignment = null;
+		private Action<Slot> onRemoveConnection = null;
 
 		public StatementInstance StatementInstance
 		{
@@ -89,7 +89,7 @@ namespace VisualScriptTool.Editor.Language
 			private set;
 		}
 
-		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, Func<Slot, bool> CheckAssignment, Action<Slot, Slot> OnAssignment, System.Action<Slot> OnRemoveConnection)
+		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, Func<Slot, bool> CheckAssignment, Action<Slot, Slot> OnAssignment, Action<Slot> OnRemoveConnection)
 		{
 			RelatedSlots = new SlotList();
 

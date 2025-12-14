@@ -2,7 +2,7 @@
 using System.Drawing;
 using VisualScriptTool.Editor.Language.Drawers.Controls;
 using VisualScriptTool.Language.Statements.Control;
-using VisualScriptTool.Language.Statements.Declaration.Variables;
+using VisualScriptTool.Language.Statements.Declaration;
 
 namespace VisualScriptTool.Editor.Language
 {

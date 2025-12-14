@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Language.Statements.Control;
-using VisualScriptTool.Language.Statements.Declaration.Variables;
+using VisualScriptTool.Language.Statements.Declaration;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor.Language

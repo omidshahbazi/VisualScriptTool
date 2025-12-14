@@ -1,43 +1,46 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System.Collections.Generic;
+using System.Reflection;
+
 namespace VisualScriptTool.Serialization
 {
 	public abstract class Serializer
 	{
-		public class ReferenceTable : System.Collections.Generic.Dictionary<object, string>
+		public class ReferenceList : List<object>
 		{ }
 
-		public class GUIDTable : System.Collections.Generic.Dictionary<string, object>
+		public class StatementIDTable : Dictionary<string, object>
 		{ }
 
 		public class ReferenceResolver
 		{
-			public string guid;
+			public string id;
 			object instance = null;
-			private System.Reflection.MemberInfo member = null;
+			private MemberInfo member = null;
 
-			public ReferenceResolver(string GUID, object Instance, System.Reflection.MemberInfo Member)
+			public ReferenceResolver(string ID, object Instance, MemberInfo Member)
 			{
-				guid = GUID;
+				id = ID;
 				instance = Instance;
 				member = Member;
 			}
 
-			public void Reslve(GUIDTable References)
+			public void Reslve(StatementIDTable References)
 			{
-				if (!References.ContainsKey(guid))
-					throw new System.ArgumentException("[" + guid + "] not found");
+				if (!References.ContainsKey(id))
+					throw new System.ArgumentException("[" + id + "] not found");
 
-				if (member is System.Reflection.FieldInfo)
+				if (member is FieldInfo)
 				{
-					((System.Reflection.FieldInfo)member).SetValue(instance, References[guid]);
+					((FieldInfo)member).SetValue(instance, References[id]);
 					return;
 				}
 
-				((System.Reflection.PropertyInfo)member).SetValue(instance, References[guid], null);
+				((PropertyInfo)member).SetValue(instance, References[id], null);
 			}
 		}
 
-		public class ResolverList : System.Collections.Generic.List<ReferenceResolver>
+		public class ResolverList : List<ReferenceResolver>
 		{ }
 
 		public abstract System.Type Type
@@ -46,11 +49,11 @@ namespace VisualScriptTool.Serialization
 		}
 
 		public abstract object CreateInstance();
-		public abstract void Serialize(ISerializeData Data, object Instance);
-		public abstract T Deserialize<T>(ISerializeData Data);
+		public abstract void Serialize(ISerializeData Object, object Instance);
+		public abstract T Deserialize<T>(ISerializeData Object);
 
-		public abstract void SerializeInternal(ISerializeData Data, object Instance, System.Type InstanceType, ReferenceTable References);
-		public abstract T DeserializeInternal<T>(ISerializeData Data, GUIDTable References, ResolverList ResolverList);
+		public abstract void SerializeInternal(ISerializeData Data, object Instance, System.Type InstanceType, ReferenceList References);
+		public abstract T DeserializeInternal<T>(ISerializeData Data, StatementIDTable StatementIDs, ResolverList Resolvers);
 
 		protected static Serializer GetSerializer(System.Type Type)
 		{
@@ -77,39 +80,10 @@ namespace VisualScriptTool.Serialization
 			return Array.AddObject();
 		}
 
-		protected static void Set(ISerializeObject Object, int ID, object Value)
-		{
-			Object.Set(ID.ToString(), Value);
-		}
 
-		protected static void Set(ISerializeObject Object, int ID, bool Value)
+		protected static void Set<T>(ISerializeObject Object, int ID, T Value, string Comment = null)
 		{
-			Object.Set(ID.ToString(), Value);
-		}
-
-		protected static void Set(ISerializeObject Object, int ID, int Value)
-		{
-			Object.Set(ID.ToString(), Value);
-		}
-
-		protected static void Set(ISerializeObject Object, int ID, uint Value)
-		{
-			Object.Set(ID.ToString(), Value);
-		}
-
-		protected static void Set(ISerializeObject Object, int ID, float Value)
-		{
-			Object.Set(ID.ToString(), Value);
-		}
-
-		protected static void Set(ISerializeObject Object, int ID, double Value)
-		{
-			Object.Set(ID.ToString(), Value);
-		}
-
-		protected static void Set(ISerializeObject Object, int ID, string Value)
-		{
-			Object.Set(ID.ToString(), Value);
+			Object.Set(ID.ToString(), Value, Comment);
 		}
 
 		protected static T Get<T>(ISerializeObject Object, int ID, T DefaultValue = default(T))

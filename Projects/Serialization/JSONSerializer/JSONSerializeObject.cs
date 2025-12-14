@@ -72,6 +72,8 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			}
 		}
 
+		ISerializeData ISerializeData.Parent => throw new NotImplementedException();
+
 		object ISerializeObject.this[string Name]
 		{
 			get { return map[Name]; }
@@ -87,8 +89,10 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			return map.ContainsKey(Name);
 		}
 
-		ISerializeArray ISerializeObject.AddArray(string Name)
+		ISerializeArray ISerializeObject.AddArray(string Name, string Comment = null)
 		{
+			HandleComment(Name, Comment);
+
 			ISerializeArray obj = new JSONSerializeArray(this);
 
 			map[Name] = obj;
@@ -96,8 +100,10 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			return obj;
 		}
 
-		ISerializeObject ISerializeObject.AddObject(string Name)
+		ISerializeObject ISerializeObject.AddObject(string Name, string Comment = null)
 		{
+			HandleComment(Name, Comment);
+
 			ISerializeObject obj = new JSONSerializeObject(this);
 
 			map[Name] = obj;
@@ -105,38 +111,52 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			return obj;
 		}
 
-		void ISerializeObject.Set(string Name, float Value)
+		void ISerializeObject.Set(string Name, float Value, string Comment = null)
 		{
+			HandleComment(Name, Comment);
+
 			map[Name] = Value;
 		}
 
-		void ISerializeObject.Set(string Name, string Value)
+		void ISerializeObject.Set(string Name, string Value, string Comment = null)
 		{
+			HandleComment(Name, Comment);
+
 			map[Name] = Value;
 		}
 
-		void ISerializeObject.Set(string Name, double Value)
+		void ISerializeObject.Set(string Name, double Value, string Comment = null)
 		{
+			HandleComment(Name, Comment);
+
 			map[Name] = Value;
 		}
 
-		void ISerializeObject.Set(string Name, uint Value)
+		void ISerializeObject.Set(string Name, uint Value, string Comment = null)
 		{
+			HandleComment(Name, Comment);
+
 			map[Name] = Value;
 		}
 
-		void ISerializeObject.Set(string Name, int Value)
+		void ISerializeObject.Set(string Name, int Value, string Comment = null)
 		{
+			HandleComment(Name, Comment);
+
 			map[Name] = Value;
 		}
 
-		void ISerializeObject.Set(string Name, bool Value)
+		void ISerializeObject.Set(string Name, bool Value, string Comment = null)
 		{
+			HandleComment(Name, Comment);
+
 			map[Name] = Value;
 		}
 
-		void ISerializeObject.Set(string Name, object Value)
+		void ISerializeObject.Set(string Name, object Value, string Comment = null)
 		{
+			HandleComment(Name, Comment);
+
 			map[Name] = Value;
 		}
 
@@ -159,14 +179,30 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			//throw new System.InvalidCastException("Value of key [" + Name + "] is " + obj.GetType().Name + ", but desire type is " + typeof(T).Name);
 		}
 
+		void ISerializeObject.Remove(string Name)
+		{
+			if (!map.ContainsKey(Name))
+				return;
+
+			map.Remove(Name);
+		}
+
 		IEnumerator<KeyValuePair<string, object>> ISerializeObject.GetEnumerator()
 		{
 			return map.GetEnumerator();
 		}
 
-		public static T Deserialize<T>(string JSON) where T : ISerializeData
+		private void HandleComment(string Name, string Comment = null)
 		{
-			return (T)parser.Parse(ref JSON);
+			if (string.IsNullOrEmpty(Comment))
+				return;
+
+			map[Name + JSONParser.COMMENT_POSTFIX] = Comment;
+		}
+
+		public static T Deserialize<T>(string JSON, bool RemoveComments = false) where T : ISerializeData
+		{
+			return (T)parser.Parse(ref JSON, RemoveComments);
 		}
 	}
 }

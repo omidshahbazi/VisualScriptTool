@@ -8,18 +8,20 @@ using VisualScriptTool.Reflection;
 
 namespace VisualScriptTool.Serialization
 {
-	public class DefaultCompileStrategy : ICompileStrategy
+	public class DefaultCompileStrategy : ISerializationCompileStrategy
 	{
-		MethodBase ICompileStrategy.GetInstantiator(Type Type)
+		MethodBase ISerializationCompileStrategy.GetInstantiator(Type Type)
 		{
 			ConstructorInfo[] ctors = Type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-			for (int i = 0; i < ctors.Length; ++i)
-			{
-				ConstructorInfo ctor = ctors[i];
 
-				if (IsMethodACorrectInstantiator(ctor, 0))
-					return ctor;
-			}
+			if (!Type.IsAbstract)
+				for (int i = 0; i < ctors.Length; ++i)
+				{
+					ConstructorInfo ctor = ctors[i];
+
+					if (IsMethodACorrectInstantiator(ctor, 0))
+						return ctor;
+				}
 
 			MethodInfo[] methods = Type.GetMethods(BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
 			for (int i = 0; i < methods.Length; ++i)
@@ -37,38 +39,41 @@ namespace VisualScriptTool.Serialization
 					return method;
 			}
 
-			for (int i = 0; i < ctors.Length; ++i)
+			if (!Type.IsAbstract)
 			{
-				ConstructorInfo ctor = ctors[i];
+				for (int i = 0; i < ctors.Length; ++i)
+				{
+					ConstructorInfo ctor = ctors[i];
 
-				if (ctor.GetParameters().Length == 0)
-					return ctor;
+					if (ctor.GetParameters().Length == 0)
+						return ctor;
+				}
 			}
 
 			return null;
 		}
 
-		MethodInfo ICompileStrategy.GetPreSerialize(Type Type)
+		MethodInfo ISerializationCompileStrategy.GetPreSerialize(Type Type)
 		{
 			return GetCallbackMethod<SerializablePreSerializeAttribute>(Type, BindingFlags.Instance | BindingFlags.Public);
 		}
 
-		MethodInfo ICompileStrategy.GetPostSerialize(Type Type)
+		MethodInfo ISerializationCompileStrategy.GetPostSerialize(Type Type)
 		{
 			return GetCallbackMethod<SerializablePostSerializeAttribute>(Type, BindingFlags.Instance | BindingFlags.Public);
 		}
 
-		MethodInfo ICompileStrategy.GetPreDeserialize(Type Type)
+		MethodInfo ISerializationCompileStrategy.GetPreDeserialize(Type Type)
 		{
 			return GetCallbackMethod<SerializablePreDeserializeAttribute>(Type, BindingFlags.Instance | BindingFlags.Public);
 		}
 
-		MethodInfo ICompileStrategy.GetPostDeserialize(Type Type)
+		MethodInfo ISerializationCompileStrategy.GetPostDeserialize(Type Type)
 		{
 			return GetCallbackMethod<SerializablePostDeserializeAttribute>(Type, BindingFlags.Instance | BindingFlags.Public);
 		}
 
-		MemberInfo[] ICompileStrategy.GetMembers(Type Type)
+		MemberInfo[] ISerializationCompileStrategy.GetMembers(Type Type)
 		{
 			List<MemberInfo> list = new List<MemberInfo>();
 
@@ -99,7 +104,7 @@ namespace VisualScriptTool.Serialization
 			return list.ToArray();
 		}
 
-		int ICompileStrategy.GetMemberID(MemberInfo Member, int DefaultID)
+		int ISerializationCompileStrategy.GetMemberID(MemberInfo Member, int DefaultID)
 		{
 			SerializableElementAttribute serializable = AttributeUtils.GetAttribute<SerializableElementAttribute>(Member);
 
@@ -109,36 +114,36 @@ namespace VisualScriptTool.Serialization
 			return serializable.ID;
 		}
 
-		string ICompileStrategy.GetInstantiatorParameterDefaultValue(MethodBase Method, uint Index)
+		string ISerializationCompileStrategy.GetInstantiatorParameterDefaultValue(MethodBase Method, uint Index)
 		{
 			SerializableInstantiatorAttribute attributes = AttributeUtils.GetAttribute<SerializableInstantiatorAttribute>(Method);
 
 			return attributes.GetDefaultParameterAsString(Index);
 		}
 
-		string ICompileStrategy.GetMemberDefaultValue(MemberInfo Member)
+		string ISerializationCompileStrategy.GetMemberDefaultValue(MemberInfo Member)
 		{
 			SerializableElementAttribute serializable = AttributeUtils.GetAttribute<SerializableElementAttribute>(Member);
 
 			return serializable.GetDefaultValueAsString();
 		}
 
-		bool ICompileStrategy.IsPrimitive(Type Type)
+		bool ISerializationCompileStrategy.IsPrimitive(Type Type)
 		{
 			return (Type.IsPrimitive || Type == typeof(string));
 		}
 
-		bool ICompileStrategy.IsArray(Type Type)
+		bool ISerializationCompileStrategy.IsArray(Type Type)
 		{
 			return Type.IsArray();
 		}
 
-		bool ICompileStrategy.IsList(Type Type)
+		bool ISerializationCompileStrategy.IsList(Type Type)
 		{
 			return Type.IsList();
 		}
 
-		bool ICompileStrategy.IsMap(Type Type)
+		bool ISerializationCompileStrategy.IsMap(Type Type)
 		{
 			return (Type.GetInterface(typeof(IDictionary).FullName) != null);
 		}

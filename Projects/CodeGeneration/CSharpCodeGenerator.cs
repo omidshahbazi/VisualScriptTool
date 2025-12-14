@@ -2,7 +2,7 @@
 using System.Text;
 using VisualScriptTool.CodeGeneration.Language;
 using VisualScriptTool.Language.Statements;
-using VisualScriptTool.Language.Statements.Declaration.Variables;
+using VisualScriptTool.Language.Statements.Declaration;
 
 namespace VisualScriptTool.CodeGeneration
 {

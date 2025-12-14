@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Binaries\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -53,6 +53,7 @@
     <Compile Include="AddVariableForm.Designer.cs">
       <DependentUpon>AddVariableForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Extensions\StatementInstanceExtensions.cs" />
     <Compile Include="Extensions\Utilities.cs" />
     <Compile Include="GridCanvas.cs">
       <SubType>UserControl</SubType>
@@ -83,7 +84,7 @@
     <Compile Include="Extensions\RectangleFExtensions.cs" />
     <Compile Include="Extensions\PointFExtensions.cs" />
     <Compile Include="Serializers\BooleanVariable_Serializer.cs" />
-    <Compile Include="Serializers\Compiler.cs" />
+    <Compile Include="Serializers\SerializationCompiler.cs" />
     <Compile Include="Serializers\ExecuterStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\ExecuterStatement_Serializer.cs" />
     <Compile Include="Serializers\FloatVariable_Serializer.cs" />
@@ -101,9 +102,11 @@
     <Compile Include="Serializers\Statement_Serializer.cs" />
     <Compile Include="Serializers\StringVariable_Serializer.cs" />
     <Compile Include="Serializers\SystemCompilerStrategy.cs" />
+    <Compile Include="Serializers\UserDefinedStatement_Serializer.cs" />
     <Compile Include="Serializers\VariableSetterStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\VariableSetterStatement_Serializer.cs" />
     <Compile Include="Serializers\VariableStatementInstance_Serializer.cs" />
+    <Compile Include="Serializers\VariableStatement_Serializer.cs" />
     <Compile Include="Serializers\WhileStatementInstance_Serializer.cs" />
     <Compile Include="Serializers\WhileStatement_Serializer.cs" />
     <Compile Include="StatementCanvas.cs">

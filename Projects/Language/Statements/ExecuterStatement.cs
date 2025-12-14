@@ -11,7 +11,7 @@ namespace VisualScriptTool.Language.Statements
 			set { }
 		}
 
-		[SerializableElement(0)]
+		[SerializableElement(1)]
 		public Statement Statement
 		{
 			get;

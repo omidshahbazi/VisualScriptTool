@@ -227,7 +227,7 @@ namespace VisualScriptTool.Editor.Language
 			}
 		}
 
-		private Slot AddSlot(string Name, Slot.Types Type, uint Index, System.Func<Slot, bool> CheckAssignment = null, System.Action<Slot, Slot> OnAssignment = null, System.Action<Slot> OnRemoveConnection = null)
+		private Slot AddSlot(string Name, Slot.Types Type, uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
 			Slot slot = new Slot(this, Name, Type, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 			slots.Add(slot);

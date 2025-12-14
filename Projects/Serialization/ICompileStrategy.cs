@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace VisualScriptTool.Serialization
 {
-	public interface ICompileStrategy
+	public interface ISerializationCompileStrategy
 	{
 		MethodBase GetInstantiator(Type Type);
 		MethodInfo GetPreSerialize(Type Type);

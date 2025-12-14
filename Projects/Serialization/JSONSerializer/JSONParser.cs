@@ -5,12 +5,14 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 {
 	class JSONParser
 	{
+		public static string COMMENT_POSTFIX = "_Comment";
+
 		private const char NULL_CHAR = '\0';
 
 		private int index = 0;
 		private char[] contents = null;
 
-		public ISerializeData Parse(ref string Contents)
+		public ISerializeData Parse(ref string Contents, bool RemoveComments = false)
 		{
 			index = 0;
 			contents = Contents.ToCharArray();
@@ -18,14 +20,14 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 			char c = GetChar();
 
 			if (c == '{')
-				return ParseObject(null);
+				return ParseObject(null, RemoveComments);
 			else if (c == '[')
-				return ParseArray(null);
+				return ParseArray(null, RemoveComments);
 
 			return null;
 		}
 
-		private ISerializeObject ParseObject(ISerializeData Parent)
+		private ISerializeObject ParseObject(ISerializeData Parent, bool RemoveComments)
 		{
 			ISerializeObject obj = new JSONSerializeObject(Parent);
 
@@ -54,9 +56,9 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 				c = GetChar();
 
 				if (c == '{')
-					obj.Set(key, ParseObject(obj));
+					obj.Set(key, ParseObject(obj, RemoveComments));
 				else if (c == '[')
-					obj.Set(key, ParseArray(obj));
+					obj.Set(key, ParseArray(obj, RemoveComments));
 				else
 				{
 					bool isString = (c == '"');
@@ -74,10 +76,34 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 					break;
 			}
 
+			if (RemoveComments)
+			{
+				bool stillContinue = false;
+				do
+				{
+					stillContinue = false;
+
+					var it = obj.GetEnumerator();
+					while (it.MoveNext())
+					{
+						string commentKey = it.Current.Key;
+
+						if (!commentKey.EndsWith(COMMENT_POSTFIX))
+							continue;
+
+						obj.Remove(commentKey);
+
+						stillContinue = true;
+						break;
+					}
+
+				} while (stillContinue);
+			}
+
 			return obj;
 		}
 
-		private ISerializeArray ParseArray(ISerializeData Parent)
+		private ISerializeArray ParseArray(ISerializeData Parent, bool RemoveComments)
 		{
 			ISerializeArray array = new JSONSerializeArray(Parent);
 
@@ -93,9 +119,9 @@ namespace VisualScriptTool.Serialization.JSONSerializer
 				c = GetChar();
 
 				if (c == '{')
-					array.Add(ParseObject(array));
+					array.Add(ParseObject(array, RemoveComments));
 				else if (c == '[')
-					array.Add(ParseArray(array));
+					array.Add(ParseArray(array, RemoveComments));
 				else
 				{
 					bool isString = (c == '"');

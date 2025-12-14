@@ -13,7 +13,7 @@ namespace VisualScriptTool.Editor
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			Compiler.Compile();
+			SerializationCompiler.Compile();
 
 			SerializationSystem.Initialize();
 
@@ -73,8 +73,8 @@ namespace VisualScriptTool.Editor
 				finalData[0] = (byte)(startBlockIndex >> 8);
 				finalData[1] = (byte)startBlockIndex;
 
-				System.Array.Copy(encodedHeader, 0, finalData, 2, encodedHeaderIndex + 1);
-				System.Array.Copy(encodedData, 0, finalData, 2 + encodedHeaderIndex, encodedDataIndex + 1);
+                Array.Copy(encodedHeader, 0, finalData, 2, encodedHeaderIndex + 1);
+                Array.Copy(encodedData, 0, finalData, 2 + encodedHeaderIndex, encodedDataIndex + 1);
 
 				return finalData;
 			}
@@ -112,7 +112,7 @@ namespace VisualScriptTool.Editor
 			}
 
 			byte[] finalData = new byte[encodedDataIndex + 1];
-			System.Array.Copy(encodedData, finalData, finalData.Length);
+            Array.Copy(encodedData, finalData, finalData.Length);
 
 			return finalData;
 		}

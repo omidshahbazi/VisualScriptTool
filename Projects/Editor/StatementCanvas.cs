@@ -134,12 +134,12 @@ namespace VisualScriptTool.Editor
 			groupSelectionPen = new Pen(Color.Black);
 			groupSelectionPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
 
-			//VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable var = new VisualScriptTool.Language.Statements.Declaration.Variables.IntegerVariable();
+			//VisualScriptTool.Language.Statements.Declaration.IntegerVariable var = new VisualScriptTool.Language.Statements.Declaration.IntegerVariable();
 			//var.Name = "Test_a";
 
 			//AddStatementInstance(new VariableStatementInstance(var));
 
-			//VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement varSetter = new VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement();
+			//VisualScriptTool.Language.Statements.Declaration.VariableSetterStatement varSetter = new VisualScriptTool.Language.Statements.Declaration.VariableSetterStatement();
 			//varSetter.Variable = var;
 
 			//AddStatementInstance(new VariableSetterStatementInstance(varSetter));
@@ -182,7 +182,7 @@ namespace VisualScriptTool.Editor
 
 		public void BindClassFunctions(Type Type)
 		{
-			MethodInfo[] methods = Type.GetMethods(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+			MethodInfo[] methods = Type.GetMethods(BindingFlags.Static | BindingFlags.Public);
 
 			if (methods.Length == 0)
 				return;
@@ -225,7 +225,7 @@ namespace VisualScriptTool.Editor
 				drawer.DrawConections(Device, Statements[i]);
 
 			if (SelectedSlot != null)
-				newConnectionLine.Draw(Device, ControlStatementDrawer.GetPen(SelectedSlot.Type));
+				newConnectionLine.Draw(Device, Drawer.GetPen(SelectedSlot.Type));
 
 			if (isGroupSelection)
 			{
@@ -353,13 +353,13 @@ namespace VisualScriptTool.Editor
 					PointF endOffset = PointF.Empty;
 					if (SelectedSlot.IsLeftAligned)
 					{
-						startOffset.X = -ControlStatementDrawer.LINE_START_OFFSET_AMOUNT;
-						endOffset.X = ControlStatementDrawer.LINE_START_OFFSET_AMOUNT;
+						startOffset.X = -Drawer.LINE_START_OFFSET_AMOUNT;
+						endOffset.X = Drawer.LINE_START_OFFSET_AMOUNT;
 					}
 					else
 					{
-						startOffset.X = ControlStatementDrawer.LINE_START_OFFSET_AMOUNT;
-						endOffset.X = -ControlStatementDrawer.LINE_START_OFFSET_AMOUNT;
+						startOffset.X = Drawer.LINE_START_OFFSET_AMOUNT;
+						endOffset.X = -Drawer.LINE_START_OFFSET_AMOUNT;
 					}
 
 					newConnectionLine.Update(SelectedSlot.Center, startOffset, location, endOffset);
@@ -532,11 +532,11 @@ namespace VisualScriptTool.Editor
 		{
 			StatementInstance instance = null;
 
-			VisualScriptTool.Language.Statements.Declaration.Variables.VariableStatement statement = (VisualScriptTool.Language.Statements.Declaration.Variables.VariableStatement)DragAndDropManager.GetData();
+			VisualScriptTool.Language.Statements.Declaration.VariableStatement statement = (VisualScriptTool.Language.Statements.Declaration.VariableStatement)DragAndDropManager.GetData();
 
 			if (IsSetter)
 			{
-				VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement setterStatement = new VisualScriptTool.Language.Statements.Declaration.Variables.VariableSetterStatement();
+				VisualScriptTool.Language.Statements.Control.VariableSetterStatement setterStatement = new VisualScriptTool.Language.Statements.Control.VariableSetterStatement();
 				setterStatement.Variable = statement;
 				instance = new VariableSetterStatementInstance(setterStatement);
 			}

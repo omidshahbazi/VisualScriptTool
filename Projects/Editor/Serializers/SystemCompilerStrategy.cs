@@ -9,9 +9,9 @@ using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor.Serializers
 {
-	class SystemCompilerStrategy : ICompileStrategy
+	class SystemCompilerStrategy : ISerializationCompileStrategy
 	{
-		MethodBase ICompileStrategy.GetInstantiator(Type Type)
+		MethodBase ISerializationCompileStrategy.GetInstantiator(Type Type)
 		{
 			ConstructorInfo[] ctors = Type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 			for (int i = 0; i < ctors.Length; ++i)
@@ -25,7 +25,7 @@ namespace VisualScriptTool.Editor.Serializers
 
 				bool isAppropriate = true;
 				for (uint j = 0; j < parameters.Length; ++j)
-					if (!((ICompileStrategy)this).IsPrimitive(parameters[j].ParameterType))
+					if (!((ISerializationCompileStrategy)this).IsPrimitive(parameters[j].ParameterType))
 					{
 						isAppropriate = false;
 						break;
@@ -38,27 +38,27 @@ namespace VisualScriptTool.Editor.Serializers
 			return null;
 		}
 
-		MethodInfo ICompileStrategy.GetPreSerialize(Type Type)
+		MethodInfo ISerializationCompileStrategy.GetPreSerialize(Type Type)
 		{
 			return null;
 		}
 
-		MethodInfo ICompileStrategy.GetPostSerialize(Type Type)
+		MethodInfo ISerializationCompileStrategy.GetPostSerialize(Type Type)
 		{
 			return null;
 		}
 
-		MethodInfo ICompileStrategy.GetPreDeserialize(Type Type)
+		MethodInfo ISerializationCompileStrategy.GetPreDeserialize(Type Type)
 		{
 			return null;
 		}
 
-		MethodInfo ICompileStrategy.GetPostDeserialize(Type Type)
+		MethodInfo ISerializationCompileStrategy.GetPostDeserialize(Type Type)
 		{
 			return null;
 		}
 
-		MemberInfo[] ICompileStrategy.GetMembers(Type Type)
+		MemberInfo[] ISerializationCompileStrategy.GetMembers(Type Type)
 		{
 			List<MemberInfo> list = new List<MemberInfo>();
 
@@ -83,19 +83,19 @@ namespace VisualScriptTool.Editor.Serializers
 			return list.ToArray();
 		}
 
-		int ICompileStrategy.GetMemberID(MemberInfo Member, int DefaultID)
+		int ISerializationCompileStrategy.GetMemberID(MemberInfo Member, int DefaultID)
 		{
 			return DefaultID;
 		}
 
-		string ICompileStrategy.GetInstantiatorParameterDefaultValue(MethodBase Method, uint Index)
+		string ISerializationCompileStrategy.GetInstantiatorParameterDefaultValue(MethodBase Method, uint Index)
 		{
 			ParameterInfo parameter = Method.GetParameters()[Index];
 
 			return parameter.ParameterType.GetDefaultValue().ToString();
 		}
 
-		string ICompileStrategy.GetMemberDefaultValue(MemberInfo Member)
+		string ISerializationCompileStrategy.GetMemberDefaultValue(MemberInfo Member)
 		{
 			Type type = (Member is FieldInfo ? ((FieldInfo)Member).FieldType : ((PropertyInfo)Member).PropertyType);
 
@@ -105,22 +105,22 @@ namespace VisualScriptTool.Editor.Serializers
 			return type.GetDefaultValue().ToString();
 		}
 
-		bool ICompileStrategy.IsPrimitive(Type Type)
+		bool ISerializationCompileStrategy.IsPrimitive(Type Type)
 		{
 			return (Type.IsPrimitive || Type == typeof(string));
 		}
 
-		bool ICompileStrategy.IsArray(Type Type)
+		bool ISerializationCompileStrategy.IsArray(Type Type)
 		{
 			return Type.IsArray();
 		}
 
-		bool ICompileStrategy.IsList(Type Type)
+		bool ISerializationCompileStrategy.IsList(Type Type)
 		{
 			return Type.IsList();
 		}
 
-		bool ICompileStrategy.IsMap(Type Type)
+		bool ISerializationCompileStrategy.IsMap(Type Type)
 		{
 			return (Type.GetInterface(typeof(IDictionary).FullName) != null);
 		}
