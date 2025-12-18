@@ -1,5 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
@@ -9,13 +10,17 @@ using VisualScriptTool.Editor.Language;
 using VisualScriptTool.Editor.Language.Drawers;
 using VisualScriptTool.Language.Extensions;
 using VisualScriptTool.Language.Statements;
+using VisualScriptTool.Language.Statements.Declaration;
 using VisualScriptTool.Renderer;
 
 namespace VisualScriptTool.Editor
 {
 	public class StatementCanvas : GridCanvas, IStatementInspector
 	{
-		public delegate void StatementsChanged();
+		public delegate void VariableStatementChanged(UserDefinedStatement Instance);
+		public delegate void VariableStatementsChanged();
+		public delegate void StatementInstanceChanged(StatementInstance Instance);
+		public delegate void StatementInstancesChanged();
 
 		private class Item
 		{
@@ -69,8 +74,9 @@ namespace VisualScriptTool.Editor
 		private ContextMenuStrip slotContextMenu = null;
 		private ContextMenuStrip variableContextMenu = null;
 		private StatementDrawer drawer = null;
-		private StatementInstanceList statements = new StatementInstanceList();
-		private StatementInstanceList selectedStatements = new StatementInstanceList();
+		private VariableStatementList variableStatements = new VariableStatementList();
+		private StatementInstanceList statementInstances = new StatementInstanceList();
+		private StatementInstanceList selectedStatementInstances = new StatementInstanceList();
 		private PointF lastMousePosition;
 		private Pen selectedPen = null;
 		private bool candidateToShowGeneralMenu = false;
@@ -87,14 +93,19 @@ namespace VisualScriptTool.Editor
 			get { return PointToClient(MousePosition); }
 		}
 
-		public StatementInstance[] Statements
+		public VariableStatement[] VariableStatements
 		{
-			get { return statements.ToArray(); }
+			get { return variableStatements.ToArray(); }
 		}
 
-		public StatementInstance[] SelectedStatements
+		public StatementInstance[] StatementInstances
 		{
-			get { return selectedStatements.ToArray(); }
+			get { return statementInstances.ToArray(); }
+		}
+
+		public StatementInstance[] SelectedStatementInstances
+		{
+			get { return selectedStatementInstances.ToArray(); }
 		}
 
 		public Slot MouseOverSlot
@@ -109,7 +120,13 @@ namespace VisualScriptTool.Editor
 			private set;
 		}
 
-		public event StatementsChanged OnStatementChanged;
+		public event VariableStatementChanged OnVariableStatementAdded;
+		public event VariableStatementChanged OnVariableStatementRemoved;
+		public event VariableStatementsChanged OnVariableStatementsChanged;
+
+		public event StatementInstanceChanged OnStatementInstanceAdded;
+		public event StatementInstanceChanged OnStatementInstanceRemoved;
+		public event StatementInstancesChanged OnStatementInstancesChanged;
 
 		public StatementCanvas()
 		{
@@ -133,27 +150,55 @@ namespace VisualScriptTool.Editor
 
 			groupSelectionPen = new Pen(Color.Black);
 			groupSelectionPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+		}
 
-			//VisualScriptTool.Language.Statements.Declaration.IntegerVariable var = new VisualScriptTool.Language.Statements.Declaration.IntegerVariable();
-			//var.Name = "Test_a";
+		public void RemoveStatement(Statement Statement)
+		{
+			if (Statement is VariableStatement)
+			{
+				RemoveStatementInstancesByStatement(Statement);
 
-			//AddStatementInstance(new VariableStatementInstance(var));
+				RemoveVariableStatement((VariableStatement)Statement);
+			}
+			else
+				throw new NotImplementedException();
 
-			//VisualScriptTool.Language.Statements.Declaration.VariableSetterStatement varSetter = new VisualScriptTool.Language.Statements.Declaration.VariableSetterStatement();
-			//varSetter.Variable = var;
+			Refresh();
+		}
 
-			//AddStatementInstance(new VariableSetterStatementInstance(varSetter));
+		public void AddVariableStatement(VariableStatement Statement)
+		{
+			variableStatements.Add(Statement);
+
+			OnVariableStatementAdded?.Invoke(Statement);
+			OnVariableStatementsChanged?.Invoke();
+		}
+
+		public void AddVariableStatement(IEnumerable<VariableStatement> Statements)
+		{
+			IEnumerator<VariableStatement> it = Statements.GetEnumerator();
+			while (it.MoveNext())
+				AddVariableStatement(it.Current);
+		}
+
+		public void RemoveVariableStatement(VariableStatement Statement)
+		{
+			variableStatements.Remove(Statement);
+
+			OnVariableStatementRemoved?.Invoke(Statement);
+			OnVariableStatementsChanged?.Invoke();
 		}
 
 		public void AddStatementInstance(StatementInstance Instance)
 		{
-			Instance.StatementInstanceSelected += OnStatementInstanceSelected;
-			Instance.SlotSelected += OnSlotSelected;
-			Instance.SlotOver += OnSlotOver;
-			Instance.SlotExit += OnSlotExit;
-			statements.Add(Instance);
+			Instance.OnStatementInstanceSelected += OnStatementInstanceSelected;
+			Instance.OnSlotSelected += OnSlotSelected;
+			Instance.OnSlotOver += OnSlotOver;
+			Instance.OnSlotExit += OnSlotExit;
+			statementInstances.Add(Instance);
 
-			OnStatementChanged?.Invoke();
+			OnStatementInstanceAdded?.Invoke(Instance);
+			OnStatementInstancesChanged?.Invoke();
 
 			Refresh();
 		}
@@ -167,15 +212,7 @@ namespace VisualScriptTool.Editor
 
 		public void RemoveStatementInstance(StatementInstance Instance)
 		{
-			Instance.StatementInstanceSelected -= OnStatementInstanceSelected;
-			Instance.SlotSelected -= OnSlotSelected;
-			Instance.SlotOver -= OnSlotOver;
-			Instance.SlotExit -= OnSlotExit;
-			statements.Remove(Instance);
-
-			OnStatementChanged?.Invoke();
-
-
+			FreeStatementInstance(Instance);
 
 			Refresh();
 		}
@@ -195,11 +232,11 @@ namespace VisualScriptTool.Editor
 
 				Item item = new Item("While", (Position) =>
 				{
-                    VisualScriptTool.Language.Statements.Control.FunctionStatement fnstmt = new VisualScriptTool.Language.Statements.Control.FunctionStatement();
-                    fnstmt.Method = method;
-                    FunctionStatementInstance statement = new FunctionStatementInstance();
-                    statement.Statement = fnstmt;
-                    statement.Position = Position;
+					VisualScriptTool.Language.Statements.Control.FunctionStatement fnstmt = new VisualScriptTool.Language.Statements.Control.FunctionStatement();
+					fnstmt.Method = method;
+					FunctionStatementInstance statement = new FunctionStatementInstance();
+					statement.Statement = fnstmt;
+					statement.Position = Position;
 					return statement;
 				});
 
@@ -207,22 +244,31 @@ namespace VisualScriptTool.Editor
 			}
 		}
 
+		public void ResetView()
+		{
+			RectangleF bounds = StatementInstances.GetBounds();
+
+			LookAt(bounds);
+
+			Refresh();
+		}
+
 		protected override void OnDrawCanvas(IDevice Device)
 		{
 			base.OnDrawCanvas(Device);
 
-			for (int i = 0; i < statements.Count; ++i)
-				drawer.Draw(Device, Statements[i]);
+			for (int i = 0; i < statementInstances.Count; ++i)
+				drawer.Draw(Device, StatementInstances[i]);
 
-			for (int i = 0; i < selectedStatements.Count; ++i)
+			for (int i = 0; i < selectedStatementInstances.Count; ++i)
 			{
-				RectangleF rect = selectedStatements[i].Bounds;
+				RectangleF rect = selectedStatementInstances[i].Bounds;
 
 				Device.DrawRectangle(rect.X, rect.Y, rect.Width, rect.Height, selectedPen);
 			}
 
-			for (int i = 0; i < statements.Count; ++i)
-				drawer.DrawConections(Device, Statements[i]);
+			for (int i = 0; i < statementInstances.Count; ++i)
+				drawer.DrawConections(Device, StatementInstances[i]);
 
 			if (SelectedSlot != null)
 				newConnectionLine.Draw(Device, Drawer.GetPen(SelectedSlot.Type));
@@ -243,9 +289,9 @@ namespace VisualScriptTool.Editor
 			PointF location = ScreenToCanvas(e.Location);
 
 			bool isAnythingUnderMouse = false;
-			for (int i = statements.Count - 1; i >= 0; --i)
+			for (int i = statementInstances.Count - 1; i >= 0; --i)
 			{
-				StatementInstance statement = Statements[i];
+				StatementInstance statement = StatementInstances[i];
 
 				if (statement.Bounds.Contains(location))
 				{
@@ -258,7 +304,7 @@ namespace VisualScriptTool.Editor
 				candidateToShowGeneralMenu = true;
 			else if (!isAnythingUnderMouse && e.Button == MouseButtons.Left)
 			{
-				selectedStatements.Clear();
+				selectedStatementInstances.Clear();
 				isGroupSelection = true;
 				startGroupSelectionLocation = endGroupSelectionLocation = location;
 			}
@@ -274,9 +320,9 @@ namespace VisualScriptTool.Editor
 
 			PointF location = ScreenToCanvas(e.Location);
 
-			for (int i = statements.Count - 1; i >= 0; --i)
+			for (int i = statementInstances.Count - 1; i >= 0; --i)
 			{
-				StatementInstance statement = Statements[i];
+				StatementInstance statement = StatementInstances[i];
 
 				if (statement.Bounds.Contains(location))
 					statement.OnMouseUp(e.Button, location);
@@ -326,9 +372,9 @@ namespace VisualScriptTool.Editor
 
 			PointF location = ScreenToCanvas(e.Location);
 
-			for (int i = statements.Count - 1; i >= 0; --i)
+			for (int i = statementInstances.Count - 1; i >= 0; --i)
 			{
-				StatementInstance statement = Statements[i];
+				StatementInstance statement = StatementInstances[i];
 				bool wasInArea = statement.Bounds.Contains(lastMousePosition);
 				bool isInArea = statement.Bounds.Contains(location);
 
@@ -370,23 +416,23 @@ namespace VisualScriptTool.Editor
 
 					RectangleF rect = RectangleFExtensions.GetRectBetweenPoints(startGroupSelectionLocation, endGroupSelectionLocation);
 
-					selectedStatements.Clear();
+					selectedStatementInstances.Clear();
 
-					for (int i = statements.Count - 1; i >= 0; --i)
+					for (int i = statementInstances.Count - 1; i >= 0; --i)
 					{
-						StatementInstance statement = Statements[i];
+						StatementInstance statement = StatementInstances[i];
 
 						if (statement.Bounds.IntersectsWith(rect))
-							selectedStatements.Add(statement);
+							selectedStatementInstances.Add(statement);
 					}
 				}
-				else if (selectedStatements.Count != 0)
+				else if (selectedStatementInstances.Count != 0)
 				{
 					PointF delta = location.Subtract(lastMousePosition);
 
-					for (int i = 0; i < selectedStatements.Count; ++i)
+					for (int i = 0; i < selectedStatementInstances.Count; ++i)
 					{
-						StatementInstance statement = SelectedStatements[i];
+						StatementInstance statement = SelectedStatementInstances[i];
 
 						statement.Position = statement.Position.Add(delta);
 					}
@@ -406,12 +452,18 @@ namespace VisualScriptTool.Editor
 
 			if (e.KeyCode == Keys.Delete)
 			{
-				for (int i = 0; i < selectedStatements.Count; ++i)
-					statements.Remove(SelectedStatements[i]);
+				for (int i = 0; i < selectedStatementInstances.Count; ++i)
+				{
+					FreeStatementInstance(selectedStatementInstances[i--]);
+				}
 
-				selectedStatements.Clear();
+				selectedStatementInstances.Clear();
 
 				Refresh();
+			}
+			else if (e.KeyCode == Keys.F)
+			{
+				ResetView();
 			}
 		}
 
@@ -425,19 +477,50 @@ namespace VisualScriptTool.Editor
 			ShowVariableMenu();
 		}
 
+		private void RemoveStatementInstancesByStatement(Statement Instance)
+		{
+			StatementInstance[] statementInstances = ((IStatementInspector)this).GetInstances(Instance);
+
+			for (int i = 0; i < statementInstances.Length; ++i)
+			{
+				FreeStatementInstance(statementInstances[i]);
+			}
+		}
+
+		private void FreeStatementInstance(StatementInstance Instance)
+		{
+			Instance.OnStatementInstanceSelected -= OnStatementInstanceSelected;
+			Instance.OnSlotSelected -= OnSlotSelected;
+			Instance.OnSlotOver -= OnSlotOver;
+			Instance.OnSlotExit -= OnSlotExit;
+
+			Instance.RemoveConnections();
+
+			statementInstances.Remove(Instance);
+			RemoveFromSelected(Instance);
+
+			OnStatementInstanceRemoved?.Invoke(Instance);
+			OnStatementInstancesChanged?.Invoke();
+		}
+
 		private void ShowGeneralMenu()
 		{
 			generalContextMenu.Show(this, ClientMousePosition);
+		}
+
+		private void RemoveFromSelected(StatementInstance StatementInstance)
+		{
+			selectedStatementInstances.Remove(StatementInstance);
 		}
 
 		private void ShowSlotMenu()
 		{
 			slotContextMenu.Items.Clear();
 
-			//if (SelectedSlot.Type == Slot.Types.Argument || SelectedSlot.Type == Slot.Types.Executer || SelectedSlot.Type == Slot.Types.Setter)
-			//	slotContextMenu.Items.Add("Remove Connection", null, (s, e) => { OnRemoveConnection(SelectedSlot); });
-			//else
-			//	slotContextMenu.Items.Add("Remove All Connections", null, (s, e) => { OnRemoveAllConnections(SelectedSlot); });
+			if (SelectedSlot.Type == Slot.Types.Argument || SelectedSlot.Type == Slot.Types.Executer)//|| SelectedSlot.Type == Slot.Types.Setter)
+				slotContextMenu.Items.Add("Remove Connection", null, (s, e) => { RemoveConnection(SelectedSlot); });
+			else
+				slotContextMenu.Items.Add("Remove All Connections", null, (s, e) => { RemoveAllConnections(SelectedSlot); });
 
 			slotContextMenu.Show(this, ClientMousePosition);
 		}
@@ -487,12 +570,12 @@ namespace VisualScriptTool.Editor
 
 		private void OnStatementInstanceSelected(StatementInstance Instance)
 		{
-			if (selectedStatements.Contains(Instance))
+			if (selectedStatementInstances.Contains(Instance))
 				return;
 
-			selectedStatements.Clear();
+			selectedStatementInstances.Clear();
 
-			selectedStatements.Add(Instance);
+			selectedStatementInstances.Add(Instance);
 		}
 
 		private void OnSlotSelected(Slot Slot)
@@ -511,14 +594,14 @@ namespace VisualScriptTool.Editor
 			MouseOverSlot = null;
 		}
 
-		private void OnRemoveConnection(Slot Slot)
+		private void RemoveConnection(Slot Slot)
 		{
 			Slot.RemoveConnection();
 
 			Refresh();
 		}
 
-		private void OnRemoveAllConnections(Slot Slot)
+		private void RemoveAllConnections(Slot Slot)
 		{
 			Slot[] relatedSlots = Slot.RelatedSlots.ToArray();
 
@@ -532,7 +615,7 @@ namespace VisualScriptTool.Editor
 		{
 			StatementInstance instance = null;
 
-			VisualScriptTool.Language.Statements.Declaration.VariableStatement statement = (VisualScriptTool.Language.Statements.Declaration.VariableStatement)DragAndDropManager.GetData();
+            VariableStatement statement = (VariableStatement)DragAndDropManager.GetData();
 
 			if (IsSetter)
 			{
@@ -551,13 +634,26 @@ namespace VisualScriptTool.Editor
 
 		StatementInstance IStatementInspector.GetInstance(Statement Statement)
 		{
-			for (int i = 0; i < Statements.Length; ++i)
+			for (int i = 0; i < StatementInstances.Length; ++i)
 			{
-				if (Statements[i].Statement == Statement)
-					return Statements[i];
+				if (StatementInstances[i].Statement == Statement)
+					return StatementInstances[i];
 			}
 
 			return null;
+		}
+
+		StatementInstance[] IStatementInspector.GetInstances(Statement Statement)
+		{
+			StatementInstanceList statementInstances = new StatementInstanceList();
+
+			for (int i = 0; i < StatementInstances.Length; ++i)
+			{
+				if (StatementInstances[i].Statement == Statement)
+					statementInstances.Add(StatementInstances[i]);
+			}
+
+			return statementInstances.ToArray();
 		}
 	}
 }

@@ -1,6 +1,9 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
 using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.IO;
 using System.Windows.Forms;
 using VisualScriptTool.CodeGeneration;
@@ -14,14 +17,15 @@ namespace VisualScriptTool.Editor
 {
 	public class DiagramTab : TabPage
 	{
-		private const string USER_DEFINED_STATEMENTS_ARRAY_NAME = "UserDefinedStatements";
+		private const string VARIABLE_STATEMENTS_ARRAY_NAME = "VariableStatements";
 		private const string STATEMENT_INSTANCES_ARRAY_NAME = "StatementInstnaces";
 
-		private ListBox list = null;
-		private StatementCanvas canvas = null;
 		private IContainer components;
 		private ContextMenuStrip listMenu;
-		private ToolStripMenuItem AddVariableButton;
+		private ToolStripMenuItem addVariableButton;
+		private ListBox list = null;
+		private StatementCanvas canvas = null;
+		private TableLayoutPanel tableLayoutPanel = null;
 		private bool isDirty = false;
 
 		public bool IsDirty
@@ -47,9 +51,14 @@ namespace VisualScriptTool.Editor
 			private set;
 		}
 
-		public StatementInstance[] Statements
+		public VariableStatement[] VariableStatements
 		{
-			get { return canvas.Statements; }
+			get { return canvas.VariableStatements; }
+		}
+
+		public StatementInstance[] StatementInstances
+		{
+			get { return canvas.StatementInstances; }
 		}
 
 		public DiagramTab()
@@ -58,7 +67,7 @@ namespace VisualScriptTool.Editor
 
 			canvas.BindClassFunctions(typeof(Math));
 
-			canvas.OnStatementChanged += OnStatementChanged;
+			canvas.OnVariableStatementsChanged += OnVariableStatementsChanged;
 		}
 
 		public void New(string Name)
@@ -76,18 +85,22 @@ namespace VisualScriptTool.Editor
 
 			ISerializeObject obj = Creator.Create<ISerializeObject>(File.ReadAllText(FilePath));
 
-			ISerializeArray userDefinedDataArray = obj.Get<ISerializeArray>(USER_DEFINED_STATEMENTS_ARRAY_NAME);
-			UserDefinedStatement[] userDefinedStatements = Creator.GetSerializer(typeof(UserDefinedStatement[])).Deserialize<UserDefinedStatement[]>(userDefinedDataArray);
-
 			ISerializeArray statementInstanceDataArray = obj.Get<ISerializeArray>(STATEMENT_INSTANCES_ARRAY_NAME);
-			StatementInstance[] statementInstance = Creator.GetSerializer(Statements.GetType()).Deserialize<StatementInstance[]>(statementInstanceDataArray);
+			StatementInstance[] statementInstance = Creator.GetSerializer(StatementInstances.GetType()).Deserialize<StatementInstance[]>(statementInstanceDataArray);
 
 			canvas.AddStatementInstance(statementInstance);
 
-			for (int i = 0; i < Statements.Length; ++i)
-				Statements[i].ResolveSlotConnections(canvas);
+			ISerializeArray variableStatementDataArray = obj.Get<ISerializeArray>(VARIABLE_STATEMENTS_ARRAY_NAME);
+			VariableStatement[] variableStatements = Creator.GetSerializer(VariableStatements.GetType()).Deserialize<VariableStatement[]>(variableStatementDataArray);
+
+			canvas.AddVariableStatement(variableStatements);
+
+			for (int i = 0; i < StatementInstances.Length; ++i)
+				StatementInstances[i].ResolveSlotConnections(canvas);
 
 			canvas.Refresh();
+
+			canvas.ResetView();
 
 			UpdateTabText();
 		}
@@ -112,7 +125,7 @@ namespace VisualScriptTool.Editor
 
 		public void GenerateCode()
 		{
-			Statement[] statements = Statements.ToStatements<Statement>();
+			Statement[] statements = StatementInstances.ToStatements<Statement>();
 
 			CSharpCodeGenerator codeGenerator = new CSharpCodeGenerator();
 
@@ -127,14 +140,13 @@ namespace VisualScriptTool.Editor
 
 			ISerializeObject obj = Creator.Create<ISerializeObject>();
 
-			UserDefinedStatement[] userDefinedStatements = Statements.ToStatements<UserDefinedStatement>();
-			ISerializeArray userDefinedDataArray = obj.AddArray(USER_DEFINED_STATEMENTS_ARRAY_NAME);
-			Creator.GetSerializer(userDefinedStatements.GetType()).Serialize(userDefinedDataArray, userDefinedStatements);
+			ISerializeArray variableStatementDataArray = obj.AddArray(VARIABLE_STATEMENTS_ARRAY_NAME);
+			Creator.GetSerializer(VariableStatements.GetType()).Serialize(variableStatementDataArray, VariableStatements);
 
 			ISerializeArray statementInstanceDataArray = obj.AddArray(STATEMENT_INSTANCES_ARRAY_NAME);
-			Creator.GetSerializer(Statements.GetType()).Serialize(statementInstanceDataArray, Statements);
+			Creator.GetSerializer(StatementInstances.GetType()).Serialize(statementInstanceDataArray, StatementInstances);
 
-			File.WriteAllText(FilePath + ".json", obj.Content);
+			File.WriteAllText(FilePath, obj.Content);
 		}
 
 		private void SomethingChanged(object sender, EventArgs e)
@@ -155,34 +167,38 @@ namespace VisualScriptTool.Editor
 			components = new Container();
 			ComponentResourceManager resources = new ComponentResourceManager(typeof(DiagramTab));
 			listMenu = new ContextMenuStrip(components);
-			AddVariableButton = new ToolStripMenuItem();
+			addVariableButton = new ToolStripMenuItem();
 			list = new ListBox();
 			canvas = new StatementCanvas();
+			tableLayoutPanel = new TableLayoutPanel();
+
 			listMenu.SuspendLayout();
+			list.SuspendLayout();
+			canvas.SuspendLayout();
 			SuspendLayout();
 			// 
 			// listMenu
 			// 
 			listMenu.Items.AddRange(new ToolStripItem[] {
-			AddVariableButton});
+			addVariableButton});
 			listMenu.Name = "listMenu";
-			listMenu.Size = new System.Drawing.Size(141, 26);
+			listMenu.Size = new Size(141, 26);
 			// 
 			// AddVariableButton
 			// 
-			AddVariableButton.Name = "AddVariableButton";
-			AddVariableButton.Size = new System.Drawing.Size(140, 22);
-			AddVariableButton.Text = "Add Variable";
-			AddVariableButton.Click += AddVariableButton_Click;
+			addVariableButton.Name = "AddVariableButton";
+			addVariableButton.Size = new Size(140, 22);
+			addVariableButton.Text = "Add Variable";
+			addVariableButton.Click += AddVariableButton_Click;
 			// 
 			// list
 			// 
 			list.ContextMenuStrip = listMenu;
-			list.Dock = DockStyle.Left;
+			list.Dock = DockStyle.Fill;
 			list.IntegralHeight = false;
-			list.Location = new System.Drawing.Point(0, 0);
+			list.Location = new Point(0, 0);
 			list.Name = "list";
-			list.Size = new System.Drawing.Size(300, 100);
+			list.Size = new Size(300, 100);
 			list.TabIndex = 1;
 			list.KeyUp += List_KeyUp;
 			list.MouseClick += List_MouseClick;
@@ -191,33 +207,47 @@ namespace VisualScriptTool.Editor
 			// canvas
 			// 
 			canvas.AllowDrop = true;
-			canvas.BackColor = System.Drawing.Color.DimGray;
-			canvas.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.Default;
+			canvas.BackColor = Color.DimGray;
+			canvas.CompositingQuality = CompositingQuality.Default;
 			canvas.Dock = DockStyle.Fill;
-			canvas.DrawAxis = false;
-			canvas.GraphicsUnit = System.Drawing.GraphicsUnit.Pixel;
-			canvas.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Default;
-			canvas.Location = new System.Drawing.Point(0, 0);
+			canvas.DrawAxis = true;
+			canvas.GraphicsUnit = GraphicsUnit.Pixel;
+			canvas.InterpolationMode = InterpolationMode.Default;
+			canvas.Location = new Point(0, 0);
 			canvas.MaximumZoom = 1F;
 			canvas.MinimumZoom = 0.5F;
 			canvas.Name = "canvas";
-			canvas.Origin = new System.Drawing.Point(0, 0);
-			canvas.Pan = ((System.Drawing.PointF)(resources.GetObject("canvas.Pan")));
-			canvas.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Default;
-			canvas.Size = new System.Drawing.Size(200, 100);
-			canvas.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+			canvas.Origin = new Point(0, 0);
+			canvas.Pan = ((PointF)(resources.GetObject("canvas.Pan")));
+			canvas.PixelOffsetMode = PixelOffsetMode.Default;
+			canvas.Size = new Size(200, 100);
+			canvas.SmoothingMode = SmoothingMode.HighQuality;
 			canvas.TabIndex = 2;
 			canvas.TextContrast = 0;
-			canvas.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
+			canvas.TextRenderingHint = TextRenderingHint.SystemDefault;
 			canvas.Zoom = 1F;
+			// 
+			// tableLayoutPanel
+			// 
+			tableLayoutPanel.ColumnCount = 2;
+			tableLayoutPanel.Dock = DockStyle.Fill;
+			tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+			tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 80F));
+			tableLayoutPanel.Controls.Add(list, 0, 0);
+			tableLayoutPanel.Controls.Add(canvas, 1, 0);
+			tableLayoutPanel.Name = "tableLayoutPanel";
+			tableLayoutPanel.RowCount = 1;
+			tableLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+			tableLayoutPanel.TabIndex = 0;
 			// 
 			// DiagramTab
 			// 
-			Controls.Add(list);
-			Controls.Add(canvas);
-			listMenu.ResumeLayout(false);
-			ResumeLayout(false);
+			Controls.Add(tableLayoutPanel);
 
+			listMenu.ResumeLayout(false);
+			list.ResumeLayout(false);
+			canvas.ResumeLayout(false);
+			ResumeLayout();
 		}
 
 		private void List_KeyUp(object sender, KeyEventArgs e)
@@ -230,17 +260,16 @@ namespace VisualScriptTool.Editor
 				if (!Utilities.ShowConfirmation("Warning", "Are you sure ?"))
 					return;
 
-				canvas.RemoveStatementInstance(((IStatementInspector)canvas).GetInstance((Statement)list.SelectedItem));
+				canvas.RemoveStatement((Statement)list.SelectedItem);
 			}
 		}
 
-		private void OnStatementChanged()
+		private void OnVariableStatementsChanged()
 		{
 			list.Items.Clear();
 
-			foreach (StatementInstance inst in Statements)
-				if (inst is VariableStatementInstance && !list.Items.Contains(inst.Statement))
-					list.Items.Add(inst.Statement);
+			foreach (VariableStatement statement in VariableStatements)
+				list.Items.Add(statement);
 		}
 
 		private void AddVariableButton_Click(object sender, EventArgs e)

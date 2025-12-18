@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System.Collections.Generic;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Language.Statements.Declaration
@@ -16,5 +17,8 @@ namespace VisualScriptTool.Language.Statements.Declaration
         {
             return Name + " (" + GetType().Name.Replace("Variable", "") + ")";
         }
-    }
+	}
+
+	public class VariableStatementList : List<VariableStatement>
+	{ }
 }

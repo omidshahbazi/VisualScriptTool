@@ -148,7 +148,21 @@ namespace VisualScriptTool.Renderer
 		{
 			var halfW = Width * 0.5F;
 			var halfH = Height * 0.5F;
+
 			Pan = new PointF(-Point.X * Zoom + halfW, -Point.Y * Zoom + halfH);
+		}
+
+		public void LookAt(RectangleF Bounds)
+		{
+			var scaleX = Width / Bounds.Width;
+			var scaleY = Height / Bounds.Height;
+
+			Zoom = Math.Min(scaleX, scaleY);
+
+			var centerX = Bounds.X + Bounds.Width * 0.5F;
+			var centerY = Bounds.Y + Bounds.Height * 0.5F;
+
+			LookAt(new PointF(centerX, centerY));
 		}
 
 		public PointF CanvasToScreen(PointF Point)
@@ -171,7 +185,7 @@ namespace VisualScriptTool.Renderer
 		{
 			base.Refresh();
 
-            Invalidate();
+			Invalidate();
 		}
 	}
 }

@@ -26,8 +26,8 @@ namespace VisualScriptTool.Editor
 			//System.IO.File.WriteAllBytes(Application.StartupPath + "/1.bin", encoded);
 		}
 
-
-		private class RunLenghtEncoder
+		//https://en.wikipedia.org/wiki/Run-length_encoding
+		private class RunLengthEncoder
 		{
 			public static byte[] Encode2(byte[] Data)
 			{

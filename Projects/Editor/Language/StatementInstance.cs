@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using VisualScriptTool.Editor.Extensions;
 using VisualScriptTool.Editor.Language.Drawers.Controls;
 using VisualScriptTool.Language.Statements;
+using VisualScriptTool.Renderer;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor.Language
@@ -23,13 +24,12 @@ namespace VisualScriptTool.Editor.Language
 		private SlotList slots = null;
 		private ControlList controls = null;
 
-		private bool isSelected = false;
 		private Slot lastSlotOver = null;
 
-		public event StatementInstanceSelectedHanlder StatementInstanceSelected = null;
-		public event SlotHandler SlotSelected = null;
-		public event SlotHandler SlotOver = null;
-		public event SlotHandler SlotExit = null;
+		public event StatementInstanceSelectedHanlder OnStatementInstanceSelected = null;
+		public event SlotHandler OnSlotSelected = null;
+		public event SlotHandler OnSlotOver = null;
+		public event SlotHandler OnSlotExit = null;
 
 		[SerializableElement(3)]
 		public virtual Statement Statement
@@ -45,14 +45,12 @@ namespace VisualScriptTool.Editor.Language
 			set { bounds.Location = value; }
 		}
 
-		[SerializableElement(1)]
 		public SizeF HeaderSize
 		{
 			get;
 			set;
 		}
 
-		[SerializableElement(2)]
 		public SizeF BodySize
 		{
 			get;
@@ -87,6 +85,30 @@ namespace VisualScriptTool.Editor.Language
 		public virtual void OnPostLoad()
 		{
 		}
+
+		//public void UpdateBounds(IDevice Device, Font Font)
+		//{
+		//protected const float ROW_HEIGHT = 30.0F;
+		//protected const float HEADER_TEXT_MARGIN = 1.0F;
+		//protected const float TWO_HEADER_TEXT_MARGIN = HEADER_TEXT_MARGIN * 2;
+
+		//protected virtual float BodyHeight
+		//{
+		//	get { return ROW_HEIGHT * 1; }
+		//}
+		//protected virtual float MinimumWidth
+		//{
+		//	get { return 100; }
+		//}
+
+		//	SizeF headerSize = Device.MeasureString(Statement.Name, Font) + new SizeF(TWO_HEADER_TEXT_MARGIN, TWO_HEADER_TEXT_MARGIN);
+		//	headerSize.Width = Math.Max(headerSize.Width, MinimumWidth);
+		//	HeaderSize = headerSize;
+
+		//	BodySize = new SizeF(HeaderSize.Width, BodyHeight);
+
+		//	bounds.Size = new SizeF(HeaderSize.Width, HeaderSize.Height + BodySize.Height);
+		//}
 
 		public void UpdateBounds()
 		{
@@ -168,6 +190,15 @@ namespace VisualScriptTool.Editor.Language
 				Slot.ConnectedSlot.RelatedSlots.Remove(Slot);
 
 			Slot.ConnectedSlot = null;
+
+			for (int i = 0; i < Slot.RelatedSlots.Count; ++i)
+				Slot.RelatedSlots[i].ConnectedSlot = null;
+		}
+
+		public virtual void RemoveConnections()
+		{
+			for (int i = 0; i < slots.Count; ++i)
+				UnsetConnection(slots[i]);
 		}
 
 		public virtual void ResolveSlotConnections(IStatementInspector Inspector)
@@ -190,7 +221,7 @@ namespace VisualScriptTool.Editor.Language
 
 		public virtual void OnMouseDown(MouseButtons Button, PointF Location)
 		{
-			OnStatementInstanceSelectedd(this);
+			StatementInstanceSelected(this);
 
 			Slot underMouse = GetSlotAtLocation(Location);
 			if (underMouse != null)
@@ -199,7 +230,7 @@ namespace VisualScriptTool.Editor.Language
 
 		public virtual void OnMouseUp(MouseButtons Button, PointF Location)
 		{
-			for (int i = 0; i < controls.Count;++i)
+			for (int i = 0; i < controls.Count; ++i)
 			{
 				ControlBase control = controls[i];
 
@@ -252,28 +283,24 @@ namespace VisualScriptTool.Editor.Language
 			return null;
 		}
 
-		protected virtual void OnStatementInstanceSelectedd(StatementInstance Statement)
+		protected virtual void StatementInstanceSelected(StatementInstance Statement)
 		{
-			if (StatementInstanceSelected != null)
-				StatementInstanceSelected(Statement);
+			OnStatementInstanceSelected?.Invoke(Statement);
 		}
 
-		protected virtual void OnSlotSelected(Slot Slot)
+		protected virtual void SlotSelected(Slot Slot)
 		{
-			if (SlotSelected != null)
-				SlotSelected(Slot);
+			OnSlotSelected?.Invoke(Slot);
 		}
 
-		protected virtual void OnSlotOver(Slot Slot)
+		protected virtual void SlotOver(Slot Slot)
 		{
-			if (SlotOver != null)
-				SlotOver(Slot);
+			OnSlotOver.Invoke(Slot);
 		}
 
-		protected virtual void OnSlotExit(Slot Slot)
+		protected virtual void SlotExit(Slot Slot)
 		{
-			if (SlotExit != null)
-				SlotExit(Slot);
+			OnSlotExit?.Invoke(Slot);
 		}
 	}
 

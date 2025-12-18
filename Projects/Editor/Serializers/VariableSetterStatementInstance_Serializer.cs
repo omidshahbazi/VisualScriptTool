@@ -97,16 +97,6 @@ namespace VisualScriptTool.Editor.Serializers
 				System.Type PositionType = VariableSetterStatementInstance.Position.GetType();
 				Set(PositionObject, 1, PositionType.AssemblyQualifiedName, "Position");
 				GetSerializer(PositionType).SerializeInternal(AddObject(PositionObject, 2), VariableSetterStatementInstance.Position, PositionType, References);
-				// HeaderSize
-				ISerializeObject HeaderSizeObject = AddObject(Object, 1); 
-				System.Type HeaderSizeType = VariableSetterStatementInstance.HeaderSize.GetType();
-				Set(HeaderSizeObject, 1, HeaderSizeType.AssemblyQualifiedName, "HeaderSize");
-				GetSerializer(HeaderSizeType).SerializeInternal(AddObject(HeaderSizeObject, 2), VariableSetterStatementInstance.HeaderSize, HeaderSizeType, References);
-				// BodySize
-				ISerializeObject BodySizeObject = AddObject(Object, 2); 
-				System.Type BodySizeType = VariableSetterStatementInstance.BodySize.GetType();
-				Set(BodySizeObject, 1, BodySizeType.AssemblyQualifiedName, "BodySize");
-				GetSerializer(BodySizeType).SerializeInternal(AddObject(BodySizeObject, 2), VariableSetterStatementInstance.BodySize, BodySizeType, References);
 			}
 		}
 
@@ -160,22 +150,6 @@ namespace VisualScriptTool.Editor.Serializers
 					ISerializeObject PositionObjectValue = Get<ISerializeObject>(Object, 0); 
 					Serializer PositionSerializer = GetSerializer(System.Type.GetType(Get<string>(PositionObjectValue, 1)));
 					VariableSetterStatementInstance.Position = PositionSerializer.DeserializeInternal<System.Drawing.PointF>(Get<ISerializeObject>(PositionObjectValue, 2), StatementIDs, Resolvers);
-				}
-				// HeaderSize
-				ISerializeObject HeaderSizeObject = Get<ISerializeObject>(Object, 1, null);
-				if (HeaderSizeObject != null)
-				{
-					ISerializeObject HeaderSizeObjectValue = Get<ISerializeObject>(Object, 1); 
-					Serializer HeaderSizeSerializer = GetSerializer(System.Type.GetType(Get<string>(HeaderSizeObjectValue, 1)));
-					VariableSetterStatementInstance.HeaderSize = HeaderSizeSerializer.DeserializeInternal<System.Drawing.SizeF>(Get<ISerializeObject>(HeaderSizeObjectValue, 2), StatementIDs, Resolvers);
-				}
-				// BodySize
-				ISerializeObject BodySizeObject = Get<ISerializeObject>(Object, 2, null);
-				if (BodySizeObject != null)
-				{
-					ISerializeObject BodySizeObjectValue = Get<ISerializeObject>(Object, 2); 
-					Serializer BodySizeSerializer = GetSerializer(System.Type.GetType(Get<string>(BodySizeObjectValue, 1)));
-					VariableSetterStatementInstance.BodySize = BodySizeSerializer.DeserializeInternal<System.Drawing.SizeF>(Get<ISerializeObject>(BodySizeObjectValue, 2), StatementIDs, Resolvers);
 				}
 				returnValue = (T)(object)VariableSetterStatementInstance;
 				VariableSetterStatementInstance.OnPostLoad();

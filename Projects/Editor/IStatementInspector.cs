@@ -7,5 +7,6 @@ namespace VisualScriptTool.Editor
 	public interface IStatementInspector
 	{
 		StatementInstance GetInstance(Statement Statement);
+		StatementInstance[] GetInstances(Statement Statement);
 	}
 }

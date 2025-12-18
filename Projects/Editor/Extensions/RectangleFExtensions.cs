@@ -15,5 +15,16 @@ namespace VisualScriptTool.Editor.Extensions
 			rect.Height = Math.Abs(A.Y - B.Y);
 			return rect;
 		}
+
+		public static RectangleF Extend(this RectangleF A, RectangleF B)
+		{
+			float x = Math.Min(A.X, B.X);
+			float y = Math.Min(A.Y, B.Y);
+
+			float right = Math.Max(A.X + A.Width, B.X + B.Width);
+			float bottom = Math.Max(A.Y + A.Height, B.Y + B.Height);
+
+			return new RectangleF(x, y, right - x, bottom - y);
+		}
 	}
 }

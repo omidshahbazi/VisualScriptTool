@@ -13,7 +13,6 @@ namespace VisualScriptTool.Language.Statements.Control
 			set { }
 		}
 
-		//TODO: VariableStatement or UserDefinedStatement? Shouldn't we have only one of them?
 		[SerializableElement(3)]
 		public VariableStatement Variable
 		{
@@ -21,17 +20,15 @@ namespace VisualScriptTool.Language.Statements.Control
 			set;
 		}
 
-		//TODO: VariableStatement or UserDefinedStatement? Shouldn't we have only one of them?
 		[SerializableElement(4)]
-		public VariableStatement Statement
+		public UserDefinedStatement Statement
 		{
 			get;
 			set;
 		}
 
-		//TODO: VariableStatement or UserDefinedStatement? Shouldn't we have only one of them?
 		[SerializableElement(5)]
-		public UserDefinedStatement DefaultValue
+		public VariableStatement DefaultValue
 		{
 			get;
 			set;

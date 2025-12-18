@@ -206,7 +206,7 @@ namespace VisualScriptTool.Editor.Serializers
 					if (Contains(StatementObjectValue, 1))
 					{
 						Serializer StatementSerializer = GetSerializer(System.Type.GetType(Get<string>(StatementObjectValue, 1)));
-						VariableSetterStatement.Statement = StatementSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.VariableStatement>(Get<ISerializeObject>(StatementObjectValue, 2), StatementIDs, Resolvers);
+						VariableSetterStatement.Statement = StatementSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.UserDefinedStatement>(Get<ISerializeObject>(StatementObjectValue, 2), StatementIDs, Resolvers);
 						StatementIDs[VariableSetterStatement.Statement.ID] = VariableSetterStatement.Statement;
 					}
 					else
@@ -225,7 +225,7 @@ namespace VisualScriptTool.Editor.Serializers
 					if (Contains(DefaultValueObjectValue, 1))
 					{
 						Serializer DefaultValueSerializer = GetSerializer(System.Type.GetType(Get<string>(DefaultValueObjectValue, 1)));
-						VariableSetterStatement.DefaultValue = DefaultValueSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.UserDefinedStatement>(Get<ISerializeObject>(DefaultValueObjectValue, 2), StatementIDs, Resolvers);
+						VariableSetterStatement.DefaultValue = DefaultValueSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.VariableStatement>(Get<ISerializeObject>(DefaultValueObjectValue, 2), StatementIDs, Resolvers);
 						StatementIDs[VariableSetterStatement.DefaultValue.ID] = VariableSetterStatement.DefaultValue;
 					}
 					else

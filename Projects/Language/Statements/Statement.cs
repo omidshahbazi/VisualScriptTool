@@ -28,6 +28,45 @@ namespace VisualScriptTool.Language.Statements
 		{
 			return Name;
 		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj is null)
+				return false;
+
+			if (obj is Statement)
+				return ((Statement)obj).ID == ID;
+
+			return false;
+		}
+
+		public static bool operator ==(Statement a, Statement b)
+		{
+			if (a is null && b is null)
+				return true;
+
+			if (a is null || b is null)
+				return false;
+
+			if (ReferenceEquals(a, b))
+				return true;
+
+			return (a.ID == b.ID);
+		}
+
+		public static bool operator !=(Statement a, Statement b)
+		{
+			if (a is null && b is null)
+				return false;
+
+			if (a is null || b is null)
+				return true;
+
+			if (ReferenceEquals(a, b))
+				return false;
+
+			return (a.ID != b.ID);
+		}
 	}
 
 	public class StatementList : List<Statement>

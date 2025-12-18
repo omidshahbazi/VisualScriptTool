@@ -6,62 +6,62 @@ using VisualScriptTool.Language.Statements.Declaration;
 
 namespace VisualScriptTool.Editor
 {
-    public partial class AddVariableForm : Form
-    {
-        private enum Types
-        {
-            Boolean,
-            Integer,
-            Float,
-            String
-        }
+	public partial class AddVariableForm : Form
+	{
+		private enum Types
+		{
+			Boolean,
+			Integer,
+			Float,
+			String
+		}
 
-        private StatementCanvas canvas = null;
+		private StatementCanvas canvas = null;
 
-        public AddVariableForm(StatementCanvas Canvas)
-        {
-            InitializeComponent();
+		public AddVariableForm(StatementCanvas Canvas)
+		{
+			InitializeComponent();
 
-            canvas = Canvas;
+			canvas = Canvas;
 
-            TypeComboBox.Items.Add(Types.Boolean);
-            TypeComboBox.Items.Add(Types.Integer);
-            TypeComboBox.Items.Add(Types.Float);
-            TypeComboBox.Items.Add(Types.String);
+			TypeComboBox.Items.Add(Types.Boolean);
+			TypeComboBox.Items.Add(Types.Integer);
+			TypeComboBox.Items.Add(Types.Float);
+			TypeComboBox.Items.Add(Types.String);
 
-            TypeComboBox.SelectedItem = Types.Boolean;
-        }
+			TypeComboBox.SelectedItem = Types.Boolean;
+		}
 
-        private void AddButton_Click(object sender, EventArgs e)
-        {
-            VariableStatement variable = null;
+		private void AddButton_Click(object sender, EventArgs e)
+		{
+			VariableStatement variable = null;
 
-            switch ((Types)TypeComboBox.SelectedItem)
-            {
-                case Types.Boolean:
-                    variable = new BooleanVariable();
-                    break;
-                case Types.Integer:
-                    variable = new IntegerVariable();
-                    break;
-                case Types.Float:
-                    variable = new FloatVariable();
-                    break;
-                case Types.String:
-                    variable = new StringVariable();
-                    break;
-            }
+			switch ((Types)TypeComboBox.SelectedItem)
+			{
+				case Types.Boolean:
+					variable = new BooleanVariable();
+					break;
+				case Types.Integer:
+					variable = new IntegerVariable();
+					break;
+				case Types.Float:
+					variable = new FloatVariable();
+					break;
+				case Types.String:
+					variable = new StringVariable();
+					break;
+			}
 
-            variable.Name = NameTextBox.Text;
+			variable.Name = NameTextBox.Text;
 
-            canvas.AddStatementInstance(new VariableStatementInstance(variable));
+			canvas.AddVariableStatement(variable);
 
-            Close();
-        }
+			Close();
+		}
 
-        private void CancelButton_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-    }
+		private void CancelButton_Click(object sender, EventArgs e)
+		{
+			Close();
+		}
+	}
 }

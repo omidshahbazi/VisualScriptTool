@@ -151,5 +151,5 @@
 		private System.Windows.Forms.ToolStripMenuItem NewMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem GenerateCSharpCode;
-	}
+    }
 }
