@@ -21,14 +21,14 @@ namespace VisualScriptTool.Language.Statements.Control
 		}
 
 		[SerializableElement(4)]
-		public UserDefinedStatement Statement
+		public VariableStatement ValueStatement
 		{
 			get;
 			set;
 		}
 
 		[SerializableElement(5)]
-		public VariableStatement DefaultValue
+		public AnyDataType DefaultValue
 		{
 			get;
 			set;

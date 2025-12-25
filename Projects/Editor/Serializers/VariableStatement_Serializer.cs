@@ -13,7 +13,7 @@ namespace VisualScriptTool.Editor.Serializers
 
 		public override object CreateInstance()
 		{
-			return null;
+			return new VisualScriptTool.Language.Statements.Declaration.VariableStatement();
 		}
 
 		public override void Serialize(ISerializeData Data, object Instance)
@@ -76,6 +76,11 @@ namespace VisualScriptTool.Editor.Serializers
 				VisualScriptTool.Language.Statements.Declaration.VariableStatement VariableStatement = (VisualScriptTool.Language.Statements.Declaration.VariableStatement)Instance;
 				// Name
 				Set(Object, 1, VariableStatement.Name, "Name");
+				// Value
+				ISerializeObject ValueObject = AddObject(Object, 3); 
+				System.Type ValueType = VariableStatement.Value.GetType();
+				Set(ValueObject, 1, ValueType.AssemblyQualifiedName, "Value");
+				GetSerializer(ValueType).SerializeInternal(AddObject(ValueObject, 2), VariableStatement.Value, ValueType, References);
 				// ID
 				Set(Object, 0, VariableStatement.ID, "ID");
 			}
@@ -107,6 +112,14 @@ namespace VisualScriptTool.Editor.Serializers
 				VisualScriptTool.Language.Statements.Declaration.VariableStatement VariableStatement = (VisualScriptTool.Language.Statements.Declaration.VariableStatement)CreateInstance();
 				// Name
 				VariableStatement.Name = Get<System.String>(Object, 1, "");
+				// Value
+				ISerializeObject ValueObject = Get<ISerializeObject>(Object, 3, null);
+				if (ValueObject != null)
+				{
+					ISerializeObject ValueObjectValue = Get<ISerializeObject>(Object, 3); 
+					Serializer ValueSerializer = GetSerializer(System.Type.GetType(Get<string>(ValueObjectValue, 1)));
+					VariableStatement.Value = ValueSerializer.DeserializeInternal<VisualScriptTool.Language.AnyDataType>(Get<ISerializeObject>(ValueObjectValue, 2), StatementIDs, Resolvers);
+				}
 				// ID
 				VariableStatement.ID = Get<System.String>(Object, 0, "");
 				returnValue = (T)(object)VariableStatement;

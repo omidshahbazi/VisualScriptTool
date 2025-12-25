@@ -129,8 +129,7 @@ namespace VisualScriptTool.Editor
 
 			CSharpCodeGenerator codeGenerator = new CSharpCodeGenerator();
 
-			//TODO: What is the first element of the array?
-			File.WriteAllText(Application.StartupPath + "/" + Name + ".cs", codeGenerator.Generate(statements)[0]);
+			File.WriteAllBytes(Application.StartupPath + "/" + Name + ".cs", codeGenerator.Generate(Name, statements));
 		}
 
 		private void SaveInternal(string FilePath)
@@ -210,7 +209,7 @@ namespace VisualScriptTool.Editor
 			canvas.BackColor = Color.DimGray;
 			canvas.CompositingQuality = CompositingQuality.Default;
 			canvas.Dock = DockStyle.Fill;
-			canvas.DrawAxis = true;
+			canvas.DrawAxis = false;
 			canvas.GraphicsUnit = GraphicsUnit.Pixel;
 			canvas.InterpolationMode = InterpolationMode.Default;
 			canvas.Location = new Point(0, 0);
@@ -268,8 +267,8 @@ namespace VisualScriptTool.Editor
 		{
 			list.Items.Clear();
 
-			foreach (VariableStatement statement in VariableStatements)
-				list.Items.Add(statement);
+			for (int i = 0; i < VariableStatements.Length; ++i)
+				list.Items.Add(VariableStatements[i]);
 		}
 
 		private void AddVariableButton_Click(object sender, EventArgs e)

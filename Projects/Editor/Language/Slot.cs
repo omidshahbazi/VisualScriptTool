@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using VisualScriptTool.Language;
+using VisualScriptTool.Language.Extensions;
 
 namespace VisualScriptTool.Editor.Language
 {
@@ -16,7 +18,7 @@ namespace VisualScriptTool.Editor.Language
 		}
 
 		private RectangleF bounds;
-		private Func<Slot, bool> checkAssignment = null;
+		private Func<Slot, Type[], Slot, bool> checkAssignment = null;
 		private Action<Slot, Slot> onAssignment = null;
 		private Action<Slot> onRemoveConnection = null;
 
@@ -27,6 +29,12 @@ namespace VisualScriptTool.Editor.Language
 		}
 
 		public string Name
+		{
+			get;
+			private set;
+		}
+
+		public string PropertyName
 		{
 			get;
 			private set;
@@ -69,7 +77,7 @@ namespace VisualScriptTool.Editor.Language
 
 		public bool IsLeftAligned
 		{
-			get { return ( Type == Types.EntryPoint || Type == Types.Argument); }//Type == Types.Setter ||
+			get { return (Type == Types.EntryPoint || Type == Types.Argument); }
 		}
 
 		public bool IsRightAligned
@@ -89,12 +97,13 @@ namespace VisualScriptTool.Editor.Language
 			private set;
 		}
 
-		public Slot(StatementInstance StatementInstance, string Name, Types Type, uint Index, Func<Slot, bool> CheckAssignment, Action<Slot, Slot> OnAssignment, Action<Slot> OnRemoveConnection)
+		public Slot(StatementInstance StatementInstance, string Name, string PropertyName, Types Type, uint Index, Func<Slot, Type[], Slot, bool> CheckAssignment, Action<Slot, Slot> OnAssignment, Action<Slot> OnRemoveConnection)
 		{
 			RelatedSlots = new SlotList();
 
 			this.StatementInstance = StatementInstance;
 			this.Name = Name;
+			this.PropertyName = PropertyName;
 			this.Type = Type;
 			this.Index = Index;
 			checkAssignment = CheckAssignment;
@@ -104,7 +113,7 @@ namespace VisualScriptTool.Editor.Language
 
 		public bool AssignConnection(Slot Slot)
 		{
-			if (onAssignment != null && (checkAssignment == null || checkAssignment(Slot)))
+			if (onAssignment != null && (checkAssignment == null || checkAssignment(this, StatementInstance.Statement.GetConstraintsOf(PropertyName), Slot)))
 			{
 				onAssignment(this, Slot);
 				return true;

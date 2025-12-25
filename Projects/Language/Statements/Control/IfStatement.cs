@@ -12,15 +12,17 @@ namespace VisualScriptTool.Language.Statements.Control
 			set { }
 		}
 
+		[Constraints(typeof(bool))]
 		[SerializableElement(2)]
-		public BooleanVariable Condition
+		public VariableStatement Condition
 		{
 			get;
 			set;
 		}
 
+		[Constraints(typeof(bool))]
 		[SerializableElement(5)]
-		public bool ConditionDefaultValue
+		public AnyDataType ConditionDefaultValue
 		{
 			get;
 			set;
@@ -38,6 +40,11 @@ namespace VisualScriptTool.Language.Statements.Control
 		{
 			get;
 			set;
+		}
+
+		public IfStatement()
+		{
+			ConditionDefaultValue = false;
 		}
 	}
 }

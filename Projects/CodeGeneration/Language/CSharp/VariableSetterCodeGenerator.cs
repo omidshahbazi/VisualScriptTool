@@ -17,16 +17,16 @@ namespace VisualScriptTool.CodeGeneration.Language.CSharp
 		{
 			VariableSetterStatement statement = (VariableSetterStatement)Statement;
 
-			if (statement.Statement == null)
+			if (statement.ValueStatement == null)
 				return;
 
 			Builder.Append(statement.Variable.Name);
 			Builder.Append(" = ");
 
-			if (statement.Statement == null)
+			if (statement.ValueStatement == null)
 				Builder.Append(statement.DefaultValue.ToString().ToLower());
 			else
-				Builder.Append(statement.Statement.Name);
+				Builder.Append(statement.ValueStatement.Name);
 
 			Builder.AppendLine(";");
 

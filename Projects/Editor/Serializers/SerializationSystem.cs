@@ -12,10 +12,6 @@ namespace VisualScriptTool.Editor.Serializers
 			Serialization.Creator.AddSerializer(new IfStatement_Serializer());
 			Serialization.Creator.AddSerializer(new WhileStatement_Serializer());
 			Serialization.Creator.AddSerializer(new ForStatement_Serializer());
-			Serialization.Creator.AddSerializer(new BooleanVariable_Serializer());
-			Serialization.Creator.AddSerializer(new IntegerVariable_Serializer());
-			Serialization.Creator.AddSerializer(new FloatVariable_Serializer());
-			Serialization.Creator.AddSerializer(new StringVariable_Serializer());
 			Serialization.Creator.AddSerializer(new VariableStatement_Serializer());
 			Serialization.Creator.AddSerializer(new VariableSetterStatement_Serializer());
 			Serialization.Creator.AddSerializer(new FunctionStatement_Serializer());
@@ -29,6 +25,7 @@ namespace VisualScriptTool.Editor.Serializers
 			Serialization.Creator.AddSerializer(new FunctionStatementInstance_Serializer());
 			Serialization.Creator.AddSerializer(new PointF_Serializer());
 			Serialization.Creator.AddSerializer(new SizeF_Serializer());
+			Serialization.Creator.AddSerializer(new AnyDataType_Serializer());
 #endif
 		}
 	}

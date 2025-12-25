@@ -1,6 +1,8 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Drawing;
 using VisualScriptTool.Editor.Language.Drawers.Controls;
+using VisualScriptTool.Language.Extensions;
 using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Language.Statements.Declaration;
 
@@ -29,67 +31,58 @@ namespace VisualScriptTool.Editor.Language
 			AddControl(conditionCheckbox);
 		}
 
-		private bool CheckConditionAssignment(Slot Other)
+		private bool CheckConditionAssignment(Slot Self, Type[] Constraints, Slot Other)
 		{
-			return (Other.StatementInstance.Statement is BooleanVariable);
+			return (Other.StatementInstance.Statement.IsVariableOfOneOf(Constraints));
 		}
 
 		private void OnConditionAssigned(Slot Self, Slot Other)
 		{
-			IfStatement statement = (IfStatement)Statement;
-
 			SetConnection(Self, Other);
 
-			statement.Condition = (BooleanVariable)Other.StatementInstance.Statement;
+			Statement.As<IfStatement>().Condition = Other.StatementInstance.Statement.As<VariableStatement>();
 		}
 
 		private void OnTrueAssigned(Slot Self, Slot Other)
 		{
-			IfStatement statement = (IfStatement)Statement;
-
 			SetConnection(Self, Other);
 
-			statement.Statement = Other.StatementInstance.Statement;
+			Statement.As<IfStatement>().Statement = Other.StatementInstance.Statement;
 		}
 
 		private void OnFalseAssigned(Slot Self, Slot Other)
 		{
-			IfStatement statement = (IfStatement)Statement;
-
 			SetConnection(Self, Other);
 
-			statement.ElseStatment = Other.StatementInstance.Statement;
+			Statement.As<IfStatement>().ElseStatment = Other.StatementInstance.Statement;
 		}
 
 		private void OnRemoveConditionConnection(Slot Self)
 		{
 			UnsetConnection(Self);
 
-			IfStatement statement = (IfStatement)Statement;
-			statement.Condition = null;
+			Statement.As<IfStatement>().Condition = null;
 		}
 
 		private void OnRemoveTrueConnection(Slot Self)
 		{
 			UnsetConnection(Self);
 
-			IfStatement statement = (IfStatement)Statement;
-			statement.Statement = null;
+			Statement.As<IfStatement>().Statement = null;
 		}
 
 		private void OnRemoveFalseConnection(Slot Self)
 		{
 			UnsetConnection(Self);
 
-			IfStatement statement = (IfStatement)Statement;
-			statement.ElseStatment = null;
+			Statement.As<IfStatement>().ElseStatment = null;
 		}
 
 		public override void ResolveSlotConnections(IStatementInspector Inspector)
 		{
 			base.ResolveSlotConnections(Inspector);
 
-			IfStatement statement = (IfStatement)Statement;
+			IfStatement statement = Statement.As<IfStatement>();
 
 			UpdateConnectedSlot(Inspector, 2, statement.Condition);
 			UpdateConnectedSlot(Inspector, 3, statement.Statement);

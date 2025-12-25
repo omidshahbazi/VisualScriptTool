@@ -1,21 +1,14 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
 using System.Windows.Forms;
-using VisualScriptTool.Editor.Language;
+using VisualScriptTool.Language;
 using VisualScriptTool.Language.Statements.Declaration;
+using VisualScriptTool.Reflection;
 
 namespace VisualScriptTool.Editor
 {
 	public partial class AddVariableForm : Form
 	{
-		private enum Types
-		{
-			Boolean,
-			Integer,
-			Float,
-			String
-		}
-
 		private StatementCanvas canvas = null;
 
 		public AddVariableForm(StatementCanvas Canvas)
@@ -24,33 +17,16 @@ namespace VisualScriptTool.Editor
 
 			canvas = Canvas;
 
-			TypeComboBox.Items.Add(Types.Boolean);
-			TypeComboBox.Items.Add(Types.Integer);
-			TypeComboBox.Items.Add(Types.Float);
-			TypeComboBox.Items.Add(Types.String);
-
-			TypeComboBox.SelectedItem = Types.Boolean;
+			for (int i = 0; i < AnyDataType.AVAILABLE_TYPES.Length; ++i)
+				TypeComboBox.Items.Add(AnyDataType.AVAILABLE_TYPES[i].Name);
+			TypeComboBox.SelectedIndex = 0;
 		}
 
 		private void AddButton_Click(object sender, EventArgs e)
 		{
-			VariableStatement variable = null;
+			VariableStatement variable = new VariableStatement();
 
-			switch ((Types)TypeComboBox.SelectedItem)
-			{
-				case Types.Boolean:
-					variable = new BooleanVariable();
-					break;
-				case Types.Integer:
-					variable = new IntegerVariable();
-					break;
-				case Types.Float:
-					variable = new FloatVariable();
-					break;
-				case Types.String:
-					variable = new StringVariable();
-					break;
-			}
+			variable.Value = new AnyDataType(Type.GetType("System." + TypeComboBox.SelectedItem.ToString()).GetDefaultValue());
 
 			variable.Name = NameTextBox.Text;
 

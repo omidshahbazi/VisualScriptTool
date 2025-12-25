@@ -19,24 +19,24 @@ namespace VisualScriptTool.CodeGeneration.Language.CSharp
 
 			Builder.Append("for (int i = ");
 
-			if (statement.MinimumValue == null)
-				Builder.Append(statement.MinimumDefaultValue.ToString());
+			if (statement.First == null)
+				Builder.Append(statement.FirstDefaultValue.ToString());
 			else
-				Builder.Append(statement.MinimumValue.Name);
+				Builder.Append(statement.First.Name);
 
 			Builder.Append("; i <= ");
 
-			if (statement.MaximumValue == null)
-				Builder.Append(statement.MaximumDefaultValue.ToString());
+			if (statement.Last == null)
+				Builder.Append(statement.LastDefaultValue.ToString());
 			else
-				Builder.Append(statement.MaximumValue.Name);
+				Builder.Append(statement.Last.Name);
 
 			Builder.Append("; i += ");
 
-			if (statement.StepValue == null)
+			if (statement.Step == null)
 				Builder.Append(statement.StepDefaultValue.ToString());
 			else
-				Builder.Append(statement.StepValue.Name);
+				Builder.Append(statement.Step.Name);
 
 			Builder.AppendLine(")");
 

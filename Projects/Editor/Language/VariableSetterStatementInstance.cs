@@ -1,6 +1,8 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using VisualScriptTool.Language.Statements.Declaration;
 using VisualScriptTool.Language.Statements.Control;
+using VisualScriptTool.Language.Extensions;
+using System;
 
 namespace VisualScriptTool.Editor.Language
 {
@@ -13,37 +15,30 @@ namespace VisualScriptTool.Editor.Language
 			AddArgumentSlot(1, CheckConditionAssignment, OnConditionAssigned, OnRemoveConditionConnection);
 		}
 
-		private bool CheckConditionAssignment(Slot Other)
+		private bool CheckConditionAssignment(Slot Self, Type[] Constraints, Slot Other)
 		{
-			VariableSetterStatement statement = (VariableSetterStatement)Statement;
-
-			return (statement.Variable.GetType() == Other.StatementInstance.Statement.GetType());
+			return (Other.StatementInstance.Statement.IsVariableOfOneOf(Statement.As<VariableSetterStatement>().Variable.Value.Type));
 		}
 
 		private void OnConditionAssigned(Slot Self, Slot Other)
 		{
-			VariableSetterStatement statement = (VariableSetterStatement)Statement;
-
 			SetConnection(Self, Other);
 
-			statement.Statement = (VariableStatement)Other.StatementInstance.Statement;
+			Statement.As<VariableSetterStatement>().ValueStatement = Other.StatementInstance.Statement.As<VariableStatement>();
 		}
 
 		private void OnRemoveConditionConnection(Slot Self)
 		{
 			UnsetConnection(Self);
 
-			VariableSetterStatement statement = (VariableSetterStatement)Statement;
-			statement.Statement = null;
+			Statement.As<VariableSetterStatement>().ValueStatement = null;
 		}
 
 		public override void ResolveSlotConnections(IStatementInspector Inspector)
 		{
 			base.ResolveSlotConnections(Inspector);
 
-			VariableSetterStatement statement = (VariableSetterStatement)Statement;
-
-			UpdateConnectedSlot(Inspector, 2, statement.Statement);
+			UpdateConnectedSlot(Inspector, 2, Statement.As<VariableSetterStatement>().ValueStatement);
 		}
 	}
 }

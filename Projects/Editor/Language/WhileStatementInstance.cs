@@ -1,4 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
+using VisualScriptTool.Language.Extensions;
 using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Language.Statements.Declaration;
 
@@ -15,50 +17,44 @@ namespace VisualScriptTool.Editor.Language
 			AddExecuterSlot("Body", 1, null, OnBodyAssigned, OnRemoveBodyConnection);
 		}
 
-		private bool CheckConditionAssignment(Slot Other)
+		private bool CheckConditionAssignment(Slot Self, Type[] Constraints, Slot Other)
 		{
-			return (Other.StatementInstance.Statement is BooleanVariable);
+			return (Other.StatementInstance.Statement.IsVariableOfOneOf(Constraints));
 		}
 
 		private void OnConditionAssigned(Slot Self, Slot Other)
 		{
-			WhileStatement statement = (WhileStatement)Statement;
-
 			SetConnection(Self, Other);
 
-			statement.Condition = (BooleanVariable)Other.StatementInstance.Statement;
+			Statement.As<WhileStatement>().Condition = Other.StatementInstance.Statement.As<VariableStatement>();
 		}
 
 		private void OnBodyAssigned(Slot Self, Slot Other)
 		{
-			WhileStatement statement = (WhileStatement)Statement;
-
 			SetConnection(Self, Other);
 
-			statement.Statement = Other.StatementInstance.Statement;
+			Statement.As<WhileStatement>().Statement = Other.StatementInstance.Statement;
 		}
 
 		private void OnRemoveConditionConnection(Slot Self)
 		{
 			UnsetConnection(Self);
 
-			WhileStatement statement = (WhileStatement)Statement;
-			statement.Condition = null;
+			Statement.As<WhileStatement>().Condition = null;
 		}
 
 		private void OnRemoveBodyConnection(Slot Self)
 		{
 			UnsetConnection(Self);
 
-			WhileStatement statement = (WhileStatement)Statement;
-			statement.Statement = null;
+			Statement.As<WhileStatement>().Statement = null;
 		}
 
 		public override void ResolveSlotConnections(IStatementInspector Inspector)
 		{
 			base.ResolveSlotConnections(Inspector);
 
-			WhileStatement statement = (WhileStatement)Statement;
+			WhileStatement statement = Statement.As<WhileStatement>();
 
 			UpdateConnectedSlot(Inspector, 2, statement.Condition);
 			UpdateConnectedSlot(Inspector, 3, statement.Statement);

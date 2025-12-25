@@ -77,11 +77,11 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get;
 		}
 
-        protected StatementInstance StatementInstance
-        {
-            get;
-            private set;
-        }
+		protected StatementInstance StatementInstance
+		{
+			get;
+			private set;
+		}
 
 		public Drawer()
 		{
@@ -102,9 +102,9 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		public void Draw(IDevice Device, StatementInstance StatementInstance)
 		{
 			this.Device = Device;
-            this.StatementInstance = StatementInstance;
+			this.StatementInstance = StatementInstance;
 
-            SizeF headerSize = Device.MeasureString(StatementInstance.Statement.Name, Font) + new SizeF(TWO_HEADER_TEXT_MARGIN, TWO_HEADER_TEXT_MARGIN);
+			SizeF headerSize = Device.MeasureString(StatementInstance.Statement.Name, Font) + new SizeF(TWO_HEADER_TEXT_MARGIN, TWO_HEADER_TEXT_MARGIN);
 			headerSize.Width = Math.Max(headerSize.Width, MinimumWidth);
 			StatementInstance.HeaderSize = headerSize;
 
@@ -116,8 +116,8 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 			DrawBody();
 
-            this.StatementInstance = null;
-        }
+			this.StatementInstance = null;
+		}
 
 		protected virtual void DrawHeader()
 		{
@@ -183,7 +183,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			switch (Slot.Type)
 			{
 				case Slot.Types.Getter:
-					//case Slot.Types.Setter:
 					Device.DrawFillTriangle(position.X, position.Y, position.X, position.Y + SLOT_SIZE, position.X + SLOT_SIZE, position.Y + HALF_SLOT_SIZE, variableSlotBrush);
 					break;
 
@@ -264,7 +263,6 @@ namespace VisualScriptTool.Editor.Language.Drawers
 				case Slot.Types.Executer:
 					return executionPen;
 
-				//case Slot.Types.Setter:
 				case Slot.Types.Getter:
 				case Slot.Types.Argument:
 					return argumentPen;

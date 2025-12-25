@@ -6,9 +6,9 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Language;
+using VisualScriptTool.Language;
 using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Language.Statements.Control;
-using VisualScriptTool.Language.Statements.Declaration;
 using VisualScriptTool.Language.Statements.Declaration;
 using VisualScriptTool.Serialization;
 
@@ -20,6 +20,7 @@ namespace VisualScriptTool.Editor.Serializers
 		{
 			ISerializationCompileStrategy defaultCompilerStrategy = new DefaultCompileStrategy();
 			ISerializationCompileStrategy systemCompilerStrategy = new SystemCompilerStrategy();
+			ISerializationCompileStrategy internalValueTypeCompilerStrategy = new InternalValueTypeCompilerStrategy();
 
 			Dictionary<Type, ISerializationCompileStrategy> types = new Dictionary<Type, ISerializationCompileStrategy>();
 			types[typeof(UserDefinedStatement)] = defaultCompilerStrategy;
@@ -28,10 +29,6 @@ namespace VisualScriptTool.Editor.Serializers
 			types[typeof(IfStatement)] = defaultCompilerStrategy;
 			types[typeof(WhileStatement)] = defaultCompilerStrategy;
 			types[typeof(ForStatement)] = defaultCompilerStrategy;
-			types[typeof(BooleanVariable)] = defaultCompilerStrategy;
-			types[typeof(IntegerVariable)] = defaultCompilerStrategy;
-			types[typeof(FloatVariable)] = defaultCompilerStrategy;
-			types[typeof(StringVariable)] = defaultCompilerStrategy;
 			types[typeof(VariableStatement)] = defaultCompilerStrategy;
 			types[typeof(VariableSetterStatement)] = defaultCompilerStrategy;
 			types[typeof(FunctionStatement)] = defaultCompilerStrategy;
@@ -47,6 +44,7 @@ namespace VisualScriptTool.Editor.Serializers
 
 			types[typeof(PointF)] = systemCompilerStrategy;
 			types[typeof(SizeF)] = systemCompilerStrategy;
+			types[typeof(AnyDataType)] = internalValueTypeCompilerStrategy;
 
 
 			SerializerCompiler compiler = new SerializerCompiler();

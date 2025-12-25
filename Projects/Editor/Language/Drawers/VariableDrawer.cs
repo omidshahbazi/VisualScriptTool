@@ -31,7 +31,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		public override Type[] StatementTypes
 		{
-			get { return new Type[] { typeof(BooleanVariable), typeof(FloatVariable), typeof(IntegerVariable), typeof(StringVariable) }; }
+			get { return new Type[] { typeof(VariableStatement) }; }
 		}
 
 		public VariableDrawer()

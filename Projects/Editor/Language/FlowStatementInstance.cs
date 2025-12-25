@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using VisualScriptTool.Language.Statements.Control;
 
 namespace VisualScriptTool.Editor.Language
@@ -12,12 +13,12 @@ namespace VisualScriptTool.Editor.Language
 			AddExecuterSlot(0, CheckExecuterAssignment, OnExecuterAssigned, OnExecuterRemoveConnection);
 		}
 
-		protected virtual bool CheckEntryPointAssignment(Slot Other)
+		protected virtual bool CheckEntryPointAssignment(Slot Self, Type[] Constraints, Slot Other)
 		{
 			return !WillCauseCircularCall(Other);
 		}
 
-		protected virtual bool CheckExecuterAssignment(Slot Other)
+		protected virtual bool CheckExecuterAssignment(Slot Self, Type[] Constraints, Slot Other)
 		{
 			return !WillCauseCircularCall(Other);
 		}

@@ -93,7 +93,10 @@ namespace VisualScriptTool.Editor.Serializers
 					Set(ConditionObject, 0, id, "Condition");
 				}
 				// ConditionDefaultValue
-				Set(Object, 5, IfStatement.ConditionDefaultValue, "ConditionDefaultValue");
+				ISerializeObject ConditionDefaultValueObject = AddObject(Object, 5); 
+				System.Type ConditionDefaultValueType = IfStatement.ConditionDefaultValue.GetType();
+				Set(ConditionDefaultValueObject, 1, ConditionDefaultValueType.AssemblyQualifiedName, "ConditionDefaultValue");
+				GetSerializer(ConditionDefaultValueType).SerializeInternal(AddObject(ConditionDefaultValueObject, 2), IfStatement.ConditionDefaultValue, ConditionDefaultValueType, References);
 				// Statement
 				if (IfStatement.Statement == null)
 					Set<object>(Object, 3, null, "Statement");
@@ -185,7 +188,7 @@ namespace VisualScriptTool.Editor.Serializers
 					if (Contains(ConditionObjectValue, 1))
 					{
 						Serializer ConditionSerializer = GetSerializer(System.Type.GetType(Get<string>(ConditionObjectValue, 1)));
-						IfStatement.Condition = ConditionSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.BooleanVariable>(Get<ISerializeObject>(ConditionObjectValue, 2), StatementIDs, Resolvers);
+						IfStatement.Condition = ConditionSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.VariableStatement>(Get<ISerializeObject>(ConditionObjectValue, 2), StatementIDs, Resolvers);
 						StatementIDs[IfStatement.Condition.ID] = IfStatement.Condition;
 					}
 					else
@@ -197,7 +200,13 @@ namespace VisualScriptTool.Editor.Serializers
 				else
 					IfStatement.Condition = null;
 				// ConditionDefaultValue
-				IfStatement.ConditionDefaultValue = Get<System.Boolean>(Object, 5, false);
+				ISerializeObject ConditionDefaultValueObject = Get<ISerializeObject>(Object, 5, null);
+				if (ConditionDefaultValueObject != null)
+				{
+					ISerializeObject ConditionDefaultValueObjectValue = Get<ISerializeObject>(Object, 5); 
+					Serializer ConditionDefaultValueSerializer = GetSerializer(System.Type.GetType(Get<string>(ConditionDefaultValueObjectValue, 1)));
+					IfStatement.ConditionDefaultValue = ConditionDefaultValueSerializer.DeserializeInternal<VisualScriptTool.Language.AnyDataType>(Get<ISerializeObject>(ConditionDefaultValueObjectValue, 2), StatementIDs, Resolvers);
+				}
 				// Statement
 				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 3, null);
 				if (StatementObject != null)

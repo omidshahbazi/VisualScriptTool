@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Extensions;
 using VisualScriptTool.Editor.Language.Drawers.Controls;
+using VisualScriptTool.Language;
 using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Renderer;
 using VisualScriptTool.Serialization;
@@ -115,34 +116,39 @@ namespace VisualScriptTool.Editor.Language
 			bounds.Size = new SizeF(HeaderSize.Width, HeaderSize.Height + BodySize.Height);
 		}
 
-		protected Slot AddEntryPointSlot(uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
+		protected Slot AddEntryPointSlot(uint Index, Func<Slot, Type[], Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
-			return AddSlot(string.Empty, Slot.Types.EntryPoint, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
+			return AddSlot(string.Empty, string.Empty, Slot.Types.EntryPoint, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
-		protected Slot AddExecuterSlot(uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
+		protected Slot AddExecuterSlot(uint Index, Func<Slot, Type[], Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
 			return AddExecuterSlot(string.Empty, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
-		protected Slot AddExecuterSlot(string Name, uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
+		protected Slot AddExecuterSlot(string Name, uint Index, Func<Slot, Type[], Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
-			return AddSlot(Name, Slot.Types.Executer, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
+			return AddSlot(Name, Name, Slot.Types.Executer, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
-		protected Slot AddArgumentSlot(uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
+		protected Slot AddArgumentSlot(uint Index, Func<Slot, Type[], Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
-			return AddArgumentSlot(string.Empty, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
+			return AddArgumentSlot(string.Empty, string.Empty, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
-		protected Slot AddArgumentSlot(string Name, uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
+		protected Slot AddArgumentSlot(string Name, uint Index, Func<Slot, Type[], Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
-			return AddSlot(Name, Slot.Types.Argument, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
+			return AddSlot(Name, Name, Slot.Types.Argument, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
-		protected Slot AddGetterSlot(uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
+		protected Slot AddArgumentSlot(string Name, string PropertyName, uint Index, Func<Slot, Type[], Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
-			return AddSlot(string.Empty, Slot.Types.Getter, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
+			return AddSlot(Name, PropertyName, Slot.Types.Argument, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
+		}
+
+		protected Slot AddGetterSlot(uint Index, Func<Slot, Type[], Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
+		{
+			return AddSlot(string.Empty, string.Empty, Slot.Types.Getter, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 		}
 
 		protected void RemoveSlot(Slot Slot)
@@ -258,9 +264,9 @@ namespace VisualScriptTool.Editor.Language
 			}
 		}
 
-		private Slot AddSlot(string Name, Slot.Types Type, uint Index, Func<Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
+		private Slot AddSlot(string Name, string PropertyName, Slot.Types Type, uint Index, Func<Slot, Type[], Slot, bool> CheckAssignment = null, Action<Slot, Slot> OnAssignment = null, Action<Slot> OnRemoveConnection = null)
 		{
-			Slot slot = new Slot(this, Name, Type, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
+			Slot slot = new Slot(this, Name, PropertyName, Type, Index, CheckAssignment, OnAssignment, OnRemoveConnection);
 			slots.Add(slot);
 			return slot;
 		}

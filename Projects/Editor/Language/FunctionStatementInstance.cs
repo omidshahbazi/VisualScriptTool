@@ -1,8 +1,9 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Diagnostics;
+using VisualScriptTool.Language.Extensions;
 using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Language.Statements.Control;
-using VisualScriptTool.Language.Statements.Declaration;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor.Language
@@ -22,12 +23,12 @@ namespace VisualScriptTool.Editor.Language
 
 				Debug.Assert(value is FunctionStatement);
 
-				FunctionStatement fnstmt = (FunctionStatement)Statement;
+				FunctionStatement statement = Statement.As<FunctionStatement>();
 
-				for (uint i = 0; i < fnstmt.ParametersName.Length; ++i)
-					AddArgumentSlot(fnstmt.ParametersName[i], i + 1, CheckParameterAssignment, OnParameterAssigned, OnRemoveParameterConnection);
+				for (uint i = 0; i < statement.ParametersName.Length; ++i)
+					AddArgumentSlot(statement.ParametersName[i], i + 1, CheckParameterAssignment, OnParameterAssigned, OnRemoveParameterConnection);
 
-				if (fnstmt.HasReturnValue)
+				if (statement.HasReturnValue)
 					AddGetterSlot(1);
 			}
 		}
@@ -37,26 +38,24 @@ namespace VisualScriptTool.Editor.Language
 		{
 		}
 
-		private bool CheckParameterAssignment(Slot Other)
+		private bool CheckParameterAssignment(Slot Self, Type[] Constraints, Slot Other)
 		{
-			return (Other.StatementInstance.Statement is FloatVariable);
+			//TODO: What types?
+			return (Other.StatementInstance.Statement.IsVariableOfOneOf(typeof(object)));
 		}
 
 		private void OnParameterAssigned(Slot Self, Slot Other)
 		{
-			FunctionStatement statement = (FunctionStatement)Statement;
-
 			SetConnection(Self, Other);
 
-			//statement.Condition = (FloatVariable)Other.StatementInstance.Statement;
+			//Statement.As<FunctionStatement>().Condition = (FloatVariable)Other.StatementInstance.Statement;
 		}
 
 		private void OnRemoveParameterConnection(Slot Self)
 		{
 			UnsetConnection(Self);
 
-			FunctionStatement statement = (FunctionStatement)Statement;
-			//statement.Condition = null;
+			//Statement.As<FunctionStatement>().Condition = null;
 		}
 	}
 }

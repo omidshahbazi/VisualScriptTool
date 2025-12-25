@@ -77,7 +77,7 @@ namespace VisualScriptTool.Serialization
 		{
 			List<MemberInfo> list = new List<MemberInfo>();
 
-			PropertyInfo[] properties = Type.GetAllProperties(BindingFlags.Instance | BindingFlags.Public);
+            PropertyInfo[] properties = TypeUtils.GetProperties(Type, BindingFlags.Instance | BindingFlags.Public);
 			for (int i = 0; i < properties.Length; ++i)
 			{
 				PropertyInfo property = properties[i];
@@ -89,7 +89,7 @@ namespace VisualScriptTool.Serialization
 					list.Add(property);
 			}
 
-			FieldInfo[] fields = Type.GetAllFields(BindingFlags.Instance | BindingFlags.Public);
+            FieldInfo[] fields = TypeUtils.GetFields(Type, BindingFlags.Instance | BindingFlags.Public);
 			for (int i = 0; i < fields.Length; ++i)
 			{
 				FieldInfo field = fields[i];

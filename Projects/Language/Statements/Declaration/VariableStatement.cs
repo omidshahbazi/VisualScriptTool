@@ -4,7 +4,7 @@ using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Language.Statements.Declaration
 {
-	public abstract class VariableStatement : UserDefinedStatement
+	public class VariableStatement : UserDefinedStatement
 	{
 		[SerializableElement(1)]
 		public override string Name
@@ -13,10 +13,17 @@ namespace VisualScriptTool.Language.Statements.Declaration
 			set;
 		}
 
-        public override string ToString()
-        {
-            return Name + " (" + GetType().Name.Replace("Variable", "") + ")";
-        }
+		[SerializableElement(3)]
+		public AnyDataType Value
+		{
+			get;
+			set;
+		}
+
+		public override string ToString()
+		{
+			return Name + " (" + Value.Type.Name + ")";
+		}
 	}
 
 	public class VariableStatementList : List<VariableStatement>

@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Reflection;
 
 namespace VisualScriptTool.Reflection
@@ -30,39 +31,34 @@ namespace VisualScriptTool.Reflection
 			return retTypes.ToArray();
 		}
 
-		public static PropertyInfo[] GetAllProperties(this Type Type)
+		public static PropertyInfo[] GetProperties(this Type Type)
 		{
-			return GetAllProperties(Type, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			return GetProperties(Type, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 		}
 
-		public static PropertyInfo[] GetAllProperties(this Type Type, BindingFlags BindingFlags)
+		public static PropertyInfo[] GetProperties(this Type Type, BindingFlags BindingFlags)
 		{
 			List<PropertyInfo> list = new List<PropertyInfo>();
 
-			//while (Type != null)
-			//{
-				PropertyInfo[] properties = Type.GetProperties(BindingFlags);
+			PropertyInfo[] properties = Type.GetProperties(BindingFlags);
 
-				for (int i = 0; i < properties.Length; ++i)
-				{
-					if (list.Contains(properties[i]))
-						continue;
+			for (int i = 0; i < properties.Length; ++i)
+			{
+				if (list.Contains(properties[i]))
+					continue;
 
-					list.Add(properties[i]);
-				}
-
-				//Type = Type.BaseType;
-			//}
+				list.Add(properties[i]);
+			}
 
 			return list.ToArray();
 		}
 
-		public static FieldInfo[] GetAllFields(this Type Type)
+		public static FieldInfo[] GetFields(this Type Type)
 		{
-			return GetAllFields(Type, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			return GetFields(Type, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 		}
 
-		public static FieldInfo[] GetAllFields(this Type Type, BindingFlags BindingFlags)
+		public static FieldInfo[] GetFields(this Type Type, BindingFlags BindingFlags)
 		{
 			List<FieldInfo> list = new List<FieldInfo>();
 
@@ -81,17 +77,30 @@ namespace VisualScriptTool.Reflection
 
 		public static object GetDefaultValue(this Type Type)
 		{
-			if (Type == typeof(string))
-				return string.Empty;
-
 			if (Type == typeof(bool))
 				return false;
 
-			if (Type == typeof(int))
+			if (Type == typeof(byte) ||
+				Type == typeof(sbyte) ||
+				Type == typeof(short) ||
+				Type == typeof(ushort) ||
+				Type == typeof(int) ||
+				Type == typeof(uint) ||
+				Type == typeof(long) ||
+				Type == typeof(ulong) ||
+				Type == typeof(float) ||
+				Type == typeof(double) ||
+				Type == typeof(decimal))
 				return 0;
 
-			if (Type == typeof(float))
-				return 0.0F;
+			if (Type == typeof(char))
+				return '\0';
+
+			if (Type == typeof(string))
+				return string.Empty;
+
+			if (Type == typeof(object))
+				return "null";
 
 			if (Type.IsEnum)
 				return Enum.GetValues(Type).GetValue(0);

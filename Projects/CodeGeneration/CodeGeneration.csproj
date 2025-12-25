@@ -38,7 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeGeneratorBase.cs" />
+    <Compile Include="ICodeGeneratorBase.cs" />
     <Compile Include="CSharpCodeGenerator.cs" />
     <Compile Include="Language\CSharp\FlowStatementCodeGenerator.cs" />
     <Compile Include="Language\CSharp\ControlStatementCodeGenerator.cs" />

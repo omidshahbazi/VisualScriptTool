@@ -74,72 +74,81 @@ namespace VisualScriptTool.Editor.Serializers
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
 				VisualScriptTool.Language.Statements.Control.ForStatement ForStatement = (VisualScriptTool.Language.Statements.Control.ForStatement)Instance;
-				// MinimumValue
-				if (ForStatement.MinimumValue == null)
-					Set<object>(Object, 2, null, "MinimumValue");
+				// First
+				if (ForStatement.First == null)
+					Set<object>(Object, 2, null, "First");
 				else
 				{
-					ISerializeObject MinimumValueObject = AddObject(Object, 2); 
+					ISerializeObject FirstObject = AddObject(Object, 2); 
 					string id = string.Empty;
-					if (References.Contains(ForStatement.MinimumValue))
-						id = ForStatement.MinimumValue.ID;
+					if (References.Contains(ForStatement.First))
+						id = ForStatement.First.ID;
 					else
 					{
-						References.Add(ForStatement.MinimumValue);
-						System.Type MinimumValueType = ForStatement.MinimumValue.GetType();
-						Set(MinimumValueObject, 1, MinimumValueType.AssemblyQualifiedName, "MinimumValue");
-						GetSerializer(MinimumValueType).SerializeInternal(AddObject(MinimumValueObject, 2), ForStatement.MinimumValue, MinimumValueType, References);
+						References.Add(ForStatement.First);
+						System.Type FirstType = ForStatement.First.GetType();
+						Set(FirstObject, 1, FirstType.AssemblyQualifiedName, "First");
+						GetSerializer(FirstType).SerializeInternal(AddObject(FirstObject, 2), ForStatement.First, FirstType, References);
 					}
-					Set(MinimumValueObject, 0, id, "MinimumValue");
+					Set(FirstObject, 0, id, "First");
 				}
-				// MinimumDefaultValue
-				Set(Object, 6, ForStatement.MinimumDefaultValue, "MinimumDefaultValue");
-				// MaximumValue
-				if (ForStatement.MaximumValue == null)
-					Set<object>(Object, 3, null, "MaximumValue");
+				// FirstDefaultValue
+				ISerializeObject FirstDefaultValueObject = AddObject(Object, 3); 
+				System.Type FirstDefaultValueType = ForStatement.FirstDefaultValue.GetType();
+				Set(FirstDefaultValueObject, 1, FirstDefaultValueType.AssemblyQualifiedName, "FirstDefaultValue");
+				GetSerializer(FirstDefaultValueType).SerializeInternal(AddObject(FirstDefaultValueObject, 2), ForStatement.FirstDefaultValue, FirstDefaultValueType, References);
+				// Last
+				if (ForStatement.Last == null)
+					Set<object>(Object, 4, null, "Last");
 				else
 				{
-					ISerializeObject MaximumValueObject = AddObject(Object, 3); 
+					ISerializeObject LastObject = AddObject(Object, 4); 
 					string id = string.Empty;
-					if (References.Contains(ForStatement.MaximumValue))
-						id = ForStatement.MaximumValue.ID;
+					if (References.Contains(ForStatement.Last))
+						id = ForStatement.Last.ID;
 					else
 					{
-						References.Add(ForStatement.MaximumValue);
-						System.Type MaximumValueType = ForStatement.MaximumValue.GetType();
-						Set(MaximumValueObject, 1, MaximumValueType.AssemblyQualifiedName, "MaximumValue");
-						GetSerializer(MaximumValueType).SerializeInternal(AddObject(MaximumValueObject, 2), ForStatement.MaximumValue, MaximumValueType, References);
+						References.Add(ForStatement.Last);
+						System.Type LastType = ForStatement.Last.GetType();
+						Set(LastObject, 1, LastType.AssemblyQualifiedName, "Last");
+						GetSerializer(LastType).SerializeInternal(AddObject(LastObject, 2), ForStatement.Last, LastType, References);
 					}
-					Set(MaximumValueObject, 0, id, "MaximumValue");
+					Set(LastObject, 0, id, "Last");
 				}
-				// MaximumDefaultValue
-				Set(Object, 7, ForStatement.MaximumDefaultValue, "MaximumDefaultValue");
-				// StepValue
-				if (ForStatement.StepValue == null)
-					Set<object>(Object, 4, null, "StepValue");
+				// LastDefaultValue
+				ISerializeObject LastDefaultValueObject = AddObject(Object, 5); 
+				System.Type LastDefaultValueType = ForStatement.LastDefaultValue.GetType();
+				Set(LastDefaultValueObject, 1, LastDefaultValueType.AssemblyQualifiedName, "LastDefaultValue");
+				GetSerializer(LastDefaultValueType).SerializeInternal(AddObject(LastDefaultValueObject, 2), ForStatement.LastDefaultValue, LastDefaultValueType, References);
+				// Step
+				if (ForStatement.Step == null)
+					Set<object>(Object, 6, null, "Step");
 				else
 				{
-					ISerializeObject StepValueObject = AddObject(Object, 4); 
+					ISerializeObject StepObject = AddObject(Object, 6); 
 					string id = string.Empty;
-					if (References.Contains(ForStatement.StepValue))
-						id = ForStatement.StepValue.ID;
+					if (References.Contains(ForStatement.Step))
+						id = ForStatement.Step.ID;
 					else
 					{
-						References.Add(ForStatement.StepValue);
-						System.Type StepValueType = ForStatement.StepValue.GetType();
-						Set(StepValueObject, 1, StepValueType.AssemblyQualifiedName, "StepValue");
-						GetSerializer(StepValueType).SerializeInternal(AddObject(StepValueObject, 2), ForStatement.StepValue, StepValueType, References);
+						References.Add(ForStatement.Step);
+						System.Type StepType = ForStatement.Step.GetType();
+						Set(StepObject, 1, StepType.AssemblyQualifiedName, "Step");
+						GetSerializer(StepType).SerializeInternal(AddObject(StepObject, 2), ForStatement.Step, StepType, References);
 					}
-					Set(StepValueObject, 0, id, "StepValue");
+					Set(StepObject, 0, id, "Step");
 				}
 				// StepDefaultValue
-				Set(Object, 8, ForStatement.StepDefaultValue, "StepDefaultValue");
+				ISerializeObject StepDefaultValueObject = AddObject(Object, 7); 
+				System.Type StepDefaultValueType = ForStatement.StepDefaultValue.GetType();
+				Set(StepDefaultValueObject, 1, StepDefaultValueType.AssemblyQualifiedName, "StepDefaultValue");
+				GetSerializer(StepDefaultValueType).SerializeInternal(AddObject(StepDefaultValueObject, 2), ForStatement.StepDefaultValue, StepDefaultValueType, References);
 				// Statement
 				if (ForStatement.Statement == null)
-					Set<object>(Object, 5, null, "Statement");
+					Set<object>(Object, 8, null, "Statement");
 				else
 				{
-					ISerializeObject StatementObject = AddObject(Object, 5); 
+					ISerializeObject StatementObject = AddObject(Object, 8); 
 					string id = string.Empty;
 					if (References.Contains(ForStatement.Statement))
 						id = ForStatement.Statement.ID;
@@ -199,74 +208,92 @@ namespace VisualScriptTool.Editor.Serializers
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
 				VisualScriptTool.Language.Statements.Control.ForStatement ForStatement = (VisualScriptTool.Language.Statements.Control.ForStatement)CreateInstance();
-				// MinimumValue
-				ISerializeObject MinimumValueObject = Get<ISerializeObject>(Object, 2, null);
-				if (MinimumValueObject != null)
+				// First
+				ISerializeObject FirstObject = Get<ISerializeObject>(Object, 2, null);
+				if (FirstObject != null)
 				{
-					ISerializeObject MinimumValueObjectValue = Get<ISerializeObject>(Object, 2); 
-					if (Contains(MinimumValueObjectValue, 1))
+					ISerializeObject FirstObjectValue = Get<ISerializeObject>(Object, 2); 
+					if (Contains(FirstObjectValue, 1))
 					{
-						Serializer MinimumValueSerializer = GetSerializer(System.Type.GetType(Get<string>(MinimumValueObjectValue, 1)));
-						ForStatement.MinimumValue = MinimumValueSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.IntegerVariable>(Get<ISerializeObject>(MinimumValueObjectValue, 2), StatementIDs, Resolvers);
-						StatementIDs[ForStatement.MinimumValue.ID] = ForStatement.MinimumValue;
+						Serializer FirstSerializer = GetSerializer(System.Type.GetType(Get<string>(FirstObjectValue, 1)));
+						ForStatement.First = FirstSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.VariableStatement>(Get<ISerializeObject>(FirstObjectValue, 2), StatementIDs, Resolvers);
+						StatementIDs[ForStatement.First.ID] = ForStatement.First;
 					}
 					else
 					{
-						string id = Get<string>(MinimumValueObjectValue, 0);
-						Resolvers.Add(new ReferenceResolver(id, ForStatement, ForStatement.GetType().GetProperty("MinimumValue", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
+						string id = Get<string>(FirstObjectValue, 0);
+						Resolvers.Add(new ReferenceResolver(id, ForStatement, ForStatement.GetType().GetProperty("First", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
 					}
 				}
 				else
-					ForStatement.MinimumValue = null;
-				// MinimumDefaultValue
-				ForStatement.MinimumDefaultValue = Get<System.Int32>(Object, 6, 0);
-				// MaximumValue
-				ISerializeObject MaximumValueObject = Get<ISerializeObject>(Object, 3, null);
-				if (MaximumValueObject != null)
+					ForStatement.First = null;
+				// FirstDefaultValue
+				ISerializeObject FirstDefaultValueObject = Get<ISerializeObject>(Object, 3, null);
+				if (FirstDefaultValueObject != null)
 				{
-					ISerializeObject MaximumValueObjectValue = Get<ISerializeObject>(Object, 3); 
-					if (Contains(MaximumValueObjectValue, 1))
+					ISerializeObject FirstDefaultValueObjectValue = Get<ISerializeObject>(Object, 3); 
+					Serializer FirstDefaultValueSerializer = GetSerializer(System.Type.GetType(Get<string>(FirstDefaultValueObjectValue, 1)));
+					ForStatement.FirstDefaultValue = FirstDefaultValueSerializer.DeserializeInternal<VisualScriptTool.Language.AnyDataType>(Get<ISerializeObject>(FirstDefaultValueObjectValue, 2), StatementIDs, Resolvers);
+				}
+				// Last
+				ISerializeObject LastObject = Get<ISerializeObject>(Object, 4, null);
+				if (LastObject != null)
+				{
+					ISerializeObject LastObjectValue = Get<ISerializeObject>(Object, 4); 
+					if (Contains(LastObjectValue, 1))
 					{
-						Serializer MaximumValueSerializer = GetSerializer(System.Type.GetType(Get<string>(MaximumValueObjectValue, 1)));
-						ForStatement.MaximumValue = MaximumValueSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.IntegerVariable>(Get<ISerializeObject>(MaximumValueObjectValue, 2), StatementIDs, Resolvers);
-						StatementIDs[ForStatement.MaximumValue.ID] = ForStatement.MaximumValue;
+						Serializer LastSerializer = GetSerializer(System.Type.GetType(Get<string>(LastObjectValue, 1)));
+						ForStatement.Last = LastSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.VariableStatement>(Get<ISerializeObject>(LastObjectValue, 2), StatementIDs, Resolvers);
+						StatementIDs[ForStatement.Last.ID] = ForStatement.Last;
 					}
 					else
 					{
-						string id = Get<string>(MaximumValueObjectValue, 0);
-						Resolvers.Add(new ReferenceResolver(id, ForStatement, ForStatement.GetType().GetProperty("MaximumValue", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
+						string id = Get<string>(LastObjectValue, 0);
+						Resolvers.Add(new ReferenceResolver(id, ForStatement, ForStatement.GetType().GetProperty("Last", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
 					}
 				}
 				else
-					ForStatement.MaximumValue = null;
-				// MaximumDefaultValue
-				ForStatement.MaximumDefaultValue = Get<System.Int32>(Object, 7, 0);
-				// StepValue
-				ISerializeObject StepValueObject = Get<ISerializeObject>(Object, 4, null);
-				if (StepValueObject != null)
+					ForStatement.Last = null;
+				// LastDefaultValue
+				ISerializeObject LastDefaultValueObject = Get<ISerializeObject>(Object, 5, null);
+				if (LastDefaultValueObject != null)
 				{
-					ISerializeObject StepValueObjectValue = Get<ISerializeObject>(Object, 4); 
-					if (Contains(StepValueObjectValue, 1))
+					ISerializeObject LastDefaultValueObjectValue = Get<ISerializeObject>(Object, 5); 
+					Serializer LastDefaultValueSerializer = GetSerializer(System.Type.GetType(Get<string>(LastDefaultValueObjectValue, 1)));
+					ForStatement.LastDefaultValue = LastDefaultValueSerializer.DeserializeInternal<VisualScriptTool.Language.AnyDataType>(Get<ISerializeObject>(LastDefaultValueObjectValue, 2), StatementIDs, Resolvers);
+				}
+				// Step
+				ISerializeObject StepObject = Get<ISerializeObject>(Object, 6, null);
+				if (StepObject != null)
+				{
+					ISerializeObject StepObjectValue = Get<ISerializeObject>(Object, 6); 
+					if (Contains(StepObjectValue, 1))
 					{
-						Serializer StepValueSerializer = GetSerializer(System.Type.GetType(Get<string>(StepValueObjectValue, 1)));
-						ForStatement.StepValue = StepValueSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.IntegerVariable>(Get<ISerializeObject>(StepValueObjectValue, 2), StatementIDs, Resolvers);
-						StatementIDs[ForStatement.StepValue.ID] = ForStatement.StepValue;
+						Serializer StepSerializer = GetSerializer(System.Type.GetType(Get<string>(StepObjectValue, 1)));
+						ForStatement.Step = StepSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.VariableStatement>(Get<ISerializeObject>(StepObjectValue, 2), StatementIDs, Resolvers);
+						StatementIDs[ForStatement.Step.ID] = ForStatement.Step;
 					}
 					else
 					{
-						string id = Get<string>(StepValueObjectValue, 0);
-						Resolvers.Add(new ReferenceResolver(id, ForStatement, ForStatement.GetType().GetProperty("StepValue", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
+						string id = Get<string>(StepObjectValue, 0);
+						Resolvers.Add(new ReferenceResolver(id, ForStatement, ForStatement.GetType().GetProperty("Step", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
 					}
 				}
 				else
-					ForStatement.StepValue = null;
+					ForStatement.Step = null;
 				// StepDefaultValue
-				ForStatement.StepDefaultValue = Get<System.Int32>(Object, 8, 0);
+				ISerializeObject StepDefaultValueObject = Get<ISerializeObject>(Object, 7, null);
+				if (StepDefaultValueObject != null)
+				{
+					ISerializeObject StepDefaultValueObjectValue = Get<ISerializeObject>(Object, 7); 
+					Serializer StepDefaultValueSerializer = GetSerializer(System.Type.GetType(Get<string>(StepDefaultValueObjectValue, 1)));
+					ForStatement.StepDefaultValue = StepDefaultValueSerializer.DeserializeInternal<VisualScriptTool.Language.AnyDataType>(Get<ISerializeObject>(StepDefaultValueObjectValue, 2), StatementIDs, Resolvers);
+				}
 				// Statement
-				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 5, null);
+				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 8, null);
 				if (StatementObject != null)
 				{
-					ISerializeObject StatementObjectValue = Get<ISerializeObject>(Object, 5); 
+					ISerializeObject StatementObjectValue = Get<ISerializeObject>(Object, 8); 
 					if (Contains(StatementObjectValue, 1))
 					{
 						Serializer StatementSerializer = GetSerializer(System.Type.GetType(Get<string>(StatementObjectValue, 1)));

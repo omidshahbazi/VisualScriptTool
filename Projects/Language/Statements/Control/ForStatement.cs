@@ -12,53 +12,93 @@ namespace VisualScriptTool.Language.Statements.Control
 			set { }
 		}
 
+		[Constraints(typeof(byte))]
+		[Constraints(typeof(sbyte))]
+		[Constraints(typeof(short))]
+		[Constraints(typeof(ushort))]
+		[Constraints(typeof(int))]
+		[Constraints(typeof(uint))]
+		[Constraints(typeof(long))]
+		[Constraints(typeof(ulong))]
+		[Constraints(typeof(float))]
+		[Constraints(typeof(double))]
+		[Constraints(typeof(decimal))]
 		[SerializableElement(2)]
-		public IntegerVariable MinimumValue
-		{
-			get;
-			set;
-		}
-
-		[SerializableElement(6)]
-		public int MinimumDefaultValue
+		public VariableStatement First
 		{
 			get;
 			set;
 		}
 
 		[SerializableElement(3)]
-		public IntegerVariable MaximumValue
+		public AnyDataType FirstDefaultValue
 		{
 			get;
 			set;
 		}
 
-		[SerializableElement(7)]
-		public int MaximumDefaultValue
-		{
-			get;
-			set;
-		}
-
+		[Constraints(typeof(byte))]
+		[Constraints(typeof(sbyte))]
+		[Constraints(typeof(short))]
+		[Constraints(typeof(ushort))]
+		[Constraints(typeof(int))]
+		[Constraints(typeof(uint))]
+		[Constraints(typeof(long))]
+		[Constraints(typeof(ulong))]
+		[Constraints(typeof(float))]
+		[Constraints(typeof(double))]
+		[Constraints(typeof(decimal))]
 		[SerializableElement(4)]
-		public IntegerVariable StepValue
-		{
-			get;
-			set;
-		}
-
-		[SerializableElement(8)]
-		public int StepDefaultValue
+		public VariableStatement Last
 		{
 			get;
 			set;
 		}
 
 		[SerializableElement(5)]
+		public AnyDataType LastDefaultValue
+		{
+			get;
+			set;
+		}
+
+		[Constraints(typeof(byte))]
+		[Constraints(typeof(sbyte))]
+		[Constraints(typeof(short))]
+		[Constraints(typeof(ushort))]
+		[Constraints(typeof(int))]
+		[Constraints(typeof(uint))]
+		[Constraints(typeof(long))]
+		[Constraints(typeof(ulong))]
+		[Constraints(typeof(float))]
+		[Constraints(typeof(double))]
+		[Constraints(typeof(decimal))]
+		[SerializableElement(6)]
+		public VariableStatement Step
+		{
+			get;
+			set;
+		}
+
+		[SerializableElement(7)]
+		public AnyDataType StepDefaultValue
+		{
+			get;
+			set;
+		}
+
+		[SerializableElement(8)]
 		public Statement Statement
 		{
 			get;
 			set;
+		}
+
+		public ForStatement()
+		{
+			FirstDefaultValue = 0;
+			LastDefaultValue = 1;
+			StepDefaultValue = 1;
 		}
 	}
 }

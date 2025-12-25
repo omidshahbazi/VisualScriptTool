@@ -517,7 +517,7 @@ namespace VisualScriptTool.Editor
 		{
 			slotContextMenu.Items.Clear();
 
-			if (SelectedSlot.Type == Slot.Types.Argument || SelectedSlot.Type == Slot.Types.Executer)//|| SelectedSlot.Type == Slot.Types.Setter)
+			if (SelectedSlot.Type == Slot.Types.Argument || SelectedSlot.Type == Slot.Types.Executer)
 				slotContextMenu.Items.Add("Remove Connection", null, (s, e) => { RemoveConnection(SelectedSlot); });
 			else
 				slotContextMenu.Items.Add("Remove All Connections", null, (s, e) => { RemoveAllConnections(SelectedSlot); });

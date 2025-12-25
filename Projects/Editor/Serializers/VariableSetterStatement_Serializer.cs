@@ -94,42 +94,29 @@ namespace VisualScriptTool.Editor.Serializers
 					}
 					Set(VariableObject, 0, id, "Variable");
 				}
-				// Statement
-				if (VariableSetterStatement.Statement == null)
-					Set<object>(Object, 4, null, "Statement");
+				// ValueStatement
+				if (VariableSetterStatement.ValueStatement == null)
+					Set<object>(Object, 4, null, "ValueStatement");
 				else
 				{
-					ISerializeObject StatementObject = AddObject(Object, 4); 
+					ISerializeObject ValueStatementObject = AddObject(Object, 4); 
 					string id = string.Empty;
-					if (References.Contains(VariableSetterStatement.Statement))
-						id = VariableSetterStatement.Statement.ID;
+					if (References.Contains(VariableSetterStatement.ValueStatement))
+						id = VariableSetterStatement.ValueStatement.ID;
 					else
 					{
-						References.Add(VariableSetterStatement.Statement);
-						System.Type StatementType = VariableSetterStatement.Statement.GetType();
-						Set(StatementObject, 1, StatementType.AssemblyQualifiedName, "Statement");
-						GetSerializer(StatementType).SerializeInternal(AddObject(StatementObject, 2), VariableSetterStatement.Statement, StatementType, References);
+						References.Add(VariableSetterStatement.ValueStatement);
+						System.Type ValueStatementType = VariableSetterStatement.ValueStatement.GetType();
+						Set(ValueStatementObject, 1, ValueStatementType.AssemblyQualifiedName, "ValueStatement");
+						GetSerializer(ValueStatementType).SerializeInternal(AddObject(ValueStatementObject, 2), VariableSetterStatement.ValueStatement, ValueStatementType, References);
 					}
-					Set(StatementObject, 0, id, "Statement");
+					Set(ValueStatementObject, 0, id, "ValueStatement");
 				}
 				// DefaultValue
-				if (VariableSetterStatement.DefaultValue == null)
-					Set<object>(Object, 5, null, "DefaultValue");
-				else
-				{
-					ISerializeObject DefaultValueObject = AddObject(Object, 5); 
-					string id = string.Empty;
-					if (References.Contains(VariableSetterStatement.DefaultValue))
-						id = VariableSetterStatement.DefaultValue.ID;
-					else
-					{
-						References.Add(VariableSetterStatement.DefaultValue);
-						System.Type DefaultValueType = VariableSetterStatement.DefaultValue.GetType();
-						Set(DefaultValueObject, 1, DefaultValueType.AssemblyQualifiedName, "DefaultValue");
-						GetSerializer(DefaultValueType).SerializeInternal(AddObject(DefaultValueObject, 2), VariableSetterStatement.DefaultValue, DefaultValueType, References);
-					}
-					Set(DefaultValueObject, 0, id, "DefaultValue");
-				}
+				ISerializeObject DefaultValueObject = AddObject(Object, 5); 
+				System.Type DefaultValueType = VariableSetterStatement.DefaultValue.GetType();
+				Set(DefaultValueObject, 1, DefaultValueType.AssemblyQualifiedName, "DefaultValue");
+				GetSerializer(DefaultValueType).SerializeInternal(AddObject(DefaultValueObject, 2), VariableSetterStatement.DefaultValue, DefaultValueType, References);
 				// CompleteStatement
 				if (VariableSetterStatement.CompleteStatement == null)
 					Set<object>(Object, 1, null, "CompleteStatement");
@@ -198,44 +185,33 @@ namespace VisualScriptTool.Editor.Serializers
 				}
 				else
 					VariableSetterStatement.Variable = null;
-				// Statement
-				ISerializeObject StatementObject = Get<ISerializeObject>(Object, 4, null);
-				if (StatementObject != null)
+				// ValueStatement
+				ISerializeObject ValueStatementObject = Get<ISerializeObject>(Object, 4, null);
+				if (ValueStatementObject != null)
 				{
-					ISerializeObject StatementObjectValue = Get<ISerializeObject>(Object, 4); 
-					if (Contains(StatementObjectValue, 1))
+					ISerializeObject ValueStatementObjectValue = Get<ISerializeObject>(Object, 4); 
+					if (Contains(ValueStatementObjectValue, 1))
 					{
-						Serializer StatementSerializer = GetSerializer(System.Type.GetType(Get<string>(StatementObjectValue, 1)));
-						VariableSetterStatement.Statement = StatementSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.UserDefinedStatement>(Get<ISerializeObject>(StatementObjectValue, 2), StatementIDs, Resolvers);
-						StatementIDs[VariableSetterStatement.Statement.ID] = VariableSetterStatement.Statement;
+						Serializer ValueStatementSerializer = GetSerializer(System.Type.GetType(Get<string>(ValueStatementObjectValue, 1)));
+						VariableSetterStatement.ValueStatement = ValueStatementSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.VariableStatement>(Get<ISerializeObject>(ValueStatementObjectValue, 2), StatementIDs, Resolvers);
+						StatementIDs[VariableSetterStatement.ValueStatement.ID] = VariableSetterStatement.ValueStatement;
 					}
 					else
 					{
-						string id = Get<string>(StatementObjectValue, 0);
-						Resolvers.Add(new ReferenceResolver(id, VariableSetterStatement, VariableSetterStatement.GetType().GetProperty("Statement", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
+						string id = Get<string>(ValueStatementObjectValue, 0);
+						Resolvers.Add(new ReferenceResolver(id, VariableSetterStatement, VariableSetterStatement.GetType().GetProperty("ValueStatement", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
 					}
 				}
 				else
-					VariableSetterStatement.Statement = null;
+					VariableSetterStatement.ValueStatement = null;
 				// DefaultValue
 				ISerializeObject DefaultValueObject = Get<ISerializeObject>(Object, 5, null);
 				if (DefaultValueObject != null)
 				{
 					ISerializeObject DefaultValueObjectValue = Get<ISerializeObject>(Object, 5); 
-					if (Contains(DefaultValueObjectValue, 1))
-					{
-						Serializer DefaultValueSerializer = GetSerializer(System.Type.GetType(Get<string>(DefaultValueObjectValue, 1)));
-						VariableSetterStatement.DefaultValue = DefaultValueSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.VariableStatement>(Get<ISerializeObject>(DefaultValueObjectValue, 2), StatementIDs, Resolvers);
-						StatementIDs[VariableSetterStatement.DefaultValue.ID] = VariableSetterStatement.DefaultValue;
-					}
-					else
-					{
-						string id = Get<string>(DefaultValueObjectValue, 0);
-						Resolvers.Add(new ReferenceResolver(id, VariableSetterStatement, VariableSetterStatement.GetType().GetProperty("DefaultValue", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
-					}
+					Serializer DefaultValueSerializer = GetSerializer(System.Type.GetType(Get<string>(DefaultValueObjectValue, 1)));
+					VariableSetterStatement.DefaultValue = DefaultValueSerializer.DeserializeInternal<VisualScriptTool.Language.AnyDataType>(Get<ISerializeObject>(DefaultValueObjectValue, 2), StatementIDs, Resolvers);
 				}
-				else
-					VariableSetterStatement.DefaultValue = null;
 				// CompleteStatement
 				ISerializeObject CompleteStatementObject = Get<ISerializeObject>(Object, 1, null);
 				if (CompleteStatementObject != null)

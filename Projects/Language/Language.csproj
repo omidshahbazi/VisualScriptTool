@@ -33,15 +33,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AnyDataType.cs" />
+    <Compile Include="Attributes.cs" />
+    <Compile Include="Extensions\StatementExtensions.cs" />
     <Compile Include="Extensions\MethodInfoExtensions.cs" />
     <Compile Include="Statements\Control\FlowStatement.cs" />
     <Compile Include="Statements\Control\WhileStatement.cs" />
     <Compile Include="Statements\ExecuterStatement.cs" />
     <Compile Include="Statements\Function\FunctionStatement.cs" />
-    <Compile Include="Statements\Declaration\BooleanVariable.cs" />
-    <Compile Include="Statements\Declaration\FloatVariable.cs" />
-    <Compile Include="Statements\Declaration\StringVariable.cs" />
-    <Compile Include="Statements\Declaration\IntegerVariable.cs" />
     <Compile Include="Statements\Control\VariableSetterStatement.cs" />
     <Compile Include="Statements\Declaration\VariableStatement.cs" />
     <Compile Include="Statements\Control\ControlStatement.cs" />

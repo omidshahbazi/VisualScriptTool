@@ -6,13 +6,14 @@ using VisualScriptTool.Language.Statements.Declaration;
 
 namespace VisualScriptTool.CodeGeneration
 {
-	public class CSharpCodeGenerator : CodeGeneratorBase
+	public class CSharpCodeGenerator : ICodeGeneratorBase
 	{
-		public override string[] Generate(Statement[] Statements)
+		public byte[] Generate(string Name, Statement[] Statements)
 		{
 			StringBuilder builder = new StringBuilder();
 
-			builder.AppendLine("class x");
+			builder.AppendLine("class ");
+			builder.AppendLine(Name);
 			builder.AppendLine("{");
 			builder.AppendLine("void doIt()");
 			builder.AppendLine("{");
@@ -38,9 +39,7 @@ namespace VisualScriptTool.CodeGeneration
 			builder.AppendLine("}");
 			builder.AppendLine("}");
 
-			return new string[] { builder.ToString() };
+			return Encoding.UTF8.GetBytes(builder.ToString());
 		}
-
-
 	}
 }

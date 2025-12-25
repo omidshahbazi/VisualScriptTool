@@ -62,7 +62,7 @@ namespace VisualScriptTool.Editor.Serializers
 		{
 			List<MemberInfo> list = new List<MemberInfo>();
 
-			PropertyInfo[] properties = Type.GetAllProperties(BindingFlags.Instance | BindingFlags.Public);
+            PropertyInfo[] properties = TypeUtils.GetProperties(Type, BindingFlags.Instance | BindingFlags.Public);
 			for (int i = 0; i < properties.Length; ++i)
 			{
 				PropertyInfo property = properties[i];
@@ -71,7 +71,7 @@ namespace VisualScriptTool.Editor.Serializers
 					list.Add(property);
 			}
 
-			FieldInfo[] fields = Type.GetAllFields(BindingFlags.Instance | BindingFlags.Public);
+            FieldInfo[] fields = TypeUtils.GetFields(Type, BindingFlags.Instance | BindingFlags.Public);
 			for (int i = 0; i < fields.Length; ++i)
 			{
 				FieldInfo field = fields[i];
@@ -98,9 +98,6 @@ namespace VisualScriptTool.Editor.Serializers
 		string ISerializationCompileStrategy.GetMemberDefaultValue(MemberInfo Member)
 		{
 			Type type = (Member is FieldInfo ? ((FieldInfo)Member).FieldType : ((PropertyInfo)Member).PropertyType);
-
-			if (type == typeof(string))
-				return "\"\"";
 
 			return type.GetDefaultValue().ToString();
 		}
