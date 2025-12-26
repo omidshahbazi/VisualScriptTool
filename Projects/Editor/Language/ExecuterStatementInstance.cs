@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using VisualScriptTool.Language.Extensions;
 using VisualScriptTool.Language.Statements;
 
 namespace VisualScriptTool.Editor.Language
@@ -14,28 +15,23 @@ namespace VisualScriptTool.Editor.Language
 
 		private void OnTrueAssigned(Slot Self, Slot Other)
 		{
-			ExecuterStatement statement = (ExecuterStatement)Statement;
-
 			SetConnection(Self, Other);
 
-			statement.Statement = Other.StatementInstance.Statement;
+			Statement.As<ExecuterStatement>().Statement = Other.StatementInstance.Statement;
 		}
 
 		private void OnRemoveTrueConnection(Slot Self)
 		{
 			UnsetConnection(Self);
 
-			ExecuterStatement statement = (ExecuterStatement)Statement;
-			statement.Statement = null;
+			Statement.As<ExecuterStatement>().Statement = null;
 		}
 
 		public override void ResolveSlotConnections(IStatementInspector Inspector)
 		{
 			base.ResolveSlotConnections(Inspector);
 
-			ExecuterStatement statement = (ExecuterStatement)Statement;
-
-			UpdateConnectedSlot(Inspector, 0, statement.Statement);
+			UpdateConnectedSlot(Inspector, 0, Statement.As<ExecuterStatement>().Statement);
 		}
 	}
 }

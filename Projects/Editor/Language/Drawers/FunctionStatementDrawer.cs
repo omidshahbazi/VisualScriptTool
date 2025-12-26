@@ -1,6 +1,7 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
 using System.Drawing;
+using VisualScriptTool.Language.Extensions;
 using VisualScriptTool.Language.Statements.Control;
 
 namespace VisualScriptTool.Editor.Language.Drawers
@@ -14,7 +15,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		public override uint RowCount
 		{
-			get { return (uint)((FunctionStatement)StatementInstance.Statement).Parameters.Length + 1; }
+			get { return (uint)(StatementInstance.Statement.As<FunctionStatement>()).Parameters.Length + 1; }
 		}
 
 		public override Type[] StatementTypes

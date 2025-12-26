@@ -26,8 +26,8 @@ namespace VisualScriptTool.Editor.Language
 
 			CheckBox conditionCheckbox = new CheckBox(this);
 			conditionCheckbox.Location = new PointF(100, 55);
-			conditionCheckbox.Value = ((IfStatement)Statement).ConditionDefaultValue;
-			conditionCheckbox.ValueChanged += (control) => { ((IfStatement)Statement).ConditionDefaultValue = conditionCheckbox.Value; };
+			conditionCheckbox.Value = Statement.As<IfStatement>().ConditionDefaultValue;
+			conditionCheckbox.ValueChanged += (control) => { Statement.As<IfStatement>().ConditionDefaultValue = conditionCheckbox.Value; };
 			AddControl(conditionCheckbox);
 		}
 

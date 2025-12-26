@@ -1,6 +1,7 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
 using System.Text;
+using VisualScriptTool.Language.Extensions;
 using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Language.Statements.Control;
 
@@ -15,7 +16,7 @@ namespace VisualScriptTool.CodeGeneration.Language.CSharp
 
 		public override void Generate(StringBuilder Builder, Statement Statement)
 		{
-			WhileStatement statement = (WhileStatement)Statement;
+			WhileStatement statement = Statement.As<WhileStatement>();
 
 			Builder.Append("while (");
 

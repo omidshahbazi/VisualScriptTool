@@ -1,5 +1,6 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
+using VisualScriptTool.Language.Extensions;
 using VisualScriptTool.Language.Statements.Control;
 
 namespace VisualScriptTool.Editor.Language
@@ -27,30 +28,26 @@ namespace VisualScriptTool.Editor.Language
 		{
 			SetConnection(Self, Other);
 
-			FlowStatement statement = (FlowStatement)Statement;
-			statement.CompleteStatement = Other.StatementInstance.Statement;
+			Statement.As<FlowStatement>().CompleteStatement = Other.StatementInstance.Statement;
 		}
 
 		private void OnExecuterRemoveConnection(Slot Self)
 		{
 			UnsetConnection(Self);
 
-			FlowStatement statement = (FlowStatement)Statement;
-			statement.CompleteStatement = null;
+			Statement.As<FlowStatement>().CompleteStatement = null;
 		}
 
 		public override void ResolveSlotConnections(IStatementInspector Inspector)
 		{
 			base.ResolveSlotConnections(Inspector);
 
-			FlowStatement statement = (FlowStatement)Statement;
-
-			UpdateConnectedSlot(Inspector, 1, statement.CompleteStatement);
+			UpdateConnectedSlot(Inspector, 1, Statement.As<FlowStatement>().CompleteStatement);
 		}
 
 		protected bool WillCauseCircularCall(Slot Slot)
 		{
-			return false;
+			throw new NotImplementedException();
 		}
 	}
 }

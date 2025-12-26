@@ -48,7 +48,7 @@ namespace VisualScriptTool.Editor.Language
 		{
 			SetConnection(Self, Other);
 
-			//Statement.As<FunctionStatement>().Condition = (FloatVariable)Other.StatementInstance.Statement;
+			//Statement.As<FunctionStatement>().Condition = (FloatVariable)Other.StatementInstance.Statement.As<>;
 		}
 
 		private void OnRemoveParameterConnection(Slot Self)

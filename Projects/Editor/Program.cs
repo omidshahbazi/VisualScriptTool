@@ -5,6 +5,13 @@ using VisualScriptTool.Editor.Serializers;
 
 namespace VisualScriptTool.Editor
 {
+	//TODO: Change the Executer to EntryPoint, it must be available all the time and only one per diagram
+	//TODO: Execter should rename or change to a group of nodes to represent a function
+	//TODO: Add unary and binary operations nodes (Don't do this as functions, make them special nodes)
+	//TODO: Do something about the functions
+	//TODO: Code generation from the diagram at this point
+	//TODO: What to do for the LogicGate nodes?
+	//TODO: Unique variable name
 	static class Program
 	{
 		[STAThread]

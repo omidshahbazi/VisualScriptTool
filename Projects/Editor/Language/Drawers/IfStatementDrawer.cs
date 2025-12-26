@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using VisualScriptTool.Editor.Language.Drawers.Controls;
+using VisualScriptTool.Language.Statements;
 using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Renderer;
 
@@ -28,7 +29,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 		//{
 		//	base.Draw(Device, StatementInstance);
 
-		//	IfStatement statement = (IfStatement)StatementInstance.Statement;
+		//IfStatement statement = Statement.As<IfStatement>();
 
 		//	if (statement.Condition == null)
 		//	{
