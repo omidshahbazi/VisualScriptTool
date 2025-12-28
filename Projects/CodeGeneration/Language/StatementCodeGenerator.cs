@@ -16,26 +16,26 @@ namespace VisualScriptTool.CodeGeneration.Language
 			get;
 		}
 
+		static StatementCodeGenerator()
+		{
+			Type[] types = TypeUtils.GetDrievedTypesOf<StatementCodeGenerator>();
+			StatementCodeGeneratorList generators = new StatementCodeGeneratorList();
+
+			for (int i = 0; i < types.Length; ++i)
+			{
+				if (types[i].IsAbstract)
+					continue;
+
+				generators.Add((StatementCodeGenerator)Activator.CreateInstance(types[i]));
+			}
+
+			codeGenerators = generators.ToArray();
+		}
+
 		public abstract void Generate(StringBuilder Builder, Statement Statement);
 
 		public static StatementCodeGenerator Get(Type StatementType)
 		{
-			if (codeGenerators == null)
-			{
-				Type[] types = TypeUtils.GetDrievedTypesOf<StatementCodeGenerator>();
-				StatementCodeGeneratorList generators = new StatementCodeGeneratorList();
-
-				for (int i = 0; i < types.Length; ++i)
-				{
-					if (types[i].IsAbstract)
-						continue;
-
-					generators.Add((StatementCodeGenerator)Activator.CreateInstance(types[i]));
-				}
-
-				codeGenerators = generators.ToArray();
-			}
-
 			for (int i = 0; i < codeGenerators.Length; ++i)
 				if (Array.IndexOf(codeGenerators[i].StatementTypes, StatementType) != -1)
 					return codeGenerators[i];

@@ -24,10 +24,6 @@ namespace VisualScriptTool.Editor
 			this.Canvas = Canvas;
 
 			Type[] types = TypeUtils.GetDrievedTypesOf<Drawer>();
-
-			if (types == null)
-				return;
-
 			for (int i = 0; i < types.Length; ++i)
 			{
 				Type type = types[i];

@@ -2,11 +2,11 @@
 using System;
 using System.Drawing;
 using VisualScriptTool.Language.Extensions;
-using VisualScriptTool.Language.Statements.Control;
+using VisualScriptTool.Language.Statements.Declaration;
 
 namespace VisualScriptTool.Editor.Language.Drawers
 {
-    public class FunctionStatementDrawer : FlowStatementDrawer
+	public class FunctionStatementDrawer : FlowStatementDrawer
 	{
 		protected override float MinimumWidth
 		{
@@ -23,14 +23,14 @@ namespace VisualScriptTool.Editor.Language.Drawers
 			get { return new Type[] { typeof(FunctionStatement) }; }
 		}
 
-        protected override Color HeaderBackColor
-        {
-            get { return Color.Red; }
-        }
+		protected override Color HeaderBackColor
+		{
+			get { return Color.Red; }
+		}
 
-        protected override Color BodyBackColor
-        {
-            get { return Color.Black; }
-        }
-    }
+		protected override Color BodyBackColor
+		{
+			get { return Color.Black; }
+		}
+	}
 }

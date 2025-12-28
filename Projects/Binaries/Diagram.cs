@@ -1,10 +1,10 @@
-class x
+class Diagram
 {
-	void doIt()
-	{
-		if (false)
-		{
-			System.Math.Sqrt();
-		}
-	}
+System.Boolean Test = False;
+public static void Main()
+{
+if (Test)
+{
+}
+}
 }

@@ -45,9 +45,9 @@ namespace VisualScriptTool.Editor
 		}
 
 		private static readonly Item[] ITEMS = new Item[] {
-			new Item("Execter", (Position)=>
+			new Item("Entrypoint", (Position)=>
 			{
-				ExecuterStatementInstance statement = new ExecuterStatementInstance();
+				EntrypointStatementInstance statement = new EntrypointStatementInstance();
 				statement.Position = Position;
 				return statement;
 			}),
@@ -232,9 +232,9 @@ namespace VisualScriptTool.Editor
 
 				Item item = new Item("While", (Position) =>
 				{
-					VisualScriptTool.Language.Statements.Control.FunctionStatement fnstmt = new VisualScriptTool.Language.Statements.Control.FunctionStatement();
+					VisualScriptTool.Language.Statements.Control.FunctionCallStatement fnstmt = new VisualScriptTool.Language.Statements.Control.FunctionCallStatement();
 					fnstmt.Method = method;
-					FunctionStatementInstance statement = new FunctionStatementInstance();
+					FunctionCallStatementInstance statement = new FunctionCallStatementInstance();
 					statement.Statement = fnstmt;
 					statement.Position = Position;
 					return statement;
@@ -505,6 +505,8 @@ namespace VisualScriptTool.Editor
 
 		private void ShowGeneralMenu()
 		{
+			generalContextMenu.Items[0].Enabled = (StatementInstances.Find<EntrypointStatementInstance>() == null);
+
 			generalContextMenu.Show(this, ClientMousePosition);
 		}
 
@@ -615,7 +617,7 @@ namespace VisualScriptTool.Editor
 		{
 			StatementInstance instance = null;
 
-            VariableStatement statement = (VariableStatement)DragAndDropManager.GetData();
+			VariableStatement statement = (VariableStatement)DragAndDropManager.GetData();
 
 			if (IsSetter)
 			{

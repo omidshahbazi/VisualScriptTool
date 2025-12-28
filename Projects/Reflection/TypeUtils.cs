@@ -2,31 +2,40 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Reflection;
 
 namespace VisualScriptTool.Reflection
 {
 	public static class TypeUtils
 	{
-		public static Type[] GetDrievedTypesOf<T>() where T : class
+		public static Type[] GetDrievedTypesOf<T>(bool AllAssemblies = false) where T : class
 		{
-			Type baseClassType = typeof(T);
-
 			List<Type> retTypes = new List<Type>();
 
-			Type[] types = Assembly.GetCallingAssembly().GetTypes();
+			List<Assembly> assemblies = new List<Assembly>();
+			if (AllAssemblies)
+				assemblies.AddRange(AppDomain.CurrentDomain.GetAssemblies());
+			else
+				assemblies.Add(Assembly.GetCallingAssembly());
 
-			for (int i = 0; i < types.Length; ++i)
+			for (int i = 0; i < assemblies.Count; ++i)
+				retTypes.AddRange(assemblies[i].GetDrievedTypesOf<T>());
+
+			return retTypes.ToArray();
+		}
+
+		public static Type[] GetDrievedTypesOf<T>(this Assembly A) where T : class
+		{
+			List<Type> retTypes = new List<Type>();
+
+			Type[] allTypes = A.GetTypes();
+			for (int i = 0; i < allTypes.Length; ++i)
 			{
-				Type type = types[i];
+				Type type = allTypes[i];
 
-				if (type.IsSubclassOf(baseClassType))
+				if (type.IsSubclassOf(typeof(T)))
 					retTypes.Add(type);
 			}
-
-			if (retTypes.Count == 0)
-				return null;
 
 			return retTypes.ToArray();
 		}

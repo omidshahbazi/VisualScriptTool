@@ -8,7 +8,7 @@ using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor.Language
 {
-	public class FunctionStatementInstance : FlowStatementInstance
+	public class FunctionStatementInstance : StatementInstance
 	{
 		[SerializableElement(3)]
 		public override Statement Statement
@@ -21,9 +21,9 @@ namespace VisualScriptTool.Editor.Language
 				if (base.Statement == null)
 					return;
 
-				Debug.Assert(value is FunctionStatement);
+				Debug.Assert(value is FunctionCallStatement);
 
-				FunctionStatement statement = Statement.As<FunctionStatement>();
+				FunctionCallStatement statement = Statement.As<FunctionCallStatement>();
 
 				for (uint i = 0; i < statement.ParametersName.Length; ++i)
 					AddArgumentSlot(statement.ParametersName[i], i + 1, CheckParameterAssignment, OnParameterAssigned, OnRemoveParameterConnection);

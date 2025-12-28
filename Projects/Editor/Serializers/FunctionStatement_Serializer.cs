@@ -8,12 +8,12 @@ namespace VisualScriptTool.Editor.Serializers
 	{
 		public override System.Type Type
 		{
-			get { return typeof(VisualScriptTool.Language.Statements.Control.FunctionStatement); }
+			get { return typeof(VisualScriptTool.Language.Statements.Declaration.FunctionStatement); }
 		}
 
 		public override object CreateInstance()
 		{
-			return new VisualScriptTool.Language.Statements.Control.FunctionStatement();
+			return null;
 		}
 
 		public override void Serialize(ISerializeData Data, object Instance)
@@ -51,14 +51,14 @@ namespace VisualScriptTool.Editor.Serializers
 			if (InstanceType.IsArrayOrList())
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
-				VisualScriptTool.Language.Statements.Control.FunctionStatement[] FunctionStatementArray = null;
+				VisualScriptTool.Language.Statements.Declaration.FunctionStatement[] FunctionStatementArray = null;
 				if (InstanceType.IsArray())
-					FunctionStatementArray = (VisualScriptTool.Language.Statements.Control.FunctionStatement[])Instance;
+					FunctionStatementArray = (VisualScriptTool.Language.Statements.Declaration.FunctionStatement[])Instance;
 				else
-					FunctionStatementArray = ((System.Collections.Generic.List<VisualScriptTool.Language.Statements.Control.FunctionStatement>)Instance).ToArray();
+					FunctionStatementArray = ((System.Collections.Generic.List<VisualScriptTool.Language.Statements.Declaration.FunctionStatement>)Instance).ToArray();
 				for (int i = 0; i < FunctionStatementArray.Length; ++i)
 				{
-					VisualScriptTool.Language.Statements.Control.FunctionStatement element = FunctionStatementArray[i];
+					VisualScriptTool.Language.Statements.Declaration.FunctionStatement element = FunctionStatementArray[i];
 					if (element == null)
 						Add(Array, null);
 					else
@@ -73,29 +73,9 @@ namespace VisualScriptTool.Editor.Serializers
 			else
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
-				VisualScriptTool.Language.Statements.Control.FunctionStatement FunctionStatement = (VisualScriptTool.Language.Statements.Control.FunctionStatement)Instance;
+				VisualScriptTool.Language.Statements.Declaration.FunctionStatement FunctionStatement = (VisualScriptTool.Language.Statements.Declaration.FunctionStatement)Instance;
 				// Name
 				Set(Object, 2, FunctionStatement.Name, "Name");
-				// MethodInfo
-				Set(Object, 3, FunctionStatement.MethodInfo, "MethodInfo");
-				// CompleteStatement
-				if (FunctionStatement.CompleteStatement == null)
-					Set<object>(Object, 1, null, "CompleteStatement");
-				else
-				{
-					ISerializeObject CompleteStatementObject = AddObject(Object, 1); 
-					string id = string.Empty;
-					if (References.Contains(FunctionStatement.CompleteStatement))
-						id = FunctionStatement.CompleteStatement.ID;
-					else
-					{
-						References.Add(FunctionStatement.CompleteStatement);
-						System.Type CompleteStatementType = FunctionStatement.CompleteStatement.GetType();
-						Set(CompleteStatementObject, 1, CompleteStatementType.AssemblyQualifiedName, "CompleteStatement");
-						GetSerializer(CompleteStatementType).SerializeInternal(AddObject(CompleteStatementObject, 2), FunctionStatement.CompleteStatement, CompleteStatementType, References);
-					}
-					Set(CompleteStatementObject, 0, id, "CompleteStatement");
-				}
 				// ID
 				Set(Object, 0, FunctionStatement.ID, "ID");
 			}
@@ -107,7 +87,7 @@ namespace VisualScriptTool.Editor.Serializers
 			if (Data is ISerializeArray)
 			{
 				ISerializeArray Array = (ISerializeArray)Data; 
-				VisualScriptTool.Language.Statements.Control.FunctionStatement[] FunctionStatementArray = (VisualScriptTool.Language.Statements.Control.FunctionStatement[])System.Array.CreateInstance(Type, Array.Count);
+				VisualScriptTool.Language.Statements.Declaration.FunctionStatement[] FunctionStatementArray = (VisualScriptTool.Language.Statements.Declaration.FunctionStatement[])System.Array.CreateInstance(Type, Array.Count);
 				for (uint i = 0; i < Array.Count; ++i)
 				{
 					ISerializeObject arrayObj = Get<ISerializeObject>(Array, i);
@@ -117,37 +97,16 @@ namespace VisualScriptTool.Editor.Serializers
 						FunctionStatementArray[i] = null;
 						continue;
 					}
-					FunctionStatementArray[i] = GetSerializer(targetType).DeserializeInternal<VisualScriptTool.Language.Statements.Control.FunctionStatement>(Get<ISerializeObject>(arrayObj, 2), StatementIDs, Resolvers); 
+					FunctionStatementArray[i] = GetSerializer(targetType).DeserializeInternal<VisualScriptTool.Language.Statements.Declaration.FunctionStatement>(Get<ISerializeObject>(arrayObj, 2), StatementIDs, Resolvers); 
 				}
 				returnValue = (T)(object)FunctionStatementArray;
 			}
 			else
 			{
 				ISerializeObject Object = (ISerializeObject)Data; 
-				VisualScriptTool.Language.Statements.Control.FunctionStatement FunctionStatement = (VisualScriptTool.Language.Statements.Control.FunctionStatement)CreateInstance();
+				VisualScriptTool.Language.Statements.Declaration.FunctionStatement FunctionStatement = (VisualScriptTool.Language.Statements.Declaration.FunctionStatement)CreateInstance();
 				// Name
 				FunctionStatement.Name = Get<System.String>(Object, 2, "");
-				// MethodInfo
-				FunctionStatement.MethodInfo = Get<System.String>(Object, 3, "");
-				// CompleteStatement
-				ISerializeObject CompleteStatementObject = Get<ISerializeObject>(Object, 1, null);
-				if (CompleteStatementObject != null)
-				{
-					ISerializeObject CompleteStatementObjectValue = Get<ISerializeObject>(Object, 1); 
-					if (Contains(CompleteStatementObjectValue, 1))
-					{
-						Serializer CompleteStatementSerializer = GetSerializer(System.Type.GetType(Get<string>(CompleteStatementObjectValue, 1)));
-						FunctionStatement.CompleteStatement = CompleteStatementSerializer.DeserializeInternal<VisualScriptTool.Language.Statements.Statement>(Get<ISerializeObject>(CompleteStatementObjectValue, 2), StatementIDs, Resolvers);
-						StatementIDs[FunctionStatement.CompleteStatement.ID] = FunctionStatement.CompleteStatement;
-					}
-					else
-					{
-						string id = Get<string>(CompleteStatementObjectValue, 0);
-						Resolvers.Add(new ReferenceResolver(id, FunctionStatement, FunctionStatement.GetType().GetProperty("CompleteStatement", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic)));
-					}
-				}
-				else
-					FunctionStatement.CompleteStatement = null;
 				// ID
 				FunctionStatement.ID = Get<System.String>(Object, 0, "");
 				returnValue = (T)(object)FunctionStatement;

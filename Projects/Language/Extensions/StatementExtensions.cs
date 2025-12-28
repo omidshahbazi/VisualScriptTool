@@ -9,6 +9,39 @@ namespace VisualScriptTool.Language.Extensions
 {
 	public static class StatementExtensions
 	{
+		public static T Find<T>(this Statement[] A) where T : Statement
+		{
+			for (int i = 0; i < A.Length; i++)
+			{
+				if (!(A[i] is T))
+					continue;
+
+				return A[i].As<T>();
+			}
+
+			return null;
+		}
+
+		public static T[] FindAll<T>(this Statement[] A) where T : Statement
+		{
+			List<T> list = new List<T>();
+
+			for (int i = 0; i < A.Length; i++)
+			{
+				if (!(A[i] is T))
+					continue;
+
+				list.Add(A[i].As<T>());
+			}
+
+			return list.ToArray();
+		}
+
+		public static T As<T>(this Statement A) where T : Statement
+		{
+			return A as T;
+		}
+
 		public static bool IsA<T>(this VariableStatement A)
 		{
 			return A.IsOneOf(typeof(T));
@@ -21,11 +54,6 @@ namespace VisualScriptTool.Language.Extensions
 					return true;
 
 			return false;
-		}
-
-		public static T As<T>(this Statement A) where T : Statement
-		{
-			return A as T;
 		}
 
 		public static Type[] GetConstraintsOf(this Statement A, string PropertyName)

@@ -1,17 +1,18 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Language.Statements
 {
-	public class ExecuterStatement : Statement
+	public class EntrypointStatement : FlowStatement
 	{
 		public override string Name
 		{
-			get { return "Executer"; }
+			get { return "Entrypoint"; }
 			set { }
 		}
 
-		[SerializableElement(1)]
+		[SerializableElement(2)]
 		public Statement Statement
 		{
 			get;

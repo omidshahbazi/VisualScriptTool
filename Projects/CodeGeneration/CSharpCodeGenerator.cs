@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System.Collections.Generic;
 using System.Text;
 using VisualScriptTool.CodeGeneration.Language;
 using VisualScriptTool.Language.Extensions;
@@ -15,8 +16,6 @@ namespace VisualScriptTool.CodeGeneration
 
 			builder.AppendLine($"class {Name}");
 			builder.AppendLine("{");
-			builder.AppendLine("void doIt()");
-			builder.AppendLine("{");
 
 			for (int i = 0; i < Statements.Length; ++i)
 			{
@@ -27,16 +26,15 @@ namespace VisualScriptTool.CodeGeneration
 				StatementCodeGenerator.Get(statement.GetType()).Generate(builder, statement);
 			}
 
-			for (int i = 0; i < Statements.Length; ++i)
-			{
-				ExecuterStatement statement = Statements[i].As<ExecuterStatement>();
-				if (statement == null)
-					continue;
+			List<Statement> parentStatements = new List<Statement>(Statements.FindAll<FunctionStatement>());
 
-				StatementCodeGenerator.Get(statement.Statement.GetType()).Generate(builder, statement.Statement);
-			}
+			EntrypointStatement executerStatement = Statements.Find<EntrypointStatement>();
+			if (executerStatement != null)
+				parentStatements.Add(executerStatement);
 
-			builder.AppendLine("}");
+			for (int i = 0; i < parentStatements.Count; ++i)
+				StatementCodeGenerator.Get(parentStatements[i].GetType()).Generate(builder, parentStatements[i]);
+
 			builder.AppendLine("}");
 
 			return Encoding.UTF8.GetBytes(builder.ToString());
