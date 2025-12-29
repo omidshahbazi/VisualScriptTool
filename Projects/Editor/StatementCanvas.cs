@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Windows.Forms;
 using VisualScriptTool.Editor.Extensions;
@@ -10,6 +11,7 @@ using VisualScriptTool.Editor.Language;
 using VisualScriptTool.Editor.Language.Drawers;
 using VisualScriptTool.Language.Extensions;
 using VisualScriptTool.Language.Statements;
+using VisualScriptTool.Language.Statements.Control;
 using VisualScriptTool.Language.Statements.Declaration;
 using VisualScriptTool.Renderer;
 
@@ -22,7 +24,7 @@ namespace VisualScriptTool.Editor
 		public delegate void StatementInstanceChanged(StatementInstance Instance);
 		public delegate void StatementInstancesChanged();
 
-		private class Item
+		private class MenuItemInfo
 		{
 			private Func<PointF, object> instantiator = null;
 
@@ -32,7 +34,7 @@ namespace VisualScriptTool.Editor
 				private set;
 			}
 
-			public Item(string Title, Func<PointF, object> Instantiator)
+			public MenuItemInfo(string Title, Func<PointF, object> Instantiator)
 			{
 				this.Title = Title;
 				instantiator = Instantiator;
@@ -44,33 +46,19 @@ namespace VisualScriptTool.Editor
 			}
 		}
 
-		private static readonly Item[] ITEMS = new Item[] {
-			new Item("Entrypoint", (Position)=>
-			{
-				EntrypointStatementInstance statement = new EntrypointStatementInstance();
-				statement.Position = Position;
-				return statement;
-			}),
-			new Item("If", (Position)=>
-			{
-				IfStatementInstance statement = new IfStatementInstance();
-				statement.Position = Position;
-				return statement;
-			}),
-			new Item("For", (Position) =>
-			{
-				ForStatementInstance statement = new ForStatementInstance();
-				statement.Position = Position;
-				return statement;
-			}),
-			new Item("While", (Position) =>
-			{
-				WhileStatementInstance statement = new WhileStatementInstance();
-				statement.Position = Position;
-				return statement;
-			}) };
+		private static readonly Type[] ROOT_MENU_ITEM_TYPES = new Type[] {
+		};
+
+		private static readonly Type[] FLOW_MENU_ITEM_TYPES = new Type[] {
+			typeof(EntrypointStatementInstance),
+			typeof(IfStatementInstance),
+			typeof(ForStatementInstance),
+			typeof(WhileStatementInstance)
+		};
 
 		private ContextMenuStrip generalContextMenu = null;
+		private ToolStripMenuItem flowToolStripMenuItem = null;
+		private ToolStripMenuItem functionsToolStripMenuItem = null;
 		private ContextMenuStrip slotContextMenu = null;
 		private ContextMenuStrip variableContextMenu = null;
 		private StatementDrawer drawer = null;
@@ -131,25 +119,43 @@ namespace VisualScriptTool.Editor
 		public StatementCanvas()
 		{
 			generalContextMenu = new ContextMenuStrip();
-			generalContextMenu.Closed += new ToolStripDropDownClosedEventHandler(OnContextMenuClosed);
-			for (int i = 0; i < ITEMS.Length; ++i)
 			{
-				Item item = ITEMS[i];
-				generalContextMenu.Items.Add(item.Title, null, (s, e) => { OnItemClicked(item); });
+				generalContextMenu.Closed += new ToolStripDropDownClosedEventHandler(OnContextMenuClosed);
+
+				flowToolStripMenuItem = CreateAndFillMenuItems("Flow", FLOW_MENU_ITEM_TYPES);
+
+				MenuItemInfo functionItem = new MenuItemInfo("Function", (Position) =>
+				{
+					FunctionStatementInstance statement = new FunctionStatementInstance();
+					statement.Statement.Name = "NewFunction";
+					statement.Position = Position;
+					return statement;
+				});
+
+				AddMenuItems(generalContextMenu.Items, functionItem);
+
+				FillMenuItems(generalContextMenu.Items, ROOT_MENU_ITEM_TYPES);
+
+				functionsToolStripMenuItem = new ToolStripMenuItem("Functions");
+				{
+					generalContextMenu.Items.Add(functionsToolStripMenuItem);
+				}
 			}
 
 			slotContextMenu = new ContextMenuStrip();
 
 			variableContextMenu = new ContextMenuStrip();
-			variableContextMenu.Items.Add("Getter", null, (s, e) => { AddVariableStatementForDropItem(false); });
-			variableContextMenu.Items.Add("Setter", null, (s, e) => { AddVariableStatementForDropItem(true); });
+			{
+				variableContextMenu.Items.Add("Getter", null, (s, e) => { AddVariableStatementForDropItem(false); });
+				variableContextMenu.Items.Add("Setter", null, (s, e) => { AddVariableStatementForDropItem(true); });
+			}
 
 			drawer = new StatementDrawer(this);
 
 			selectedPen = new Pen(Color.Orange, 1.5F);
 
 			groupSelectionPen = new Pen(Color.Black);
-			groupSelectionPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+			groupSelectionPen.DashStyle = DashStyle.Dash;
 		}
 
 		public void RemoveStatement(Statement Statement)
@@ -221,18 +227,13 @@ namespace VisualScriptTool.Editor
 		{
 			MethodInfo[] methods = Type.GetMethods(BindingFlags.Static | BindingFlags.Public);
 
-			if (methods.Length == 0)
-				return;
-
-			ToolStripMenuItem parentItem = (ToolStripMenuItem)generalContextMenu.Items.Add(Type.Name);
-
 			for (int i = 0; i < methods.Length; ++i)
 			{
 				MethodInfo method = methods[i];
 
-				Item item = new Item("While", (Position) =>
+				MenuItemInfo item = new MenuItemInfo(method.GetPrettyName(), (Position) =>
 				{
-					VisualScriptTool.Language.Statements.Control.FunctionCallStatement fnstmt = new VisualScriptTool.Language.Statements.Control.FunctionCallStatement();
+					FunctionCallStatement fnstmt = new FunctionCallStatement();
 					fnstmt.Method = method;
 					FunctionCallStatementInstance statement = new FunctionCallStatementInstance();
 					statement.Statement = fnstmt;
@@ -240,7 +241,7 @@ namespace VisualScriptTool.Editor
 					return statement;
 				});
 
-				parentItem.DropDownItems.Add(method.GetPrettyName(), null, (s, e) => { OnItemClicked(item); });
+				functionsToolStripMenuItem.DropDownItems.Add(item.Title, null, (s, e) => { OnItemClicked(item); });
 			}
 		}
 
@@ -503,16 +504,55 @@ namespace VisualScriptTool.Editor
 			OnStatementInstancesChanged?.Invoke();
 		}
 
-		private void ShowGeneralMenu()
-		{
-			generalContextMenu.Items[0].Enabled = (StatementInstances.Find<EntrypointStatementInstance>() == null);
-
-			generalContextMenu.Show(this, ClientMousePosition);
-		}
-
 		private void RemoveFromSelected(StatementInstance StatementInstance)
 		{
 			selectedStatementInstances.Remove(StatementInstance);
+		}
+
+		private ToolStripMenuItem CreateAndFillMenuItems(string Title, params Type[] Types)
+		{
+			ToolStripMenuItem menuItem = new ToolStripMenuItem(Title);
+
+			generalContextMenu.Items.Add(menuItem);
+
+			FillMenuItems(menuItem.DropDownItems, Types);
+
+			return menuItem;
+		}
+
+		private void FillMenuItems(ToolStripItemCollection Collection, params Type[] Types)
+		{
+			for (int i = 0; i < Types.Length; ++i)
+			{
+				Type type = Types[i];
+
+				MenuItemInfo item = new MenuItemInfo(type.Name.Replace(typeof(StatementInstance).Name, string.Empty), (Position) =>
+				{
+					StatementInstance statement = (StatementInstance)Activator.CreateInstance(type);
+					statement.Position = Position;
+					return statement;
+				});
+
+				AddMenuItems(Collection, item);
+
+			}
+		}
+
+		private void AddMenuItems(ToolStripItemCollection Collection, params MenuItemInfo[] Items)
+		{
+			for (int i = 0; i < Items.Length; ++i)
+			{
+				MenuItemInfo item = Items[i];
+
+				Collection.Add(item.Title, null, (s, e) => { OnItemClicked(item); });
+			}
+		}
+
+		private void ShowGeneralMenu()
+		{
+			flowToolStripMenuItem.DropDownItems[0].Enabled = (StatementInstances.Find<EntrypointStatementInstance>() == null);
+
+			generalContextMenu.Show(this, ClientMousePosition);
 		}
 
 		private void ShowSlotMenu()
@@ -539,7 +579,7 @@ namespace VisualScriptTool.Editor
 			Refresh();
 		}
 
-		private void OnItemClicked(Item Item)
+		private void OnItemClicked(MenuItemInfo Item)
 		{
 			PointF location = ScreenToCanvas(PointToClient(MousePosition));
 

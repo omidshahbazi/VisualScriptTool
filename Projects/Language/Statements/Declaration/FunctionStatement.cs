@@ -1,11 +1,14 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
+using System.Collections.Generic;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Language.Statements.Declaration
 {
-	public abstract class FunctionStatement : UserDefinedStatement
+	public class FunctionStatement : UserDefinedStatement
 	{
-		private Statement[] arguments = null;
+		private List<Statement> parameters = new List<Statement>();
+		private List<AnyDataType> parameterDefaultValues = new List<AnyDataType>();
 
 		[SerializableElement(2)]
 		public override string Name
@@ -14,27 +17,30 @@ namespace VisualScriptTool.Language.Statements.Declaration
 			set;
 		}
 
+		[SerializableElement(3)]
 		public Statement[] Parameters
 		{
-			get { return arguments; }
+			get { return parameters.ToArray(); }
+			set { parameters = new List<Statement>(value); }
 		}
 
-		public string[] ParametersName
+		[SerializableElement(4)]
+		public AnyDataType[] ParametersDefaultValue
 		{
-			get;
-			private set;
-		}
-
-		public object[] ParametersDefaultValue
-		{
-			get;
-			private set;
+			get { return parameterDefaultValues.ToArray(); }
+			set { parameterDefaultValues = new List<AnyDataType>(value); }
 		}
 
 		public bool HasReturnValue
 		{
 			get;
 			private set;
+		}
+
+		public void AddParameter(Statement Statement)
+		{
+			parameters.Add(Statement);
+			parameterDefaultValues.Add(new AnyDataType());
 		}
 
 		public FunctionStatement()

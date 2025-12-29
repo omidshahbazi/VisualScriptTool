@@ -1,4 +1,5 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using VisualScriptTool.Renderer;
@@ -49,7 +50,10 @@ namespace VisualScriptTool.Editor
 			base.OnMouseDown(e);
 
 			if (e.Button == MouseButtons.Right)
+			{
 				IsPanning = true;
+				lastMousePosition = e.Location;
+			}
 		}
 
 		protected override void OnMouseUp(MouseEventArgs e)

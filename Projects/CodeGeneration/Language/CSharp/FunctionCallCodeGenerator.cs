@@ -7,7 +7,7 @@ using VisualScriptTool.Language.Statements.Control;
 
 namespace VisualScriptTool.CodeGeneration.Language.CSharp
 {
-	class FunctionCallSCodeGenerator : FlowStatementCodeGenerator
+	class FunctionCallCodeGenerator : FlowStatementCodeGenerator
 	{
 		public override Type[] StatementTypes
 		{

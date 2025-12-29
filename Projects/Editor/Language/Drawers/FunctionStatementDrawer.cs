@@ -25,7 +25,7 @@ namespace VisualScriptTool.Editor.Language.Drawers
 
 		protected override Color HeaderBackColor
 		{
-			get { return Color.Red; }
+			get { return Color.DarkBlue; }
 		}
 
 		protected override Color BodyBackColor

@@ -472,11 +472,12 @@ namespace VisualScriptTool.Serialization
 			else if (elementValueType == ValueType.DataStructure)
 			{
 				if (ValueType == ValueType.Array)
-					DeserializeMethod.AppendLine(MemberAccessName + "[(int)i] = (" + GetFullTypeName(elementType) + ")GetSerializer(" + MemberAccessName + ".GetType())." + CREATE_INSTANCE_METHOD_NAME + "();", indent);
+					DeserializeMethod.AppendLine(MemberAccessName + "[(int)i] = GetSerializer(" + MemberAccessName + ".GetType())." + DESERIALIZE_INTERNAL_METHOD_NAME + "<" + GetFullTypeName(elementType) + ">(Get<ISerializeObject>(" + arrayName + ", i), StatementIDs, Resolvers);", indent);
+				//DeserializeMethod.AppendLine(MemberAccessName + "[(int)i] = (" + GetFullTypeName(elementType) + ")GetSerializer(" + MemberAccessName + ".GetType())." + CREATE_INSTANCE_METHOD_NAME + "();", indent);
 				else
 					DeserializeMethod.AppendLine("// " + MemberAccessName + ".Add(Allocated);", indent);
 
-				DeserializeMethod.AppendLine("GetSerializer(" + MemberAccessName + ".GetType())." + DESERIALIZE_INTERNAL_METHOD_NAME + "(Get<ISerializeObject>(" + arrayName + ", i), StatementIDs, Resolvers);", indent);
+				//DeserializeMethod.AppendLine("GetSerializer(" + MemberAccessName + ".GetType())." + DESERIALIZE_INTERNAL_METHOD_NAME + "(Get<ISerializeObject>(" + arrayName + ", i), StatementIDs, Resolvers);", indent);
 			}
 
 			DeserializeMethod.AppendLine("}", --indent);

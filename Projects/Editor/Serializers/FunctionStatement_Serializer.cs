@@ -13,7 +13,7 @@ namespace VisualScriptTool.Editor.Serializers
 
 		public override object CreateInstance()
 		{
-			return null;
+			return new VisualScriptTool.Language.Statements.Declaration.FunctionStatement();
 		}
 
 		public override void Serialize(ISerializeData Data, object Instance)
@@ -76,6 +76,46 @@ namespace VisualScriptTool.Editor.Serializers
 				VisualScriptTool.Language.Statements.Declaration.FunctionStatement FunctionStatement = (VisualScriptTool.Language.Statements.Declaration.FunctionStatement)Instance;
 				// Name
 				Set(Object, 2, FunctionStatement.Name, "Name");
+				// Parameters
+				if (FunctionStatement.Parameters == null)
+					Set<object>(Object, 3, null, "Parameters");
+				else
+				{
+					ISerializeArray ParametersArray = AddArray(Object, 3);
+					for (int i = 0; i < FunctionStatement.Parameters.Length; ++i)
+					{
+						VisualScriptTool.Language.Statements.Statement element = FunctionStatement.Parameters[i];
+						if (element == null)
+						{
+							Add(ParametersArray, null);
+							continue;
+						}
+						ISerializeObject ParametersArrayObject = AddObject(ParametersArray); 
+						System.Type elementType = element.GetType();
+						Set(ParametersArrayObject, 1, elementType.AssemblyQualifiedName, "Parameters");
+						GetSerializer(elementType).SerializeInternal(AddObject(ParametersArrayObject, 2), element, elementType, References); 
+					}
+				}
+				// ParametersDefaultValue
+				if (FunctionStatement.ParametersDefaultValue == null)
+					Set<object>(Object, 4, null, "ParametersDefaultValue");
+				else
+				{
+					ISerializeArray ParametersDefaultValueArray = AddArray(Object, 4);
+					for (int i = 0; i < FunctionStatement.ParametersDefaultValue.Length; ++i)
+					{
+						VisualScriptTool.Language.AnyDataType element = FunctionStatement.ParametersDefaultValue[i];
+						if (element == null)
+						{
+							Add(ParametersDefaultValueArray, null);
+							continue;
+						}
+						ISerializeObject ParametersDefaultValueArrayObject = AddObject(ParametersDefaultValueArray); 
+						System.Type elementType = element.GetType();
+						Set(ParametersDefaultValueArrayObject, 1, elementType.AssemblyQualifiedName, "ParametersDefaultValue");
+						GetSerializer(elementType).SerializeInternal(AddObject(ParametersDefaultValueArrayObject, 2), element, elementType, References); 
+					}
+				}
 				// ID
 				Set(Object, 0, FunctionStatement.ID, "ID");
 			}
@@ -107,6 +147,30 @@ namespace VisualScriptTool.Editor.Serializers
 				VisualScriptTool.Language.Statements.Declaration.FunctionStatement FunctionStatement = (VisualScriptTool.Language.Statements.Declaration.FunctionStatement)CreateInstance();
 				// Name
 				FunctionStatement.Name = Get<System.String>(Object, 2, "");
+				// Parameters
+				ISerializeArray ParametersArray = Get<ISerializeArray>(Object, 3, null);
+				if (ParametersArray == null)
+					FunctionStatement.Parameters = null;
+				else
+				{
+					FunctionStatement.Parameters = (VisualScriptTool.Language.Statements.Statement[])System.Array.CreateInstance(typeof(VisualScriptTool.Language.Statements.Statement), ParametersArray.Count);
+					for (uint i = 0; i < ParametersArray.Count; ++i)
+					{
+						FunctionStatement.Parameters[(int)i] = GetSerializer(FunctionStatement.Parameters.GetType()).DeserializeInternal<VisualScriptTool.Language.Statements.Statement>(Get<ISerializeObject>(ParametersArray, i), StatementIDs, Resolvers);
+					}
+				}
+				// ParametersDefaultValue
+				ISerializeArray ParametersDefaultValueArray = Get<ISerializeArray>(Object, 4, null);
+				if (ParametersDefaultValueArray == null)
+					FunctionStatement.ParametersDefaultValue = null;
+				else
+				{
+					FunctionStatement.ParametersDefaultValue = (VisualScriptTool.Language.AnyDataType[])System.Array.CreateInstance(typeof(VisualScriptTool.Language.AnyDataType), ParametersDefaultValueArray.Count);
+					for (uint i = 0; i < ParametersDefaultValueArray.Count; ++i)
+					{
+						FunctionStatement.ParametersDefaultValue[(int)i] = GetSerializer(FunctionStatement.ParametersDefaultValue.GetType()).DeserializeInternal<VisualScriptTool.Language.AnyDataType>(Get<ISerializeObject>(ParametersDefaultValueArray, i), StatementIDs, Resolvers);
+					}
+				}
 				// ID
 				FunctionStatement.ID = Get<System.String>(Object, 0, "");
 				returnValue = (T)(object)FunctionStatement;

@@ -42,7 +42,7 @@
     <Compile Include="CSharpCodeGenerator.cs" />
     <Compile Include="Language\CSharp\FlowStatementCodeGenerator.cs" />
     <Compile Include="Language\CSharp\ControlStatementCodeGenerator.cs" />
-    <Compile Include="Language\CSharp\FunctionCallSCodeGenerator.cs" />
+    <Compile Include="Language\CSharp\FunctionCallCodeGenerator.cs" />
     <Compile Include="Language\CSharp\VariableSetterCodeGenerator.cs" />
     <Compile Include="Language\CSharp\EntrypointGenerator.cs" />
     <Compile Include="Language\CSharp\WhileCodeGenerator.cs" />

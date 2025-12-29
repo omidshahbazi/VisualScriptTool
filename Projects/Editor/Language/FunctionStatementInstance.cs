@@ -1,9 +1,8 @@
 ﻿// Copyright 2016-2017 ?????????????. All Rights Reserved.
 using System;
-using System.Diagnostics;
 using VisualScriptTool.Language.Extensions;
 using VisualScriptTool.Language.Statements;
-using VisualScriptTool.Language.Statements.Control;
+using VisualScriptTool.Language.Statements.Declaration;
 using VisualScriptTool.Serialization;
 
 namespace VisualScriptTool.Editor.Language
@@ -18,23 +17,12 @@ namespace VisualScriptTool.Editor.Language
 			{
 				base.Statement = value;
 
-				if (base.Statement == null)
-					return;
-
-				Debug.Assert(value is FunctionCallStatement);
-
-				FunctionCallStatement statement = Statement.As<FunctionCallStatement>();
-
-				for (uint i = 0; i < statement.ParametersName.Length; ++i)
-					AddArgumentSlot(statement.ParametersName[i], i + 1, CheckParameterAssignment, OnParameterAssigned, OnRemoveParameterConnection);
-
-				if (statement.HasReturnValue)
-					AddGetterSlot(1);
+				SetValues();
 			}
 		}
 
 		public FunctionStatementInstance() :
-			base(null)
+			base(new FunctionStatement())
 		{
 		}
 
@@ -56,6 +44,19 @@ namespace VisualScriptTool.Editor.Language
 			UnsetConnection(Self);
 
 			//Statement.As<FunctionStatement>().Condition = null;
+		}
+
+		private void SetValues()
+		{
+			//TODO: CLEAR SLOTS FIRST?
+
+			FunctionStatement statement = Statement.As<FunctionStatement>();
+
+			for (uint i = 0; i < statement.Parameters.Length; ++i)
+				AddArgumentSlot(statement.Parameters[i].Name, i + 1, CheckParameterAssignment, OnParameterAssigned, OnRemoveParameterConnection);
+
+			if (statement.HasReturnValue)
+				AddGetterSlot(1);
 		}
 	}
 }
